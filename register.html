@@ -1,0 +1,1864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Pay | Registration Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        
+        :root {
+            --primary: #1a73e8;
+            --primary-dark: #0d47a1;
+            --secondary: #34a853;
+            --danger: #ea4335;
+            --warning: #fbbc04;
+            --light-gray: #f8f9fa;
+            --medium-gray: #e8eaed;
+            --dark-gray: #5f6368;
+            --text: #202124;
+            --white: #ffffff;
+            --merchant: #4285f4;
+            --customer: #34a853;
+            --admin: #ea4335;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --gradient: linear-gradient(135deg, #1a73e8 0%, #34a853 100%);
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        header {
+            background: var(--gradient);
+            color: white;
+            padding: 20px 0;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        .logo-icon {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+        }
+        
+        .back-btn {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: opacity 0.3s;
+        }
+        
+        .back-btn:hover {
+            opacity: 0.8;
+        }
+        
+        /* Main Registration Container */
+        .registration-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 80px);
+            padding: 40px 0;
+        }
+        
+        .registration-box {
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 800px;
+            overflow: hidden;
+            animation: fadeIn 0.8s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .registration-header {
+            padding: 30px;
+            background: var(--gradient);
+            color: white;
+            text-align: center;
+        }
+        
+        .registration-header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .registration-header p {
+            opacity: 0.9;
+        }
+        
+        .registration-tabs {
+            display: flex;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            padding: 5px;
+            margin-top: 20px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            background: transparent;
+            color: white;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .tab-btn.active {
+            background: white;
+            color: var(--primary);
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 40px;
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        /* Form Styles */
+        .form-container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .form-step {
+            display: none;
+        }
+        
+        .form-step.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text);
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid var(--medium-gray);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .form-input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
+        }
+        
+        .input-with-icon {
+            position: relative;
+        }
+        
+        .input-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--dark-gray);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .password-hint {
+            font-size: 13px;
+            color: var(--dark-gray);
+            margin-top: 5px;
+        }
+        
+        .form-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--medium-gray);
+        }
+        
+        .btn {
+            padding: 14px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(26, 115, 232, 0.3);
+        }
+        
+        .btn-secondary {
+            background-color: var(--medium-gray);
+            color: var(--text);
+        }
+        
+        .btn-secondary:hover {
+            background-color: #d5d9dd;
+        }
+        
+        .btn-success {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #2e8b47;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52, 168, 83, 0.3);
+        }
+        
+        .btn-next {
+            margin-left: auto;
+        }
+        
+        .progress-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .progress-indicator::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--medium-gray);
+            z-index: 1;
+        }
+        
+        .progress-step {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            flex: 1;
+        }
+        
+        .step-circle {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--medium-gray);
+            color: var(--dark-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .step-circle.active {
+            background: var(--primary);
+            color: white;
+            transform: scale(1.1);
+        }
+        
+        .step-label {
+            font-size: 14px;
+            color: var(--dark-gray);
+        }
+        
+        .step-label.active {
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        /* Face Recognition Section */
+        .face-recognition-container {
+            text-align: center;
+            padding: 20px 0;
+        }
+        
+        .face-instructions {
+            background: #e8f0fe;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .instruction-step {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .step-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-weight: bold;
+        }
+        
+        .video-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto 30px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        #video {
+            width: 100%;
+            height: auto;
+            display: block;
+            transform: scaleX(-1);
+        }
+        
+        .face-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        
+        .face-instruction-display {
+            background: var(--primary);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            animation: pulse-bg 2s infinite;
+        }
+        
+        @keyframes pulse-bg {
+            0% { background-color: var(--primary); }
+            50% { background-color: #0d47a1; }
+            100% { background-color: var(--primary); }
+        }
+        
+        .capture-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .capture-preview {
+            width: 100%;
+            height: 100px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 3px solid var(--medium-gray);
+            position: relative;
+        }
+        
+        .capture-preview.active {
+            border-color: var(--secondary);
+            animation: pulse-border 1s infinite;
+        }
+        
+        @keyframes pulse-border {
+            0% { border-color: var(--secondary); }
+            50% { border-color: #2e8b47; }
+            100% { border-color: var(--secondary); }
+        }
+        
+        .capture-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .capture-status {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 5px;
+            font-size: 12px;
+            text-align: center;
+        }
+        
+        .capture-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        /* Success Message */
+        .success-message {
+            text-align: center;
+            padding: 40px 20px;
+            display: none;
+        }
+        
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--secondary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 36px;
+            animation: scaleIn 0.5s ease;
+        }
+        
+        @keyframes scaleIn {
+            from { transform: scale(0); }
+            to { transform: scale(1); }
+        }
+        
+        /* Error Message */
+        .error-message {
+            color: var(--danger);
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .form-input.error {
+            border-color: var(--danger);
+        }
+        
+        .form-input.success {
+            border-color: var(--secondary);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .registration-box {
+                margin: 20px;
+                width: calc(100% - 40px);
+            }
+            
+            .tab-content {
+                padding: 30px 20px;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            
+            .capture-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .registration-header h1 {
+                font-size: 24px;
+            }
+            
+            .form-footer {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .capture-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .registration-tabs {
+                flex-direction: column;
+                border-radius: 10px;
+            }
+            
+            .tab-btn {
+                border-radius: 10px;
+                margin-bottom: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-face-smile"></i>
+                </div>
+                <span>Face Pay</span>
+            </div>
+            <a href="index.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Back to Home
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Registration Container -->
+    <div class="registration-container">
+        <div class="registration-box">
+            <div class="registration-header">
+                <h1>Create Your Account</h1>
+                <p>Join Face Pay and experience seamless payments with facial recognition</p>
+                
+                <div class="registration-tabs">
+                    <button class="tab-btn active" data-tab="merchant">
+                        <i class="fas fa-store"></i> Merchant
+                    </button>
+                    <button class="tab-btn" data-tab="customer">
+                        <i class="fas fa-user"></i> Customer
+                    </button>
+                    <button class="tab-btn" data-tab="admin">
+                        <i class="fas fa-shield-alt"></i> Admin
+                    </button>
+                </div>
+            </div>
+
+            <!-- Merchant Registration Form -->
+            <div class="tab-content active" id="merchant-tab">
+                <div class="form-container">
+                    <div class="progress-indicator">
+                        <div class="progress-step">
+                            <div class="step-circle active">1</div>
+                            <div class="step-label active">Account Details</div>
+                        </div>
+                        <div class="progress-step">
+                            <div class="step-circle">2</div>
+                            <div class="step-label">Business Info</div>
+                        </div>
+                        <div class="progress-step">
+                            <div class="step-circle">3</div>
+                            <div class="step-label">Bank Details</div>
+                        </div>
+                    </div>
+                    
+                    <form id="merchantForm">
+                        <!-- Step 1: Account Details -->
+                        <div class="form-step active" data-step="1">
+                            <div class="form-group">
+                                <label class="form-label" for="merchant-email">Email Address *</label>
+                                <div class="input-with-icon">
+                                    <input type="email" id="merchant-email" class="form-input" placeholder="you@example.com" required>
+                                    <i class="fas fa-envelope input-icon"></i>
+                                </div>
+                                <div class="error-message" id="merchant-email-error"></div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="merchant-password">Password *</label>
+                                <div class="input-with-icon">
+                                    <input type="password" id="merchant-password" class="form-input" placeholder="Minimum 6 characters" required minlength="6">
+                                    <i class="fas fa-lock input-icon"></i>
+                                </div>
+                                <div class="password-hint">Enter at least 6 characters</div>
+                                <div class="error-message" id="merchant-password-error"></div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="merchant-confirm-password">Confirm Password *</label>
+                                <div class="input-with-icon">
+                                    <input type="password" id="merchant-confirm-password" class="form-input" placeholder="Confirm your password" required>
+                                    <i class="fas fa-lock input-icon"></i>
+                                </div>
+                                <div class="error-message" id="merchant-password-match-error"></div>
+                            </div>
+                            
+                            <div class="form-footer">
+                                <div></div>
+                                <button type="button" class="btn btn-primary btn-next" data-next-step="2">
+                                    Next <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 2: Business Information -->
+                        <div class="form-step" data-step="2">
+                            <div class="form-group">
+                                <label class="form-label" for="company-name">Company Name *</label>
+                                <div class="input-with-icon">
+                                    <input type="text" id="company-name" class="form-input" placeholder="Your business name" required>
+                                    <i class="fas fa-building input-icon"></i>
+                                </div>
+                                <div class="error-message" id="company-name-error"></div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label" for="contact-person">Contact Person *</label>
+                                    <input type="text" id="contact-person" class="form-input" placeholder="Full name" required>
+                                    <div class="error-message" id="contact-person-error"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="contact-no">Contact Number *</label>
+                                    <div class="input-with-icon">
+                                        <input type="tel" id="contact-no" class="form-input" placeholder="+1 234 567 8900" required>
+                                        <i class="fas fa-phone input-icon"></i>
+                                    </div>
+                                    <div class="error-message" id="contact-no-error"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="business-address">Business Address</label>
+                                <textarea id="business-address" class="form-input" placeholder="Full business address" rows="3"></textarea>
+                            </div>
+                            
+                            <div class="form-footer">
+                                <button type="button" class="btn btn-secondary btn-prev" data-prev-step="1">
+                                    <i class="fas fa-arrow-left"></i> Back
+                                </button>
+                                <button type="button" class="btn btn-primary btn-next" data-next-step="3">
+                                    Next <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 3: Bank Details -->
+                        <div class="form-step" data-step="3">
+                            <div class="form-group">
+                                <label class="form-label" for="bank-name">Bank Name *</label>
+                                <div class="input-with-icon">
+                                    <input type="text" id="bank-name" class="form-input" placeholder="e.g. Chase, Bank of America" required>
+                                    <i class="fas fa-university input-icon"></i>
+                                </div>
+                                <div class="error-message" id="bank-name-error"></div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="account-number">Account Number *</label>
+                                <div class="input-with-icon">
+                                    <input type="text" id="account-number" class="form-input" placeholder="Bank account number" required>
+                                    <i class="fas fa-credit-card input-icon"></i>
+                                </div>
+                                <div class="error-message" id="account-number-error"></div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label" for="ifsc-code">IFSC Code *</label>
+                                    <input type="text" id="ifsc-code" class="form-input" placeholder="IFSC code" required>
+                                    <div class="error-message" id="ifsc-code-error"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="upi-id">UPI ID *</label>
+                                    <div class="input-with-icon">
+                                        <input type="text" id="upi-id" class="form-input" placeholder="username@bank" required>
+                                        <i class="fas fa-qrcode input-icon"></i>
+                                    </div>
+                                    <div class="error-message" id="upi-id-error"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="instruction-step">
+                                <div class="step-icon"><i class="fas fa-info"></i></div>
+                                <div>Your bank details are encrypted and securely stored.</div>
+                            </div>
+                            
+                            <div class="form-footer">
+                                <button type="button" class="btn btn-secondary btn-prev" data-prev-step="2">
+                                    <i class="fas fa-arrow-left"></i> Back
+                                </button>
+                                <button type="submit" class="btn btn-success">
+                                    <i class="fas fa-check"></i> Complete Registration
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    
+                    <div class="success-message" id="merchant-success">
+                        <div class="success-icon">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <h2>Registration Successful!</h2>
+                        <p>Your merchant account has been created successfully.</p>
+                        <p>You will be redirected to your dashboard shortly.</p>
+                        <div class="capture-buttons" style="margin-top: 30px;">
+                            <button class="btn btn-primary" id="go-to-merchant-dashboard">
+                                <i class="fas fa-tachometer-alt"></i> Go to Dashboard
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Customer Registration Form -->
+            <div class="tab-content" id="customer-tab">
+                <div class="form-container">
+                    <div class="progress-indicator">
+                        <div class="progress-step">
+                            <div class="step-circle active">1</div>
+                            <div class="step-label active">Account Details</div>
+                        </div>
+                        <div class="progress-step">
+                            <div class="step-circle">2</div>
+                            <div class="step-label">Face Recognition</div>
+                        </div>
+                        <div class="progress-step">
+                            <div class="step-circle">3</div>
+                            <div class="step-label">Complete</div>
+                        </div>
+                    </div>
+                    
+                    <form id="customerForm">
+                        <!-- Step 1: Account Details -->
+                        <div class="form-step active" data-step="1">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label" for="customer-name">Full Name *</label>
+                                    <div class="input-with-icon">
+                                        <input type="text" id="customer-name" class="form-input" placeholder="Your full name" required>
+                                        <i class="fas fa-user input-icon"></i>
+                                    </div>
+                                    <div class="error-message" id="customer-name-error"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="customer-email">Email Address *</label>
+                                    <div class="input-with-icon">
+                                        <input type="email" id="customer-email" class="form-input" placeholder="you@example.com" required>
+                                        <i class="fas fa-envelope input-icon"></i>
+                                    </div>
+                                    <div class="error-message" id="customer-email-error"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="customer-password">Password *</label>
+                                <div class="input-with-icon">
+                                    <input type="password" id="customer-password" class="form-input" placeholder="Minimum 6 characters" required minlength="6">
+                                    <i class="fas fa-lock input-icon"></i>
+                                </div>
+                                <div class="password-hint">Enter at least 6 characters</div>
+                                <div class="error-message" id="customer-password-error"></div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="customer-confirm-password">Confirm Password *</label>
+                                <div class="input-with-icon">
+                                    <input type="password" id="customer-confirm-password" class="form-input" placeholder="Confirm your password" required>
+                                    <i class="fas fa-lock input-icon"></i>
+                                </div>
+                                <div class="error-message" id="customer-password-match-error"></div>
+                            </div>
+                            
+                            <div class="form-footer">
+                                <div></div>
+                                <button type="button" class="btn btn-primary btn-next" data-next-step="2">
+                                    Next <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 2: Face Recognition -->
+                        <div class="form-step" data-step="2">
+                            <div class="face-recognition-container">
+                                <div class="face-instructions">
+                                    <h3 style="margin-bottom: 15px;">Face Recognition Setup</h3>
+                                    <p>We need to capture your face from multiple angles for secure authentication. Follow the instructions below:</p>
+                                    
+                                    <div class="instruction-step">
+                                        <div class="step-icon">1</div>
+                                        <div>Position your face in the frame and look straight ahead</div>
+                                    </div>
+                                    <div class="instruction-step">
+                                        <div class="step-icon">2</div>
+                                        <div>Slowly turn your head left, right, up and down as instructed</div>
+                                    </div>
+                                    <div class="instruction-step">
+                                        <div class="step-icon">3</div>
+                                        <div>Blink when prompted to verify liveness</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="face-instruction-display" id="face-instruction">
+                                    Look straight at the camera
+                                </div>
+                                
+                                <div class="video-container">
+                                    <video id="video" autoplay playsinline></video>
+                                    <canvas id="face-overlay" class="face-overlay"></canvas>
+                                </div>
+                                
+                                <div class="capture-grid">
+                                    <div class="capture-preview" id="preview-straight">
+                                        <div class="capture-status">Straight</div>
+                                    </div>
+                                    <div class="capture-preview" id="preview-left">
+                                        <div class="capture-status">Left</div>
+                                    </div>
+                                    <div class="capture-preview" id="preview-right">
+                                        <div class="capture-status">Right</div>
+                                    </div>
+                                    <div class="capture-preview" id="preview-up">
+                                        <div class="capture-status">Up</div>
+                                    </div>
+                                    <div class="capture-preview" id="preview-down">
+                                        <div class="capture-status">Down</div>
+                                    </div>
+                                    <div class="capture-preview" id="preview-blink">
+                                        <div class="capture-status">Blink</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="capture-buttons">
+                                    <button type="button" class="btn btn-secondary" id="restart-face-capture">
+                                        <i class="fas fa-redo"></i> Restart
+                                    </button>
+                                    <button type="button" class="btn btn-primary" id="capture-face">
+                                        <i class="fas fa-camera"></i> Capture
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="form-footer">
+                                <button type="button" class="btn btn-secondary btn-prev" data-prev-step="1">
+                                    <i class="fas fa-arrow-left"></i> Back
+                                </button>
+                                <a href="customer_das.html"><button type="button" class="btn btn-primary btn-next" data-next-step="3" id="proceed-after-face" disabled>
+                                    Proceed <i class="fas fa-arrow-right"></i>
+                                </button></a>
+                            </div>
+                        </div>
+                    </form>
+                    
+                    <div class="success-message" id="customer-success">
+                        <div class="success-icon">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <h2>Registration Successful!</h2>
+                        <p>Your customer account has been created with face recognition.</p>
+                        <p>You can now use face authentication for payments.</p>
+                        <div class="capture-buttons" style="margin-top: 30px;">
+                            <button class="btn btn-primary" id="go-to-customer-dashboard">
+                                <i class="fas fa-tachometer-alt"></i> Go to Dashboard
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admin Registration Form -->
+            <div class="tab-content" id="admin-tab">
+                <div class="form-container">
+                    <div class="instruction-step" style="margin-bottom: 30px;">
+                        <div class="step-icon"><i class="fas fa-shield-alt"></i></div>
+                        <div><strong>Admin Registration:</strong> Create admin account for system management.</div>
+                    </div>
+                    
+                    <form id="adminForm">
+                        <div class="form-group">
+                            <label class="form-label" for="admin-email">Admin Email *</label>
+                            <div class="input-with-icon">
+                                <input type="email" id="admin-email" class="form-input" placeholder="admin@facepay.com" required>
+                                <i class="fas fa-envelope input-icon"></i>
+                            </div>
+                            <div class="error-message" id="admin-email-error"></div>
+                            <div class="password-hint">Use your organization email address</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="admin-password">Password *</label>
+                            <div class="input-with-icon">
+                                <input type="password" id="admin-password" class="form-input" placeholder="Minimum 6 characters" required minlength="6">
+                                <i class="fas fa-lock input-icon"></i>
+                            </div>
+                            <div class="password-hint">Enter at least 6 characters</div>
+                            <div class="error-message" id="admin-password-error"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="admin-confirm-password">Confirm Password *</label>
+                            <div class="input-with-icon">
+                                <input type="password" id="admin-confirm-password" class="form-input" placeholder="Confirm your password" required>
+                                <i class="fas fa-lock input-icon"></i>
+                            </div>
+                            <div class="error-message" id="admin-password-match-error"></div>
+                        </div>
+                        
+                        <div class="form-footer">
+                            <div></div>
+                            <a href="admin.html"><button type="submit" class="btn btn-success">
+                                <i class="fas fa-shield-alt"></i> Register as Admin
+                            </button></a>
+                        </div>
+                    </form>
+                    
+                    <div class="success-message" id="admin-success">
+                        <div class="success-icon">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <h2>Admin Registration Successful!</h2>
+                        <p>Your admin account has been created.</p>
+                        <p>You can now access the admin dashboard.</p>
+                        <div class="capture-buttons" style="margin-top: 30px;">
+                            <button class="btn btn-primary" id="go-to-admin-dashboard">
+                                <i class="fas fa-tachometer-alt"></i> Go to Admin Portal
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize global variables
+        let faceCaptures = {};
+        let currentInstructionIndex = 0;
+        let captureInterval = null;
+        let videoStream = null;
+        let faceRecognitionInitialized = false;
+        
+        const instructions = [
+            { text: "Look straight at the camera", key: "straight", duration: 3000 },
+            { text: "Slowly turn your head to the LEFT", key: "left", duration: 3000 },
+            { text: "Slowly turn your head to the RIGHT", key: "right", duration: 3000 },
+            { text: "Look UP towards the ceiling", key: "up", duration: 3000 },
+            { text: "Look DOWN towards your chin", key: "down", duration: 3000 },
+            { text: "BLINK your eyes 3 times", key: "blink", duration: 4000 }
+        ];
+
+        // DOM Content Loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeTabs();
+            initializeFormNavigation();
+            initializePasswordValidation();
+            initializeFormSubmissions();
+            initializeDashboardButtons();
+            initializeFaceRecognitionButtons();
+        });
+
+        // Tab Switching
+        function initializeTabs() {
+            document.querySelectorAll('.tab-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Update active tab button
+                    document.querySelectorAll('.tab-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                    
+                    // Update active tab content
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    document.getElementById(`${tabId}-tab`).classList.add('active');
+                    
+                    // Reset forms when switching tabs
+                    resetCurrentForm();
+                });
+            });
+        }
+
+document.getElementById("go-to-admin-dashboard").addEventListener("click", function () {
+    
+    // Redirect properly
+    window.location.href = "admin.html";
+
+});
+
+        // Form Navigation
+        function initializeFormNavigation() {
+            // Next button functionality
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('btn-next') || e.target.closest('.btn-next')) {
+                    const button = e.target.classList.contains('btn-next') ? e.target : e.target.closest('.btn-next');
+                    const nextStep = button.getAttribute('data-next-step');
+                    const currentForm = button.closest('form');
+                    
+                    if (currentForm && nextStep) {
+                        navigateToStep(currentForm, nextStep);
+                    }
+                }
+                
+                // Previous button functionality
+                if (e.target.classList.contains('btn-prev') || e.target.closest('.btn-prev')) {
+                    const button = e.target.classList.contains('btn-prev') ? e.target : e.target.closest('.btn-prev');
+                    const prevStep = button.getAttribute('data-prev-step');
+                    const currentForm = button.closest('form');
+                    
+                    if (currentForm && prevStep) {
+                        navigateToStep(currentForm, prevStep);
+                    }
+                }
+            });
+        }
+
+        function navigateToStep(form, targetStep) {
+            const currentStepElement = form.querySelector('.form-step.active');
+            const currentStep = currentStepElement ? currentStepElement.getAttribute('data-step') : '1';
+            
+            // Validate before moving forward
+            if (parseInt(targetStep) > parseInt(currentStep)) {
+                if (!validateCurrentStep(form, currentStep)) {
+                    return; // Stop if validation fails
+                }
+            }
+            
+            // Update progress indicator
+            updateProgressIndicator(form, currentStep, targetStep);
+            
+            // Hide current step, show target step
+            form.querySelectorAll('.form-step').forEach(step => {
+                step.classList.remove('active');
+            });
+            
+            const targetStepElement = form.querySelector(`[data-step="${targetStep}"]`);
+            if (targetStepElement) {
+                targetStepElement.classList.add('active');
+                
+                // Initialize face recognition if moving to step 2 in customer form
+                if (form.id === 'customerForm' && targetStep === '2' && !faceRecognitionInitialized) {
+                    initializeFaceRecognition();
+                    faceRecognitionInitialized = true;
+                }
+            }
+        }
+
+        function updateProgressIndicator(form, currentStep, targetStep) {
+            const progressSteps = form.querySelectorAll('.progress-step');
+            const currentIndex = parseInt(currentStep) - 1;
+            const targetIndex = parseInt(targetStep) - 1;
+            
+            if (progressSteps.length > 0) {
+                if (parseInt(targetStep) > parseInt(currentStep)) {
+                    // Moving forward
+                    if (currentIndex >= 0 && currentIndex < progressSteps.length) {
+                        progressSteps[currentIndex].querySelector('.step-circle').classList.remove('active');
+                        progressSteps[currentIndex].querySelector('.step-label').classList.remove('active');
+                    }
+                    
+                    if (targetIndex >= 0 && targetIndex < progressSteps.length) {
+                        progressSteps[targetIndex].querySelector('.step-circle').classList.add('active');
+                        progressSteps[targetIndex].querySelector('.step-label').classList.add('active');
+                    }
+                } else {
+                    // Moving backward
+                    if (currentIndex >= 0 && currentIndex < progressSteps.length) {
+                        progressSteps[currentIndex].querySelector('.step-circle').classList.remove('active');
+                        progressSteps[currentIndex].querySelector('.step-label').classList.remove('active');
+                    }
+                    
+                    if (targetIndex >= 0 && targetIndex < progressSteps.length) {
+                        progressSteps[targetIndex].querySelector('.step-circle').classList.add('active');
+                        progressSteps[targetIndex].querySelector('.step-label').classList.add('active');
+                    }
+                }
+            }
+        }
+
+        // Step Validation
+        function validateCurrentStep(form, step) {
+            const stepElement = form.querySelector(`[data-step="${step}"]`);
+            if (!stepElement) return true;
+            
+            const inputs = stepElement.querySelectorAll('.form-input[required]');
+            let isValid = true;
+            
+            // Clear previous errors
+            stepElement.querySelectorAll('.error-message').forEach(error => {
+                error.textContent = '';
+                error.style.display = 'none';
+            });
+            
+            stepElement.querySelectorAll('.form-input').forEach(input => {
+                input.classList.remove('error', 'success');
+            });
+            
+            // Validate each input
+            inputs.forEach(input => {
+                const value = input.value.trim();
+                const errorId = input.id + '-error';
+                const errorElement = document.getElementById(errorId);
+                
+                // Check if empty
+                if (!value) {
+                    if (errorElement) {
+                        errorElement.textContent = 'This field is required';
+                        errorElement.style.display = 'block';
+                    }
+                    input.classList.add('error');
+                    isValid = false;
+                    return;
+                }
+                
+                // Email validation
+                if (input.type === 'email') {
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(value)) {
+                        if (errorElement) {
+                            errorElement.textContent = 'Please enter a valid email address';
+                            errorElement.style.display = 'block';
+                        }
+                        input.classList.add('error');
+                        isValid = false;
+                        return;
+                    }
+                }
+                
+                // Password validation (for password fields only, not confirm)
+                if (input.type === 'password' && input.id.includes('password') && !input.id.includes('confirm')) {
+                    if (value.length < 6) {
+                        if (errorElement) {
+                            errorElement.textContent = 'Password must be at least 6 characters';
+                            errorElement.style.display = 'block';
+                        }
+                        input.classList.add('error');
+                        isValid = false;
+                        return;
+                    }
+                }
+                
+                // Password match validation
+                if (input.type === 'password' && input.id.includes('confirm')) {
+                    const passwordFieldId = input.id.replace('confirm-', '').replace('-password', '') + '-password';
+                    const passwordField = document.getElementById(passwordFieldId);
+                    
+                    if (passwordField && passwordField.value !== value) {
+                        if (errorElement) {
+                            errorElement.textContent = 'Passwords do not match';
+                            errorElement.style.display = 'block';
+                        }
+                        input.classList.add('error');
+                        isValid = false;
+                        return;
+                    }
+                }
+                
+                // Phone number basic validation
+                if (input.id.includes('contact-no')) {
+                    if (value.length < 10) {
+                        if (errorElement) {
+                            errorElement.textContent = 'Please enter a valid phone number';
+                            errorElement.style.display = 'block';
+                        }
+                        input.classList.add('error');
+                        isValid = false;
+                        return;
+                    }
+                }
+                
+                // If all validations passed
+                input.classList.add('success');
+            });
+            
+            return isValid;
+        }
+
+        // Password Validation Setup
+        function initializePasswordValidation() {
+            // Setup real-time validation for password fields
+            document.querySelectorAll('input[type="password"]').forEach(input => {
+                input.addEventListener('input', function() {
+                    const value = this.value;
+                    const errorId = this.id + '-error';
+                    const errorElement = document.getElementById(errorId);
+                    
+                    if (this.id.includes('confirm')) {
+                        // For confirm password fields
+                        const passwordFieldId = this.id.replace('confirm-', '').replace('-password', '') + '-password';
+                        const passwordField = document.getElementById(passwordFieldId);
+                        
+                        if (passwordField && passwordField.value !== value) {
+                            if (errorElement) {
+                                errorElement.textContent = 'Passwords do not match';
+                                errorElement.style.display = 'block';
+                            }
+                            this.classList.add('error');
+                            this.classList.remove('success');
+                        } else if (value.length > 0) {
+                            if (errorElement) errorElement.style.display = 'none';
+                            this.classList.remove('error');
+                            this.classList.add('success');
+                        } else {
+                            if (errorElement) errorElement.style.display = 'none';
+                            this.classList.remove('error', 'success');
+                        }
+                    } else if (this.id.includes('password') && !this.id.includes('confirm')) {
+                        // For password fields
+                        if (value.length > 0 && value.length < 6) {
+                            if (errorElement) {
+                                errorElement.textContent = 'Password must be at least 6 characters';
+                                errorElement.style.display = 'block';
+                            }
+                            this.classList.add('error');
+                            this.classList.remove('success');
+                        } else if (value.length >= 6) {
+                            if (errorElement) errorElement.style.display = 'none';
+                            this.classList.remove('error');
+                            this.classList.add('success');
+                        } else {
+                            if (errorElement) errorElement.style.display = 'none';
+                            this.classList.remove('error', 'success');
+                        }
+                    }
+                });
+            });
+            
+            // Setup email validation
+            document.querySelectorAll('input[type="email"]').forEach(input => {
+                input.addEventListener('blur', function() {
+                    const value = this.value.trim();
+                    const errorId = this.id + '-error';
+                    const errorElement = document.getElementById(errorId);
+                    
+                    if (value && !validateEmail(value)) {
+                        if (errorElement) {
+                            errorElement.textContent = 'Please enter a valid email address';
+                            errorElement.style.display = 'block';
+                        }
+                        this.classList.add('error');
+                        this.classList.remove('success');
+                    } else if (value) {
+                        if (errorElement) errorElement.style.display = 'none';
+                        this.classList.remove('error');
+                        this.classList.add('success');
+                    }
+                });
+            });
+        }
+
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        // Form Submissions
+        function initializeFormSubmissions() {
+            // Merchant form submission
+            document.getElementById('merchantForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Validate all steps
+                let allValid = true;
+                for (let i = 1; i <= 3; i++) {
+                    if (!validateCurrentStep(this, i.toString())) {
+                        allValid = false;
+                        // Show the step with errors
+                        navigateToStep(this, i.toString());
+                        break;
+                    }
+                }
+                
+                if (!allValid) {
+                    alert('Please fix all errors before submitting.');
+                    return;
+                }
+                
+                // Get form data
+                const formData = {
+                    email: document.getElementById('merchant-email').value,
+                    companyName: document.getElementById('company-name').value,
+                    contactPerson: document.getElementById('contact-person').value,
+                    contactNo: document.getElementById('contact-no').value,
+                    bankName: document.getElementById('bank-name').value,
+                    accountNumber: document.getElementById('account-number').value,
+                    ifscCode: document.getElementById('ifsc-code').value,
+                    upiId: document.getElementById('upi-id').value,
+                    userType: 'merchant',
+                    timestamp: new Date().toISOString()
+                };
+                
+                // Save to localStorage
+                localStorage.setItem('facepay_merchant', JSON.stringify(formData));
+                localStorage.setItem('facepay_current_user', JSON.stringify({
+                    ...formData,
+                    type: 'merchant'
+                }));
+                
+                // Show success message
+                this.style.display = 'none';
+                document.getElementById('merchant-success').style.display = 'block';
+            });
+            
+            // Customer form submission
+            document.getElementById('customerForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Check if face capture is complete
+                if (Object.keys(faceCaptures).length < 6) {
+                    alert('Please complete face recognition setup before submitting.');
+                    navigateToStep(this, '2');
+                    return;
+                }
+                
+                // Validate step 1
+                if (!validateCurrentStep(this, '1')) {
+                    alert('Please fix errors in account details.');
+                    navigateToStep(this, '1');
+                    return;
+                }
+                
+                // Get form data
+                const formData = {
+                    name: document.getElementById('customer-name').value,
+                    email: document.getElementById('customer-email').value,
+                    faceCaptures: faceCaptures,
+                    userType: 'customer',
+                    timestamp: new Date().toISOString()
+                };
+                
+                // Save to localStorage
+                localStorage.setItem('facepay_customer', JSON.stringify(formData));
+                localStorage.setItem('facepay_current_user', JSON.stringify({
+                    ...formData,
+                    type: 'customer'
+                }));
+                
+                // Show success message
+                this.style.display = 'none';
+                document.getElementById('customer-success').style.display = 'block';
+            });
+            
+            // Admin form submission
+            document.getElementById('adminForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Validate form
+                if (!validateCurrentStep(this, '1')) {
+                    alert('Please fix errors before submitting.');
+                    return;
+                }
+                
+                // Get form data
+                const formData = {
+                    email: document.getElementById('admin-email').value,
+                    userType: 'admin',
+                    timestamp: new Date().toISOString()
+                };
+                
+                // Save to localStorage
+                localStorage.setItem('facepay_admin', JSON.stringify(formData));
+                localStorage.setItem('facepay_current_user', JSON.stringify({
+                    ...formData,
+                    type: 'admin'
+                }));
+                
+                // Show success message
+                this.style.display = 'none';
+                document.getElementById('admin-success').style.display = 'block';
+            });
+        }
+
+        // Dashboard Navigation
+        function initializeDashboardButtons() {
+            document.getElementById('go-to-merchant-dashboard').addEventListener('click', function() {
+                // Create simple dashboard for demo
+                const dashboardHTML = `
+                    <html>
+                    <head><title>Merchant Dashboard</title>
+                    <style>
+                        body { font-family: Arial; padding: 20px; }
+                        h1 { color: #4285f4; }
+                        .card { background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 10px 0; }
+                    </style>
+                    </head>
+                    <body>
+                        <h1>Merchant Dashboard</h1>
+                        <div class="card">Company: ${localStorage.getItem('facepay_merchant') ? JSON.parse(localStorage.getItem('facepay_merchant')).companyName : 'Your Company'}</div>
+                    </body>
+                    </html>
+                `;
+                
+                const newWindow = window.open();
+                newWindow.document.write(dashboardHTML);
+                newWindow.document.close();
+            });
+            
+            document.getElementById('go-to-customer-dashboard').addEventListener('click', function() {
+                const dashboardHTML = `
+                    <html>
+                    <head><title>Customer Dashboard</title>
+                    <style>
+                        body { font-family: Arial; padding: 20px; }
+                        h1 { color: #34a853; }
+                        .card { background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 10px 0; }
+                    </style>
+                    </head>
+                    <body>
+                    </body>
+                    </html>
+                `;
+                
+                const newWindow = window.open();
+                newWindow.document.write(dashboardHTML);
+                newWindow.document.close();
+            });
+            
+            document.getElementById('go-to-admin-dashboard').addEventListener('click', function() {
+                const dashboardHTML = `
+                    <html>
+                    <head><title>Admin Dashboard</title>
+                    <style>
+                        body { font-family: Arial; padding: 20px; }
+                        h1 { color: #ea4335; }
+                        .card { background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 10px 0; }
+                    </style>
+                    </head>
+                    <body>
+                    </body>
+                    </html>
+                `;
+                
+                const newWindow = window.open();
+                newWindow.document.write(dashboardHTML);
+                newWindow.document.close();
+            });
+        }
+
+        // Face Recognition Functions
+        function initializeFaceRecognitionButtons() {
+            const captureFaceBtn = document.getElementById('capture-face');
+            const restartFaceBtn = document.getElementById('restart-face-capture');
+            
+            if (captureFaceBtn) {
+                captureFaceBtn.addEventListener('click', function() {
+                    if (currentInstructionIndex < instructions.length) {
+                        captureFace(instructions[currentInstructionIndex].key);
+                    }
+                });
+            }
+            
+            if (restartFaceBtn) {
+                restartFaceBtn.addEventListener('click', function() {
+                    restartFaceCapture();
+                });
+            }
+        }
+
+        function initializeFaceRecognition() {
+            const video = document.getElementById('video');
+            const instructionDisplay = document.getElementById('face-instruction');
+            
+            if (!video) return;
+            
+            // Try to access webcam
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ 
+                    video: { 
+                        width: { ideal: 640 },
+                        height: { ideal: 480 },
+                        facingMode: 'user' 
+                    } 
+                })
+                .then(stream => {
+                    videoStream = stream;
+                    video.srcObject = stream;
+                    
+                    // Start instruction cycle
+                    startInstructionCycle();
+                })
+                .catch(err => {
+                    console.log("Webcam not available, using simulation:", err);
+                    if (instructionDisplay) {
+                        instructionDisplay.textContent = "Using face simulation for demo";
+                    }
+                    
+                    // Simulate face capture
+                    simulateFaceCapture();
+                });
+            } else {
+                // Fallback to simulation
+                if (instructionDisplay) {
+                    instructionDisplay.textContent = "Webcam not supported, using simulation";
+                }
+                simulateFaceCapture();
+            }
+        }
+
+        function startInstructionCycle() {
+            const instructionDisplay = document.getElementById('face-instruction');
+            currentInstructionIndex = 0;
+            
+            if (!instructionDisplay) return;
+            
+            // Show first instruction
+            showInstruction(currentInstructionIndex);
+            
+            // Start automatic progression
+            captureInterval = setInterval(() => {
+                currentInstructionIndex++;
+                
+                if (currentInstructionIndex < instructions.length) {
+                    showInstruction(currentInstructionIndex);
+                } else {
+                    // All instructions completed
+                    clearInterval(captureInterval);
+                    instructionDisplay.textContent = "Face capture complete!";
+                    instructionDisplay.style.background = "var(--secondary)";
+                    
+                    // Enable proceed button
+                    const proceedBtn = document.getElementById('proceed-after-face');
+                    if (proceedBtn) {
+                        proceedBtn.disabled = false;
+                        proceedBtn.classList.add('btn-success');
+                    }
+                }
+            }, instructions[0].duration);
+        }
+
+        function showInstruction(index) {
+            const instruction = instructions[index];
+            const instructionDisplay = document.getElementById('face-instruction');
+            
+            if (!instructionDisplay) return;
+            
+            // Update instruction text
+            instructionDisplay.textContent = instruction.text;
+            
+            // Highlight current preview box
+            document.querySelectorAll('.capture-preview').forEach(box => {
+                box.classList.remove('active');
+            });
+            
+            const previewBox = document.getElementById(`preview-${instruction.key}`);
+            if (previewBox) {
+                previewBox.classList.add('active');
+            }
+            
+            // Update interval duration for next instruction
+            if (captureInterval) {
+                clearInterval(captureInterval);
+                captureInterval = setInterval(() => {
+                    currentInstructionIndex++;
+                    
+                    if (currentInstructionIndex < instructions.length) {
+                        showInstruction(currentInstructionIndex);
+                    } else {
+                        clearInterval(captureInterval);
+                        instructionDisplay.textContent = "Face capture complete!";
+                        instructionDisplay.style.background = "var(--secondary)";
+                        
+                        const proceedBtn = document.getElementById('proceed-after-face');
+                        if (proceedBtn) {
+                            proceedBtn.disabled = false;
+                            proceedBtn.classList.add('btn-success');
+                        }
+                    }
+                }, instruction.duration);
+            }
+        }
+
+        function captureFace(key) {
+            const video = document.getElementById('video');
+            const previewBox = document.getElementById(`preview-${key}`);
+            
+            if (!video || !previewBox) return;
+            
+            // Create canvas for capturing
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth || 640;
+            canvas.height = video.videoHeight || 480;
+            
+            // Draw video frame to canvas
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            
+            // Convert to data URL
+            const imageData = canvas.toDataURL('image/jpeg', 0.8);
+            
+            // Store capture
+            faceCaptures[key] = imageData;
+            
+            // Update preview box
+            previewBox.innerHTML = `
+                <img src="${imageData}" alt="${key} face capture">
+                <div class="capture-status">✓ Captured</div>
+            `;
+        }
+
+        function simulateFaceCapture() {
+            // For demo purposes when webcam is not available
+            instructions.forEach((instruction, index) => {
+                setTimeout(() => {
+                    const previewBox = document.getElementById(`preview-${instruction.key}`);
+                    const instructionDisplay = document.getElementById('face-instruction');
+                    
+                    if (!previewBox || !instructionDisplay) return;
+                    
+                    instructionDisplay.textContent = instruction.text;
+                    
+                    document.querySelectorAll('.capture-preview').forEach(box => {
+                        box.classList.remove('active');
+                    });
+                    previewBox.classList.add('active');
+                    
+                    // Create a simulated face image
+                    const colors = ['#4285f4', '#34a853', '#ea4335', '#fbbc04'];
+                    const color = colors[index % colors.length];
+                    
+                    const canvas = document.createElement('canvas');
+                    canvas.width = 200;
+                    canvas.height = 200;
+                    const ctx = canvas.getContext('2d');
+                    
+                    // Draw a simple face
+                    ctx.fillStyle = '#f5f5f5';
+                    ctx.fillRect(0, 0, 200, 200);
+                    
+                    ctx.fillStyle = color;
+                    ctx.beginPath();
+                    ctx.arc(100, 100, 80, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    ctx.fillStyle = 'white';
+                    ctx.beginPath();
+                    ctx.arc(70, 80, 15, 0, Math.PI * 2);
+                    ctx.arc(130, 80, 15, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    ctx.fillStyle = 'white';
+                    ctx.beginPath();
+                    ctx.ellipse(100, 130, 40, 20, 0, 0, Math.PI);
+                    ctx.fill();
+                    
+                    const imageData = canvas.toDataURL();
+                    faceCaptures[instruction.key] = imageData;
+                    
+                    previewBox.innerHTML = `
+                        <img src="${imageData}" alt="${instruction.key} face capture">
+                        <div class="capture-status">✓ Simulated</div>
+                    `;
+                    
+                    if (index === instructions.length - 1) {
+                        setTimeout(() => {
+                            instructionDisplay.textContent = "Face capture complete!";
+                            instructionDisplay.style.background = "var(--secondary)";
+                            const proceedBtn = document.getElementById('proceed-after-face');
+                            if (proceedBtn) {
+                                proceedBtn.disabled = false;
+                                proceedBtn.classList.add('btn-success');
+                            }
+                        }, 1000);
+                    }
+                }, index * 3000);
+            });
+        }
+
+        function restartFaceCapture() {
+            // Clear existing interval
+            if (captureInterval) {
+                clearInterval(captureInterval);
+                captureInterval = null;
+            }
+            
+            // Reset face captures
+            faceCaptures = {};
+            
+            // Reset preview boxes
+            document.querySelectorAll('.capture-preview').forEach(box => {
+                box.innerHTML = `<div class="capture-status">${box.id.replace('preview-', '').toUpperCase()}</div>`;
+                box.classList.remove('active');
+            });
+            
+            // Reset instruction
+            const instructionDisplay = document.getElementById('face-instruction');
+            if (instructionDisplay) {
+                instructionDisplay.textContent = "Look straight at the camera";
+                instructionDisplay.style.background = "var(--primary)";
+            }
+            
+            // Disable proceed button
+            const proceedBtn = document.getElementById('proceed-after-face');
+            if (proceedBtn) {
+                proceedBtn.disabled = true;
+                proceedBtn.classList.remove('btn-success');
+            }
+            
+            // Reset instruction index
+            currentInstructionIndex = 0;
+            
+            // Restart cycle
+            startInstructionCycle();
+        }
+
+        // Form Reset
+        function resetCurrentForm() {
+            const activeForm = document.querySelector('.tab-content.active form');
+            if (!activeForm) return;
+            
+            // Reset to first step
+            activeForm.querySelectorAll('.form-step').forEach((step, index) => {
+                step.classList.remove('active');
+                if (index === 0) step.classList.add('active');
+            });
+            
+            // Reset progress indicator
+            const progressSteps = activeForm.querySelectorAll('.progress-step');
+            progressSteps.forEach((step, index) => {
+                const circle = step.querySelector('.step-circle');
+                const label = step.querySelector('.step-label');
+                
+                if (circle && label) {
+                    circle.classList.remove('active');
+                    label.classList.remove('active');
+                    
+                    if (index === 0) {
+                        circle.classList.add('active');
+                        label.classList.add('active');
+                    }
+                }
+            });
+            
+            // Hide success message
+            const successMsg = activeForm.nextElementSibling;
+            if (successMsg && successMsg.classList.contains('success-message')) {
+                successMsg.style.display = 'none';
+            }
+            
+            // Show form
+            activeForm.style.display = 'block';
+            
+            // Reset face recognition if it's the customer form
+            if (activeForm.id === 'customerForm') {
+                if (captureInterval) {
+                    clearInterval(captureInterval);
+                    captureInterval = null;
+                }
+                
+                if (videoStream) {
+                    videoStream.getTracks().forEach(track => track.stop());
+                    videoStream = null;
+                }
+                
+                faceRecognitionInitialized = false;
+                faceCaptures = {};
+                currentInstructionIndex = 0;
+                
+                // Reset face previews
+                document.querySelectorAll('.capture-preview').forEach(box => {
+                    box.innerHTML = `<div class="capture-status">${box.id.replace('preview-', '').toUpperCase()}</div>`;
+                    box.classList.remove('active');
+                });
+                
+                // Reset face instruction
+                const instructionDisplay = document.getElementById('face-instruction');
+                if (instructionDisplay) {
+                    instructionDisplay.textContent = "Look straight at the camera";
+                    instructionDisplay.style.background = "var(--primary)";
+                }
+                
+                // Disable proceed button
+                const proceedBtn = document.getElementById('proceed-after-face');
+                if (proceedBtn) {
+                    proceedBtn.disabled = true;
+                    proceedBtn.classList.remove('btn-success');
+                }
+            }
+        }
+
+        // Clean up on page unload
+        window.addEventListener('beforeunload', function() {
+            if (videoStream) {
+                videoStream.getTracks().forEach(track => track.stop());
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Payment Platform</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js for Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .sidebar-link.active {
+            background-color: #3b82f6;
+            color: white;
+        }
+        .sidebar-link:hover:not(.active) {
+            background-color: #f3f4f6;
+        }
+        .stat-card {
+            transition: transform 0.3s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        .powerbi-container {
+            height: 600px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            flex-direction: column;
+        }
+        .table-row:hover {
+            background-color: #f9fafb;
+        }
+        .hidden {
+            display: none;
+        }
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .toggle-slider {
+            background-color: #10b981;
+        }
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Main Container -->
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <div class="w-64 bg-white shadow-md flex flex-col">
+            <!-- Logo -->
+            <div class="p-6 border-b">
+                <h1 class="text-2xl font-bold text-blue-600">
+                    <i class="fas fa-lock mr-2"></i>Admin Panel
+                </h1>
+                <p class="text-gray-500 text-sm mt-1">Payment Platform</p>
+            </div>
+            
+            <!-- Navigation -->
+            <nav class="flex-1 p-4">
+                <ul class="space-y-2">
+                    <li>
+                        <a href="#dashboard" class="sidebar-link flex items-center p-3 rounded-lg active">
+                            <i class="fas fa-tachometer-alt w-6"></i>
+                            <span class="ml-3">Dashboard Overview</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#users" class="sidebar-link flex items-center p-3 rounded-lg">
+                            <i class="fas fa-users w-6"></i>
+                            <span class="ml-3">User Management</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#transactions" class="sidebar-link flex items-center p-3 rounded-lg">
+                            <i class="fas fa-exchange-alt w-6"></i>
+                            <span class="ml-3">Transaction List</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#analytics" class="sidebar-link flex items-center p-3 rounded-lg">
+                            <i class="fas fa-chart-bar w-6"></i>
+                            <span class="ml-3">Analytics</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#settings" class="sidebar-link flex items-center p-3 rounded-lg">
+                            <i class="fas fa-cog w-6"></i>
+                            <span class="ml-3">Settings</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <!-- Admin Profile -->
+            <div class="p-4 border-t">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+                        <i class="fas fa-user-shield text-blue-600"></i>
+                    </div>
+                    <div class="ml-3">
+                        <p class="font-medium">Administrator</p>
+                        <p class="text-gray-500 text-sm">admin@paymentplatform.com</p>
+                    </div>
+                    <a href="/" class="ml-auto text-gray-500 hover:text-red-600" title="Logout">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="flex-1 overflow-auto">
+            <!-- Header -->
+            <header class="bg-white shadow-sm p-4 flex justify-between items-center">
+                <h2 class="text-xl font-semibold text-gray-800" id="page-title">Dashboard Overview</h2>
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <i class="fas fa-bell text-gray-600"></i>
+                        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">3</span>
+                    </div>
+                    <div class="text-sm text-gray-600">
+                        <span id="current-date">Loading...</span>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Content Area -->
+            <main class="p-6">
+                <!-- Dashboard Overview (Default View) -->
+                <div id="dashboard" class="content-section">
+                    <!-- Stats Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                        <div class="stat-card bg-white rounded-xl shadow p-6">
+                            <div class="flex items-center">
+                                <div class="p-3 rounded-lg bg-blue-100">
+                                    <i class="fas fa-users text-blue-600 text-xl"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-gray-500">Total Users</p>
+                                    <p class="text-3xl font-bold">1,254</p>
+                                </div>
+                            </div>
+                            <div class="mt-4 text-sm">
+                                <span class="text-green-600">
+                                    <i class="fas fa-arrow-up mr-1"></i>12% from last month
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card bg-white rounded-xl shadow p-6">
+                            <div class="flex items-center">
+                                <div class="p-3 rounded-lg bg-green-100">
+                                    <i class="fas fa-store text-green-600 text-xl"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-gray-500">Merchants</p>
+                                    <p class="text-3xl font-bold">89</p>
+                                </div>
+                            </div>
+                            <div class="mt-4 text-sm">
+                                <span class="text-green-600">
+                                    <i class="fas fa-arrow-up mr-1"></i>8% from last month
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card bg-white rounded-xl shadow p-6">
+                            <div class="flex items-center">
+                                <div class="p-3 rounded-lg bg-purple-100">
+                                    <i class="fas fa-receipt text-purple-600 text-xl"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-gray-500">Transactions</p>
+                                    <p class="text-3xl font-bold">5,432</p>
+                                </div>
+                            </div>
+                            <div class="mt-4 text-sm">
+                                <span class="text-green-600">
+                                    <i class="fas fa-arrow-up mr-1"></i>23% from last month
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card bg-white rounded-xl shadow p-6">
+                            <div class="flex items-center">
+                                <div class="p-3 rounded-lg bg-yellow-100">
+                                    <i class="fas fa-money-bill-wave text-yellow-600 text-xl"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-gray-500">Revenue</p>
+                                    <p class="text-3xl font-bold">₹2,45,800</p>
+                                </div>
+                            </div>
+                            <div class="mt-4 text-sm">
+                                <span class="text-green-600">
+                                    <i class="fas fa-arrow-up mr-1"></i>15% from last month
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Charts Row -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                        <!-- Transaction Chart -->
+                        <div class="bg-white rounded-xl shadow p-6">
+                            <h3 class="text-lg font-semibold mb-4">Transaction Volume</h3>
+                            <div class="h-64">
+                                <canvas id="transactionChart"></canvas>
+                            </div>
+                        </div>
+                        
+                        <!-- User Growth Chart -->
+                        <div class="bg-white rounded-xl shadow p-6">
+                            <h3 class="text-lg font-semibold mb-4">User Growth</h3>
+                            <div class="h-64">
+                                <canvas id="userChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Recent Activity -->
+                    <div class="bg-white rounded-xl shadow p-6">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-lg font-semibold">Recent Activity</h3>
+                            <a href="#transactions" class="text-blue-600 hover:underline">View All</a>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead>
+                                    <tr class="border-b">
+                                        <th class="text-left py-3">User</th>
+                                        <th class="text-left py-3">Type</th>
+                                        <th class="text-left py-3">Amount</th>
+                                        <th class="text-left py-3">Status</th>
+                                        <th class="text-left py-3">Time</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recent-activity">
+                                    <!-- Activity rows will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- User Management Section -->
+                <div id="users" class="content-section hidden">
+                    <div class="bg-white rounded-xl shadow p-6">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-lg font-semibold">User Management</h3>
+                            <div class="flex space-x-4">
+                                <div class="relative">
+                                    <input type="text" placeholder="Search users..." class="pl-10 pr-4 py-2 border rounded-lg">
+                                    <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                                </div>
+                                <select class="border rounded-lg px-4 py-2">
+                                    <option>All Users</option>
+                                    <option>Merchants</option>
+                                    <option>Customers</option>
+                                    <option>Admins</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead>
+                                    <tr class="border-b">
+                                        <th class="text-left py-3">ID</th>
+                                        <th class="text-left py-3">Name</th>
+                                        <th class="text-left py-3">Email</th>
+                                        <th class="text-left py-3">Role</th>
+                                        <th class="text-left py-3">Registration Date</th>
+                                        <th class="text-left py-3">Status</th>
+                                        <th class="text-left py-3">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="user-table">
+                                    <!-- User rows will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <!-- Pagination -->
+                        <div class="flex justify-between items-center mt-6">
+                            <div class="text-gray-600">
+                                Showing 1 to 10 of 1,254 users
+                            </div>
+                            <div class="flex space-x-2">
+                                <button class="px-3 py-1 border rounded-lg bg-gray-100"><i class="fas fa-chevron-left"></i></button>
+                                <button class="px-3 py-1 border rounded-lg bg-blue-600 text-white">1</button>
+                                <button class="px-3 py-1 border rounded-lg">2</button>
+                                <button class="px-3 py-1 border rounded-lg">3</button>
+                                <button class="px-3 py-1 border rounded-lg">...</button>
+                                <button class="px-3 py-1 border rounded-lg">10</button>
+                                <button class="px-3 py-1 border rounded-lg"><i class="fas fa-chevron-right"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Transaction List Section -->
+                <div id="transactions" class="content-section hidden">
+                    <div class="bg-white rounded-xl shadow p-6">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-lg font-semibold">Transaction List</h3>
+                            <div class="flex space-x-4">
+                                <input type="date" class="border rounded-lg px-4 py-2">
+                                <select class="border rounded-lg px-4 py-2">
+                                    <option>All Status</option>
+                                    <option>Success</option>
+                                    <option>Pending</option>
+                                    <option>Failed</option>
+                                </select>
+                                <button class="bg-blue-600 text-white px-4 py-2 rounded-lg">
+                                    <i class="fas fa-download mr-2"></i>Export
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead>
+                                    <tr class="border-b">
+                                        <th class="text-left py-3">Transaction ID</th>
+                                        <th class="text-left py-3">Merchant</th>
+                                        <th class="text-left py-3">Customer</th>
+                                        <th class="text-left py-3">Amount</th>
+                                        <th class="text-left py-3">Payment Method</th>
+                                        <th class="text-left py-3">Status</th>
+                                        <th class="text-left py-3">Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="transaction-table">
+                                    <!-- Transaction rows will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Analytics Section -->
+                <div id="analytics" class="content-section hidden">
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold mb-4">Analytics Dashboard</h3>
+                        <p class="text-gray-600">Powered by Power BI integration</p>
+                    </div>
+                    
+                    <!-- Power BI Container -->
+                    <div class="powerbi-container mb-8">
+                        <i class="fas fa-chart-line text-6xl mb-4"></i>
+                        <h4 class="text-2xl font-bold mb-2">Power BI Analytics</h4>
+                        <p class="mb-4">Interactive business intelligence dashboard</p>
+                        <button class="bg-white text-purple-700 px-6 py-3 rounded-lg font-medium">
+                            <i class="fas fa-external-link-alt mr-2"></i>Open Power BI Dashboard
+                        </button>
+                    </div>
+                    
+                    <!-- Additional Analytics Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-white rounded-xl shadow p-6">
+                            <h4 class="font-semibold mb-4">Face Pay Success Rate</h4>
+                            <div class="flex items-center">
+                                <div class="text-3xl font-bold text-green-600">94.2%</div>
+                                <div class="ml-4">
+                                    <div class="h-2 bg-gray-200 rounded-full w-32">
+                                        <div class="h-full bg-green-500 rounded-full" style="width: 94%"></div>
+                                    </div>
+                                    <p class="text-sm text-gray-500 mt-1">Higher than last month (92.1%)</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white rounded-xl shadow p-6">
+                            <h4 class="font-semibold mb-4">Average Transaction Value</h4>
+                            <div class="flex items-center">
+                                <div class="text-3xl font-bold text-blue-600">₹1,240</div>
+                                <div class="ml-4">
+                                    <div class="h-2 bg-gray-200 rounded-full w-32">
+                                        <div class="h-full bg-blue-500 rounded-full" style="width: 78%"></div>
+                                    </div>
+                                    <p class="text-sm text-gray-500 mt-1">Increased by ₹120 from last month</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white rounded-xl shadow p-6">
+                            <h4 class="font-semibold mb-4">Platform Uptime</h4>
+                            <div class="flex items-center">
+                                <div class="text-3xl font-bold text-purple-600">99.8%</div>
+                                <div class="ml-4">
+                                    <div class="h-2 bg-gray-200 rounded-full w-32">
+                                        <div class="h-full bg-purple-500 rounded-full" style="width: 99.8%"></div>
+                                    </div>
+                                    <p class="text-sm text-gray-500 mt-1">30-day average</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Settings Section -->
+                <div id="settings" class="content-section hidden">
+                    <div class="bg-white rounded-xl shadow p-6">
+                        <h3 class="text-lg font-semibold mb-6">Admin Settings</h3>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <!-- Platform Settings -->
+                            <div>
+                                <h4 class="font-semibold mb-4 text-blue-600">Platform Settings</h4>
+                                
+                                <div class="space-y-6">
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <p class="font-medium">Enable Face Pay Registration</p>
+                                            <p class="text-sm text-gray-500">Allow customers to register using face capture</p>
+                                        </div>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" checked>
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <p class="font-medium">Require UPI ID for Merchants</p>
+                                            <p class="text-sm text-gray-500">Merchants must provide UPI ID during registration</p>
+                                        </div>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" checked>
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <p class="font-medium">Auto-capture Face Embeddings</p>
+                                            <p class="text-sm text-gray-500">Enable guided auto-capture flow for customers</p>
+                                        </div>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" checked>
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Security Settings -->
+                            <div>
+                                <h4 class="font-semibold mb-4 text-blue-600">Security Settings</h4>
+                                
+                                <div class="space-y-6">
+                                    <div>
+                                        <label class="block font-medium mb-2">Face Match Threshold</label>
+                                        <div class="flex items-center">
+                                            <input type="range" min="0.5" max="1.0" step="0.05" value="0.75" class="w-full">
+                                            <span id="threshold-value" class="ml-4 font-bold">0.75</span>
+                                        </div>
+                                        <p class="text-sm text-gray-500 mt-1">Higher values increase security but may cause false rejections</p>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block font-medium mb-2">Session Timeout (minutes)</label>
+                                        <input type="number" value="30" class="w-full border rounded-lg px-4 py-2">
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block font-medium mb-2">Admin Notification Email</label>
+                                        <input type="email" value="admin@paymentplatform.com" class="w-full border rounded-lg px-4 py-2">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Save Settings Button -->
+                        <div class="mt-8 pt-6 border-t flex justify-end">
+                            <button class="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition">
+                                <i class="fas fa-save mr-2"></i>Save Settings
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    
+    <script>
+        // Set current date
+        document.getElementById('current-date').textContent = new Date().toLocaleDateString('en-US', { 
+            weekday: 'long', 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+        });
+        
+        // Navigation functionality
+        document.querySelectorAll('.sidebar-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Update active state
+                document.querySelectorAll('.sidebar-link').forEach(item => {
+                    item.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // Get target section
+                const targetId = this.getAttribute('href').substring(1);
+                const pageTitleMap = {
+                    'dashboard': 'Dashboard Overview',
+                    'users': 'User Management',
+                    'transactions': 'Transaction List',
+                    'analytics': 'Analytics',
+                    'settings': 'Settings'
+                };
+                
+                // Update page title
+                document.getElementById('page-title').textContent = pageTitleMap[targetId] || 'Dashboard';
+                
+                // Show target section
+                document.querySelectorAll('.content-section').forEach(section => {
+                    section.classList.add('hidden');
+                });
+                document.getElementById(targetId).classList.remove('hidden');
+            });
+        });
+        
+        // Generate sample data for recent activity
+        const recentActivity = [
+            { user: 'Rajesh Kumar', type: 'Face Pay', amount: '₹1,500', status: 'Success', time: '10 min ago' },
+            { user: 'Neha Sharma', type: 'UPI Payment', amount: '₹2,300', status: 'Success', time: '25 min ago' },
+            { user: 'TechMart Store', type: 'Merchant Registration', amount: '-', status: 'Completed', time: '1 hour ago' },
+            { user: 'Amit Patel', type: 'Face Pay', amount: '₹850', status: 'Failed', time: '2 hours ago' },
+            { user: 'FashionHub', type: 'Invoice Generated', amount: '₹5,400', status: 'Pending', time: '3 hours ago' }
+        ];
+        
+        const recentActivityTable = document.getElementById('recent-activity');
+        recentActivity.forEach(activity => {
+            const statusClass = activity.status === 'Success' || activity.status === 'Completed' 
+                ? 'bg-green-100 text-green-800'
+                : activity.status === 'Failed' 
+                ? 'bg-red-100 text-red-800'
+                : 'bg-yellow-100 text-yellow-800';
+            
+            const row = document.createElement('tr');
+            row.className = 'border-b hover:bg-gray-50';
+            row.innerHTML = `
+                <td class="py-3">
+                    <div class="flex items-center">
+                        <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center mr-3">
+                            <i class="fas fa-user text-gray-600"></i>
+                        </div>
+                        ${activity.user}
+                    </div>
+                </td>
+                <td class="py-3">${activity.type}</td>
+                <td class="py-3 font-medium">${activity.amount}</td>
+                <td class="py-3">
+                    <span class="px-3 py-1 rounded-full text-xs font-medium ${statusClass}">${activity.status}</span>
+                </td>
+                <td class="py-3 text-gray-500">${activity.time}</td>
+            `;
+            recentActivityTable.appendChild(row);
+        });
+        
+        // Generate sample user data
+        const users = [
+            { id: 'USR001', name: 'Rahul Mehta', email: 'rahul@example.com', role: 'Customer', date: '2023-10-15', status: 'Active' },
+            { id: 'USR002', name: 'Sunita Traders', email: 'sunita@store.com', role: 'Merchant', date: '2023-10-10', status: 'Active' },
+            { id: 'USR003', name: 'Anjali Singh', email: 'anjali@example.com', role: 'Customer', date: '2023-10-05', status: 'Inactive' },
+            { id: 'USR004', name: 'TechGadgets Inc', email: 'info@techgadgets.com', role: 'Merchant', date: '2023-09-28', status: 'Active' },
+            { id: 'USR005', name: 'Vikram Joshi', email: 'vikram@example.com', role: 'Customer', date: '2023-09-20', status: 'Active' },
+            { id: 'USR006', name: 'Fashion Boutique', email: 'contact@fashionboutique.com', role: 'Merchant', date: '2023-09-15', status: 'Pending' },
+            { id: 'USR007', name: 'Priya Nair', email: 'priya@example.com', role: 'Customer', date: '2023-09-10', status: 'Active' },
+            { id: 'USR008', name: 'FoodCorner', email: 'orders@foodcorner.com', role: 'Merchant', date: '2023-09-05', status: 'Active' },
+            { id: 'USR009', name: 'Arun Kumar', email: 'arun@example.com', role: 'Customer', date: '2023-08-28', status: 'Inactive' },
+            { id: 'USR010', name: 'BookWorld', email: 'support@bookworld.com', role: 'Merchant', date: '2023-08-20', status: 'Active' }
+        ];
+        
+        const userTable = document.getElementById('user-table');
+        users.forEach(user => {
+            const statusClass = user.status === 'Active' 
+                ? 'bg-green-100 text-green-800'
+                : user.status === 'Inactive'
+                ? 'bg-gray-100 text-gray-800'
+                : 'bg-yellow-100 text-yellow-800';
+            
+            const roleClass = user.role === 'Merchant' 
+                ? 'bg-blue-100 text-blue-800'
+                : user.role === 'Customer'
+                ? 'bg-purple-100 text-purple-800'
+                : 'bg-red-100 text-red-800';
+            
+            const row = document.createElement('tr');
+            row.className = 'border-b hover:bg-gray-50';
+            row.innerHTML = `
+                <td class="py-3 font-medium">${user.id}</td>
+                <td class="py-3">${user.name}</td>
+                <td class="py-3">${user.email}</td>
+                <td class="py-3">
+                    <span class="px-3 py-1 rounded-full text-xs font-medium ${roleClass}">${user.role}</span>
+                </td>
+                <td class="py-3">${user.date}</td>
+                <td class="py-3">
+                    <span class="px-3 py-1 rounded-full text-xs font-medium ${statusClass}">${user.status}</span>
+                </td>
+                <td class="py-3">
+                    <button class="text-blue-600 hover:text-blue-800 mr-3" title="Edit">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="text-red-600 hover:text-red-800" title="Delete">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </td>
+            `;
+            userTable.appendChild(row);
+        });
+        
+        // Generate sample transaction data
+        const transactions = [
+            { id: 'TXN1001', merchant: 'Sunita Traders', customer: 'Rahul Mehta', amount: '₹1,500', method: 'Face Pay', status: 'Success', date: '2023-10-20' },
+            { id: 'TXN1002', merchant: 'TechGadgets Inc', customer: 'Anjali Singh', amount: '₹8,400', method: 'UPI', status: 'Success', date: '2023-10-19' },
+            { id: 'TXN1003', merchant: 'Fashion Boutique', customer: 'Vikram Joshi', amount: '₹3,200', method: 'Face Pay', status: 'Failed', date: '2023-10-18' },
+            { id: 'TXN1004', merchant: 'FoodCorner', customer: 'Priya Nair', amount: '₹650', method: 'UPI', status: 'Success', date: '2023-10-17' },
+            { id: 'TXN1005', merchant: 'BookWorld', customer: 'Arun Kumar', amount: '₹1,200', method: 'Face Pay', status: 'Pending', date: '2023-10-16' },
+            { id: 'TXN1006', merchant: 'Sunita Traders', customer: 'Rahul Mehta', amount: '₹2,800', method: 'UPI', status: 'Success', date: '2023-10-15' },
+            { id: 'TXN1007', merchant: 'TechGadgets Inc', customer: 'Anjali Singh', amount: '₹5,600', method: 'Face Pay', status: 'Success', date: '2023-10-14' },
+            { id: 'TXN1008', merchant: 'FoodCorner', customer: 'Vikram Joshi', amount: '₹920', method: 'UPI', status: 'Success', date: '2023-10-13' }
+        ];
+        
+        const transactionTable = document.getElementById('transaction-table');
+        transactions.forEach(transaction => {
+            const statusClass = transaction.status === 'Success' 
+                ? 'bg-green-100 text-green-800'
+                : transaction.status === 'Failed'
+                ? 'bg-red-100 text-red-800'
+                : 'bg-yellow-100 text-yellow-800';
+            
+            const methodClass = transaction.method === 'Face Pay' 
+                ? 'bg-purple-100 text-purple-800'
+                : 'bg-blue-100 text-blue-800';
+            
+            const row = document.createElement('tr');
+            row.className = 'border-b hover:bg-gray-50';
+            row.innerHTML = `
+                <td class="py-3 font-medium">${transaction.id}</td>
+                <td class="py-3">${transaction.merchant}</td>
+                <td class="py-3">${transaction.customer}</td>
+                <td class="py-3 font-medium">${transaction.amount}</td>
+                <td class="py-3">
+                    <span class="px-3 py-1 rounded-full text-xs font-medium ${methodClass}">${transaction.method}</span>
+                </td>
+                <td class="py-3">
+                    <span class="px-3 py-1 rounded-full text-xs font-medium ${statusClass}">${transaction.status}</span>
+                </td>
+                <td class="py-3">${transaction.date}</td>
+            `;
+            transactionTable.appendChild(row);
+        });
+        
+        // Initialize charts
+        function initializeCharts() {
+            // Transaction Chart
+            const transactionCtx = document.getElementById('transactionChart');
+            if (transactionCtx) {
+                new Chart(transactionCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
+                        datasets: [{
+                            label: 'Transaction Volume',
+                            data: [1200, 1900, 1500, 2200, 1800, 2500, 3000, 2800, 3200, 4000],
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    display: true
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // User Growth Chart
+            const userCtx = document.getElementById('userChart');
+            if (userCtx) {
+                new Chart(userCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
+                        datasets: [
+                            {
+                                label: 'Customers',
+                                data: [400, 500, 450, 600, 550, 700, 750, 800, 850, 900],
+                                backgroundColor: '#8b5cf6',
+                                borderRadius: 6
+                            },
+                            {
+                                label: 'Merchants',
+                                data: [20, 25, 30, 35, 40, 45, 50, 55, 60, 65],
+                                backgroundColor: '#10b981',
+                                borderRadius: 6
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    display: true
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+        
+        // Initialize charts when DOM is loaded
+        document.addEventListener('DOMContentLoaded', initializeCharts);
+        
+        // Toggle switch functionality
+        document.querySelectorAll('.toggle-switch input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const toggle = this.nextElementSibling;
+                if (this.checked) {
+                    toggle.style.backgroundColor = '#10b981'; // Green
+                } else {
+                    toggle.style.backgroundColor = '#ccc'; // Gray
+                }
+            });
+        });
+        
+        // Range slider functionality
+        const thresholdSlider = document.querySelector('input[type="range"]');
+        if (thresholdSlider) {
+            thresholdSlider.addEventListener('input', function() {
+                document.getElementById('threshold-value').textContent = this.value;
+            });
+        }
+        
+        // Settings save button
+        const saveButton = document.querySelector('#settings button.bg-blue-600');
+        if (saveButton) {
+            saveButton.addEventListener('click', function() {
+                // Show loading state
+                const originalText = this.innerHTML;
+                this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Saving...';
+                this.disabled = true;
+                
+                // Simulate API call
+                setTimeout(() => {
+                    // Show success message
+                    alert('Settings saved successfully!');
+                    
+                    // Restore button
+                    this.innerHTML = originalText;
+                    this.disabled = false;
+                }, 1500);
+            });
+        }
+    </script>
+</body>
+</html>

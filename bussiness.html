@@ -1,0 +1,1398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Invoice Templates</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        body {
+            background: #f8fafc;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        /* Header */
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            color: #1e293b;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .header p {
+            color: #64748b;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+        
+        .demo-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #2563eb;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .demo-btn:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+        }
+        
+        /* Template Grid */
+        .templates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .template-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            border: 1px solid #e2e8f0;
+            cursor: pointer;
+        }
+        
+        .template-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .template-preview {
+            height: 200px;
+            padding: 25px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .template-info {
+            padding: 20px;
+            border-top: 1px solid #f1f5f9;
+        }
+        
+        .template-info h3 {
+            color: #1e293b;
+            margin-bottom: 8px;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .template-info p {
+            color: #64748b;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+        
+        .template-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+        }
+        
+        .btn-use {
+            background: #10b981;
+            color: white;
+            flex: 1;
+        }
+        
+        .btn-use:hover {
+            background: #059669;
+        }
+        
+        .btn-preview {
+            background: #3b82f6;
+            color: white;
+        }
+        
+        .btn-preview:hover {
+            background: #2563eb;
+        }
+        
+        /* Customization Panel */
+        .customization-panel {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-top: 30px;
+            display: none;
+        }
+        
+        .customization-panel.active {
+            display: block;
+        }
+        
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f1f5f9;
+        }
+        
+        .panel-header h2 {
+            color: #1e293b;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        .back-btn {
+            background: #64748b;
+            color: white;
+            padding: 10px 20px;
+        }
+        
+        .back-btn:hover {
+            background: #475569;
+        }
+        
+        .customization-layout {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 40px;
+        }
+        
+        .input-section {
+            padding-right: 20px;
+            border-right: 1px solid #e2e8f0;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #475569;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        
+        .input-group input,
+        .input-group textarea,
+        .input-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background: #f8fafc;
+        }
+        
+        .input-group input:focus,
+        .input-group textarea:focus,
+        .input-group select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            background: white;
+        }
+        
+        .invoice-actions {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 25px;
+        }
+        
+        .action-btn {
+            background: #f1f5f9;
+            color: #475569;
+            padding: 12px;
+            text-align: center;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+        
+        .action-btn:hover {
+            background: #e2e8f0;
+            color: #1e293b;
+        }
+        
+        .action-btn.active {
+            background: #3b82f6;
+            color: white;
+        }
+        
+        .action-btn.active:hover {
+            background: #2563eb;
+        }
+        
+        .items-section {
+            margin-top: 30px;
+        }
+        
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        .items-table th {
+            background: #f8fafc;
+            padding: 12px;
+            text-align: left;
+            color: #475569;
+            font-weight: 600;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        
+        .items-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .add-item-btn {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+        
+        .add-item-btn:hover {
+            background: #059669;
+        }
+        
+        .remove-item {
+            color: #ef4444;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+        
+        .remove-item:hover {
+            background: #fee2e2;
+        }
+        
+        .preview-section {
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 20px;
+            min-height: 800px;
+        }
+        
+        .invoice-preview {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            min-height: 800px;
+        }
+        
+        .download-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            justify-content: center;
+        }
+        
+        .btn-download {
+            background: #10b981;
+            color: white;
+            padding: 14px 32px;
+            font-size: 1.1rem;
+        }
+        
+        .btn-print {
+            background: #3b82f6;
+            color: white;
+            padding: 14px 32px;
+            font-size: 1.1rem;
+        }
+        
+        /* Template Preview Styles */
+        .template-preview-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .preview-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+        }
+        
+        .preview-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: white;
+        }
+        
+        .preview-details {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .preview-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            color: white;
+        }
+        
+        .preview-row:last-child {
+            border-bottom: none;
+        }
+        
+        .preview-footer {
+            display: flex;
+            justify-content: space-between;
+            color: white;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        /* Template-specific preview backgrounds */
+        .template-1 .template-preview { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); }
+        .template-2 .template-preview { background: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%); }
+        .template-3 .template-preview { background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%); }
+        .template-4 .template-preview { background: linear-gradient(135deg, #1e293b 0%, #475569 100%); }
+        .template-5 .template-preview { background: linear-gradient(135deg, #0369a1 0%, #0ea5e9 100%); }
+        .template-6 .template-preview { background: linear-gradient(135deg, #059669 0%, #10b981 100%); }
+        .template-7 .template-preview { background: linear-gradient(135deg, #7e22ce 0%, #c084fc 100%); }
+        .template-8 .template-preview { background: linear-gradient(135deg, #be123c 0%, #fb7185 100%); }
+        .template-9 .template-preview { background: linear-gradient(135deg, #78350f 0%, #f59e0b 100%); }
+        .template-10 .template-preview { background: linear-gradient(135deg, #0c4a6e 0%, #38bdf8 100%); }
+        
+        @media (max-width: 1200px) {
+            .customization-layout {
+                grid-template-columns: 1fr;
+            }
+            
+            .input-section {
+                padding-right: 0;
+                border-right: none;
+                border-bottom: 1px solid #e2e8f0;
+                padding-bottom: 30px;
+                margin-bottom: 30px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .templates-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .panel-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            
+            .invoice-actions {
+                grid-template-columns: 1fr;
+            }
+            
+            .download-actions {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Business Invoice Generator</h1>
+            <p>Professional invoice templates designed for corporate and business use</p>
+            <button class="demo-btn" onclick="showDemo()">
+                <i class="fas fa-play-circle"></i> Watch Demo
+            </button>
+        </div>
+        
+        <!-- Template Selection Grid -->
+        <div class="templates-grid" id="templatesGrid">
+            <!-- Template 1: Corporate Blue -->
+            <div class="template-card template-1">
+                <div class="template-preview">
+                    <div class="template-preview-content">
+                        <div class="preview-header">
+                            <div class="preview-title">INVOICE</div>
+                            <div class="preview-badge">#INV-001</div>
+                        </div>
+                        <div class="preview-details">
+                            <div class="preview-row">
+                                <span>Client:</span>
+                                <span>ABC Corporation</span>
+                            </div>
+                            <div class="preview-row">
+                                <span>Amount:</span>
+                                <span>$2,850.00</span>
+                            </div>
+                            <div class="preview-row">
+                                <span>Due Date:</span>
+                                <span>Nov 30, 2023</span>
+                            </div>
+                        </div>
+                        <div class="preview-footer">
+                            <span>Corporate</span>
+                            <span>Professional</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="template-info">
+                    <h3>Corporate Blue</h3>
+                    <p>Traditional corporate design with blue accent. Suitable for established businesses.</p>
+                    <div class="template-actions">
+                        <button class="btn btn-use" onclick="selectTemplate(1)">
+                            <i class="fas fa-file-invoice"></i> Use Template
+                        </button>
+                        <button class="btn btn-preview" onclick="previewTemplate(1)">
+                            <i class="fas fa-eye"></i> Preview
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Template 2: Professional Green -->
+            <div class="template-card template-2">
+                <div class="template-preview">
+                    <div class="template-preview-content">
+                        <div class="preview-header">
+                            <div class="preview-title">INVOICE</div>
+                            <div class="preview-badge">#INV-002</div>
+                        </div>
+                        <div class="preview-details">
+                            <div class="preview-row">
+                                <span>Client:</span>
+                                <span>XYZ Ltd.</span>
+                            </div>
+                            <div class="preview-row">
+                                <span>Amount:</span>
+                                <span>$1,250.00</span>
+                            </div>
+                            <div class="preview-row">
+                                <span>Due Date:</span>
+                                <span>Dec 15, 2023</span>
+                            </div>
+                        </div>
+                        <div class="preview-footer">
+                            <span>Professional</span>
+                            <span>Clean</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="template-info">
+                    <h3>Professional Green</h3>
+                    <p>Clean green design for finance and accounting businesses.</p>
+                    <div class="template-actions">
+                        <button class="btn btn-use" onclick="selectTemplate(2)">
+                            <i class="fas fa-file-invoice"></i> Use Template
+                        </button>
+                        <button class="btn btn-preview" onclick="previewTemplate(2)">
+                            <i class="fas fa-eye"></i> Preview
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Template 3: Executive Purple -->
+            <div class="template-card template-3">
+                <div class="template-preview">
+                    <div class="template-preview-content">
+                        <div class="preview-header">
+                            <div class="preview-title">INVOICE</div>
+                            <div class="preview-badge">#INV-003</div>
+                        </div>
+                        <div class="preview-details">
+                            <div class="preview-row">
+                                <span>Client:</span>
+                                <span>Global Corp</span>
+                            </div>
+                            <div class="preview-row">
+                                <span>Amount:</span>
+                                <span>$5,500.00</span>
+                            </div>
+                            <div class="preview-row">
+                                <span>Due Date:</span>
+                                <span>Jan 10, 2024</span>
+                            </div>
+                        </div>
+                        <div class="preview-footer">
+                            <span>Executive</span>
+                            <span>Premium</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="template-info">
+                    <h3>Executive Purple</h3>
+                    <p>Premium purple design for executive-level consulting services.</p>
+                    <div class="template-actions">
+                        <button class="btn btn-use" onclick="selectTemplate(3)">
+                            <i class="fas fa-file-invoice"></i> Use Template
+                        </button>
+                        <button class="btn btn-preview" onclick="previewTemplate(3)">
+                            <i class="fas fa-eye"></i> Preview
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Template 4: Business Dark -->
+            <div class="template-card template-4">
+                <div class="template-preview">
+                    <div class="template-preview-content">
+                        <div class="preview-header">
+                            <div class="preview-title">INVOICE</div>
+                            <div class="preview-badge">#INV-004</div>
+                        </div>
+                        <div class="preview-details">
+                            <div class="preview-row">
+                                <span>Client:</span>
+                                <span>Tech Solutions</span>
+                            </div>
+                            <div class="preview-row">
+                                <span>Amount:</span>
+                                <span>$3,200.00</span>
+                            </div>
+                            <div class="preview-row">
+                                <span>Due Date:</span>
+                                <span>Nov 25, 2023</span>
+                            </div>
+                        </div>
+                        <div class="preview-footer">
+                            <span>Modern</span>
+                            <span>Tech</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="template-info">
+                    <h3>Business Dark</h3>
+                    <p>Modern dark theme for technology and software companies.</p>
+                    <div class="template-actions">
+                        <button class="btn btn-use" onclick="selectTemplate(4)">
+                            <i class="fas fa-file-invoice"></i> Use Template
+                        </button>
+                        <button class="btn btn-preview" onclick="previewTemplate(4)">
+                            <i class="fas fa-eye"></i> Preview
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Template 5: Corporate Navy -->
+            <div class="template-card template-5">
+                <div class="template-preview">
+                    <div class="template-preview-content">
+                        <div class="preview-header">
+                            <div class="preview-title">INVOICE</div>
+                            <div class="preview-badge">#INV-005</div>
+                        </div>
+                        <div class="preview-details">
+                            <div class="preview-row">
+                                <span>Client:</span>
+                                <span>Bank & Trust</span>
+                            </div>
+                            <div class="preview-row">
+                                <span>Amount:</span>
+                                <span>$8,750.00</span>
+                            </div>
+                            <div class="preview-row">
+                                <span>Due Date:</span>
+                                <span>Dec 30, 2023</span>
+                            </div>
+                        </div>
+                        <div class="preview-footer">
+                            <span>Corporate</span>
+                            <span>Banking</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="template-info">
+                    <h3>Corporate Navy</h3>
+                    <p>Deep blue design suitable for banking and financial institutions.</p>
+                    <div class="template-actions">
+                        <button class="btn btn-use" onclick="selectTemplate(5)">
+                            <i class="fas fa-file-invoice"></i> Use Template
+                        </button>
+                        <button class="btn btn-preview" onclick="previewTemplate(5)">
+                            <i class="fas fa-eye"></i> Preview
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Template 6: Enterprise Green -->
+            <div class="template-card template-6">
+                <div class="template-preview">
+                    <div class="template-preview-content">
+                        <div class="preview-header">
+                            <div class="preview-title">INVOICE</div>
+                            <div class="preview-badge">#INV-006</div>
+                        </div>
+                        <div class="preview-details">
+                            <div class="preview-row">
+                                <span>Client:</span>
+                                <span>Enterprise Co.</span>
+                            </div>
+                            <div class="preview-row">
+                                <span>Amount:</span>
+                                <span>$12,500.00</span>
+                            </div>
+                            <div class="preview-row">
+                                <span>Due Date:</span>
+                                <span>Jan 15, 2024</span>
+                            </div>
+                        </div>
+                        <div class="preview-footer">
+                            <span>Enterprise</span>
+                            <span>Business</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="template-info">
+                    <h3>Enterprise Green</h3>
+                    <p>Green enterprise design for large-scale business operations.</p>
+                    <div class="template-actions">
+                        <button class="btn btn-use" onclick="selectTemplate(6)">
+                            <i class="fas fa-file-invoice"></i> Use Template
+                        </button>
+                        <button class="btn btn-preview" onclick="previewTemplate(6)">
+                            <i class="fas fa-eye"></i> Preview
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Template 7: Premium Violet -->
+            <div class="template-card template-7">
+                <div class="template-preview">
+                    <div class="template-preview-content">
+                        <div class="preview-header">
+                            <div class="preview-title">INVOICE</div>
+                            <div class="preview-badge">#INV-007</div>
+                        </div>
+                        <div class="preview-details">
+                            <div class="preview-row">
+                                <span>Client:</span>
+                                <span>Luxury Brands</span>
+                            </div>
+                            <div class="preview-row">
+                                <span>Amount:</span>
+                                <span>$9,800.00</span>
+                            </div>
+                            <div class="preview-row">
+                                <span>Due Date:</span>
+                                <span>Dec 20, 2023</span>
+                            </div>
+                        </div>
+                        <div class="preview-footer">
+                            <span>Premium</span>
+                            <span>Luxury</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="template-info">
+                    <h3>Premium Violet</h3>
+                    <p>Violet premium design for luxury brands and high-end services.</p>
+                    <div class="template-actions">
+                        <button class="btn btn-use" onclick="selectTemplate(7)">
+                            <i class="fas fa-file-invoice"></i> Use Template
+                        </button>
+                        <button class="btn btn-preview" onclick="previewTemplate(7)">
+                            <i class="fas fa-eye"></i> Preview
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Template 8: Business Crimson -->
+            <div class="template-card template-8">
+                <div class="template-preview">
+                    <div class="template-preview-content">
+                        <div class="preview-header">
+                            <div class="preview-title">INVOICE</div>
+                            <div class="preview-badge">#INV-008</div>
+                        </div>
+                        <div class="preview-details">
+                            <div class="preview-row">
+                                <span>Client:</span>
+                                <span>Legal Partners</span>
+                            </div>
+                            <div class="preview-row">
+                                <span>Amount:</span>
+                                <span>$6,500.00</span>
+                            </div>
+                            <div class="preview-row">
+                                <span>Due Date:</span>
+                                <span>Nov 30, 2023</span>
+                            </div>
+                        </div>
+                        <div class="preview-footer">
+                            <span>Legal</span>
+                            <span>Professional</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="template-info">
+                    <h3>Business Crimson</h3>
+                    <p>Red accent design suitable for legal and professional services.</p>
+                    <div class="template-actions">
+                        <button class="btn btn-use" onclick="selectTemplate(8)">
+                            <i class="fas fa-file-invoice"></i> Use Template
+                        </button>
+                        <button class="btn btn-preview" onclick="previewTemplate(8)">
+                            <i class="fas fa-eye"></i> Preview
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Template 9: Corporate Amber -->
+            <div class="template-card template-9">
+                <div class="template-preview">
+                    <div class="template-preview-content">
+                        <div class="preview-header">
+                            <div class="preview-title">INVOICE</div>
+                            <div class="preview-badge">#INV-009</div>
+                        </div>
+                        <div class="preview-details">
+                            <div class="preview-row">
+                                <span>Client:</span>
+                                <span>Construction Inc.</span>
+                            </div>
+                            <div class="preview-row">
+                                <span>Amount:</span>
+                                <span>$15,250.00</span>
+                            </div>
+                            <div class="preview-row">
+                                <span>Due Date:</span>
+                                <span>Jan 05, 2024</span>
+                            </div>
+                        </div>
+                        <div class="preview-footer">
+                            <span>Industrial</span>
+                            <span>Corporate</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="template-info">
+                    <h3>Corporate Amber</h3>
+                    <p>Amber design for construction and industrial businesses.</p>
+                    <div class="template-actions">
+                        <button class="btn btn-use" onclick="selectTemplate(9)">
+                            <i class="fas fa-file-invoice"></i> Use Template
+                        </button>
+                        <button class="btn btn-preview" onclick="previewTemplate(9)">
+                            <i class="fas fa-eye"></i> Preview
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Template 10: Sky Corporate -->
+            <div class="template-card template-10">
+                <div class="template-preview">
+                    <div class="template-preview-content">
+                        <div class="preview-header">
+                            <div class="preview-title">INVOICE</div>
+                            <div class="preview-badge">#INV-010</div>
+                        </div>
+                        <div class="preview-details">
+                            <div class="preview-row">
+                                <span>Client:</span>
+                                <span>Consulting Group</span>
+                            </div>
+                            <div class="preview-row">
+                                <span>Amount:</span>
+                                <span>$4,800.00</span>
+                            </div>
+                            <div class="preview-row">
+                                <span>Due Date:</span>
+                                <span>Dec 10, 2023</span>
+                            </div>
+                        </div>
+                        <div class="preview-footer">
+                            <span>Consulting</span>
+                            <span>Professional</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="template-info">
+                    <h3>Sky Corporate</h3>
+                    <p>Light blue design for consulting and professional advisory services.</p>
+                    <div class="template-actions">
+                        <button class="btn btn-use" onclick="selectTemplate(10)">
+                            <i class="fas fa-file-invoice"></i> Use Template
+                        </button>
+                        <button class="btn btn-preview" onclick="previewTemplate(10)">
+                            <i class="fas fa-eye"></i> Preview
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Customization Panel -->
+        <div class="customization-panel" id="customizationPanel">
+            <div class="panel-header">
+                <h2>Customize Your Business Invoice</h2>
+                <button class="btn back-btn" onclick="backToTemplates()">
+                    <i class="fas fa-arrow-left"></i> Back to Templates
+                </button>
+            </div>
+            
+            <div class="customization-layout">
+                <div class="input-section">
+                    <!-- Business Details -->
+                    <div class="input-group">
+                        <label>Company/Business Name</label>
+                        <input type="text" id="businessName" value="Corporate Solutions Inc." oninput="updateInvoice()">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Business Address</label>
+                        <textarea id="businessAddress" rows="3" oninput="updateInvoice()">123 Corporate Avenue\nSuite 500\nNew York, NY 10001</textarea>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Business Phone</label>
+                        <input type="text" id="businessPhone" value="(555) 123-4567" oninput="updateInvoice()">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Business Email</label>
+                        <input type="email" id="businessEmail" value="invoices@corporate-solutions.com" oninput="updateInvoice()">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Business Website</label>
+                        <input type="text" id="businessWebsite" value="www.corporate-solutions.com" oninput="updateInvoice()">
+                    </div>
+                    
+                    <!-- Client Details -->
+                    <div class="input-group">
+                        <label>Client Company Name</label>
+                        <input type="text" id="clientCompany" value="ABC Corporation" oninput="updateInvoice()">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Client Address</label>
+                        <textarea id="clientAddress" rows="3" oninput="updateInvoice()">456 Business Boulevard\nSuite 200\nChicago, IL 60601</textarea>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Client Contact</label>
+                        <input type="text" id="clientContact" value="John Smith, Finance Department" oninput="updateInvoice()">
+                    </div>
+                    
+                    <!-- Invoice Details -->
+                    <div class="input-group">
+                        <label>Invoice Number</label>
+                        <input type="text" id="invoiceNumber" value="INV-2023-001" oninput="updateInvoice()">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Invoice Date</label>
+                        <input type="date" id="invoiceDate" oninput="updateInvoice()">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Due Date</label>
+                        <input type="date" id="dueDate" oninput="updateInvoice()">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Payment Terms</label>
+                        <select id="paymentTerms" oninput="updateInvoice()">
+                            <option value="Net 30">Net 30</option>
+                            <option value="Net 15">Net 15</option>
+                            <option value="Due on Receipt">Due on Receipt</option>
+                            <option value="Net 60">Net 60</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Quick Actions -->
+                    <div class="invoice-actions">
+                        <div class="action-btn" onclick="addNewItem()">
+                            <i class="fas fa-plus"></i> Add Item
+                        </div>
+                        <div class="action-btn" onclick="clearAllItems()">
+                            <i class="fas fa-trash"></i> Clear All
+                        </div>
+                        <div class="action-btn" onclick="addSampleData()">
+                            <i class="fas fa-file-alt"></i> Sample Data
+                        </div>
+                    </div>
+                    
+                    <!-- Items Section -->
+                    <div class="items-section">
+                        <h3>Invoice Items</h3>
+                        <table class="items-table" id="itemsTable">
+                            <thead>
+                                <tr>
+                                    <th>Description</th>
+                                    <th>Qty</th>
+                                    <th>Price</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="itemsBody">
+                                <!-- Items will be added here -->
+                            </tbody>
+                        </table>
+                        <button class="add-item-btn" onclick="addNewItem()">
+                            <i class="fas fa-plus-circle"></i> Add New Item
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Invoice Preview -->
+                <div class="preview-section">
+                    <div id="invoicePreview" class="invoice-preview">
+                        <!-- Invoice preview will be generated here -->
+                    </div>
+                    
+                    <!-- Download Buttons -->
+                    <div class="download-actions">
+                        <button class="btn btn-download" onclick="downloadPDF()">
+                            <i class="fas fa-download"></i> Download PDF
+                        </button>
+                        <button class="btn btn-print" onclick="printInvoice()">
+                            <i class="fas fa-print"></i> Print Invoice
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        let currentTemplate = 1;
+        let invoiceItems = [];
+        
+        // Initialize date fields
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date();
+            const dueDate = new Date(today);
+            dueDate.setDate(today.getDate() + 30);
+            
+            document.getElementById('invoiceDate').value = today.toISOString().split('T')[0];
+            document.getElementById('dueDate').value = dueDate.toISOString().split('T')[0];
+            
+            // Add sample items
+            addSampleData();
+        });
+        
+        function selectTemplate(templateId) {
+            currentTemplate = templateId;
+            document.getElementById('customizationPanel').classList.add('active');
+            document.getElementById('templatesGrid').style.display = 'none';
+            document.querySelector('.header').style.display = 'none';
+            updateInvoice();
+        }
+        
+        function previewTemplate(templateId) {
+            const templateNames = [
+                "Corporate Blue", "Professional Green", "Executive Purple", "Business Dark",
+                "Corporate Navy", "Enterprise Green", "Premium Violet", "Business Crimson",
+                "Corporate Amber", "Sky Corporate"
+            ];
+            alert(`Preview: ${templateNames[templateId-1]}\n\nA professional invoice template designed for business use.\nClick "Use Template" to customize.`);
+        }
+        
+        function showDemo() {
+            const demoSteps = `DEMO: How to Create a Business Invoice\n\n1. Choose a professional template\n2. Enter your business details\n3. Add client information\n4. Input invoice items\n5. Customize payment terms\n6. Download as PDF or Print\n\nTry it now with our professional templates!`;
+            alert(demoSteps);
+        }
+        
+        function backToTemplates() {
+            document.getElementById('customizationPanel').classList.remove('active');
+            document.getElementById('templatesGrid').style.display = 'grid';
+            document.querySelector('.header').style.display = 'block';
+        }
+        
+        function addNewItem() {
+            const description = prompt("Enter item description:", "Professional Consulting Services");
+            if (!description) return;
+            
+            const quantity = parseFloat(prompt("Enter quantity:", "1"));
+            if (isNaN(quantity)) return;
+            
+            const price = parseFloat(prompt("Enter unit price ($):", "150.00"));
+            if (isNaN(price)) return;
+            
+            const item = {
+                id: Date.now(),
+                description: description,
+                quantity: quantity,
+                price: price
+            };
+            
+            invoiceItems.push(item);
+            updateItemsTable();
+            updateInvoice();
+        }
+        
+        function addSampleData() {
+            invoiceItems = [
+                { id: 1, description: "Business Consulting Services", quantity: 10, price: 250.00 },
+                { id: 2, description: "Project Management", quantity: 15, price: 150.00 },
+                { id: 3, description: "Technical Support (Monthly)", quantity: 1, price: 500.00 }
+            ];
+            updateItemsTable();
+            updateInvoice();
+        }
+        
+        function clearAllItems() {
+            if (confirm("Clear all invoice items?")) {
+                invoiceItems = [];
+                updateItemsTable();
+                updateInvoice();
+            }
+        }
+        
+        function removeItem(id) {
+            invoiceItems = invoiceItems.filter(item => item.id !== id);
+            updateItemsTable();
+            updateInvoice();
+        }
+        
+        function updateItemsTable() {
+            const itemsBody = document.getElementById('itemsBody');
+            itemsBody.innerHTML = '';
+            
+            invoiceItems.forEach(item => {
+                const row = document.createElement('tr');
+                const amount = item.quantity * item.price;
+                
+                row.innerHTML = `
+                    <td>${item.description}</td>
+                    <td>${item.quantity}</td>
+                    <td>$${item.price.toFixed(2)}</td>
+                    <td>
+                        <button class="remove-item" onclick="removeItem(${item.id})">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </td>
+                `;
+                itemsBody.appendChild(row);
+            });
+        }
+        
+        function updateInvoice() {
+            const templateId = currentTemplate;
+            
+            // Get all input values
+            const businessName = document.getElementById('businessName').value;
+            const businessAddress = document.getElementById('businessAddress').value;
+            const businessPhone = document.getElementById('businessPhone').value;
+            const businessEmail = document.getElementById('businessEmail').value;
+            const businessWebsite = document.getElementById('businessWebsite').value;
+            const clientCompany = document.getElementById('clientCompany').value;
+            const clientAddress = document.getElementById('clientAddress').value;
+            const clientContact = document.getElementById('clientContact').value;
+            const invoiceNumber = document.getElementById('invoiceNumber').value;
+            const invoiceDate = new Date(document.getElementById('invoiceDate').value);
+            const dueDate = new Date(document.getElementById('dueDate').value);
+            const paymentTerms = document.getElementById('paymentTerms').value;
+            
+            // Format dates
+            const formatDate = (date) => {
+                return date.toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                });
+            };
+            
+            // Calculate totals
+            let subtotal = 0;
+            invoiceItems.forEach(item => {
+                subtotal += item.quantity * item.price;
+            });
+            
+            const taxRate = 10; // 10% tax
+            const tax = subtotal * (taxRate / 100);
+            const total = subtotal + tax;
+            
+            // Template colors based on selected template
+            const templateColors = {
+                1: { primary: '#1e3a8a', secondary: '#3b82f6' },
+                2: { primary: '#0f766e', secondary: '#14b8a6' },
+                3: { primary: '#7c3aed', secondary: '#a78bfa' },
+                4: { primary: '#1e293b', secondary: '#475569' },
+                5: { primary: '#0369a1', secondary: '#0ea5e9' },
+                6: { primary: '#059669', secondary: '#10b981' },
+                7: { primary: '#7e22ce', secondary: '#c084fc' },
+                8: { primary: '#be123c', secondary: '#fb7185' },
+                9: { primary: '#78350f', secondary: '#f59e0b' },
+                10: { primary: '#0c4a6e', secondary: '#38bdf8' }
+            };
+            
+            const colors = templateColors[templateId];
+            
+            // Generate professional invoice HTML
+            const invoiceHTML = `
+                <div class="business-invoice" style="font-family: 'Inter', sans-serif; color: #1e293b;">
+                    <!-- Invoice Header -->
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; padding-bottom: 20px; border-bottom: 2px solid #e2e8f0;">
+                        <div>
+                            <div style="font-size: 2.5rem; font-weight: 700; color: ${colors.primary}; margin-bottom: 5px;">INVOICE</div>
+                            <div style="color: #64748b; font-size: 1.1rem;">Professional Business Invoice</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-size: 1.3rem; font-weight: 600; color: ${colors.primary}; margin-bottom: 5px;">${businessName}</div>
+                            <div style="color: #64748b; font-size: 0.95rem;">${businessAddress.replace(/\n/g, '<br>')}</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Company & Client Info -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 40px;">
+                        <!-- From -->
+                        <div>
+                            <div style="color: ${colors.primary}; font-weight: 600; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid ${colors.secondary};">FROM</div>
+                            <div style="margin-bottom: 5px; font-weight: 600;">${businessName}</div>
+                            <div style="color: #64748b; margin-bottom: 5px;">${businessAddress.replace(/\n/g, '<br>')}</div>
+                            <div style="color: #64748b; margin-bottom: 5px;">Phone: ${businessPhone}</div>
+                            <div style="color: #64748b; margin-bottom: 5px;">Email: ${businessEmail}</div>
+                            <div style="color: #64748b;">Website: ${businessWebsite}</div>
+                        </div>
+                        
+                        <!-- To -->
+                        <div>
+                            <div style="color: ${colors.primary}; font-weight: 600; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid ${colors.secondary};">TO</div>
+                            <div style="margin-bottom: 5px; font-weight: 600;">${clientCompany}</div>
+                            <div style="color: #64748b; margin-bottom: 5px;">${clientAddress.replace(/\n/g, '<br>')}</div>
+                            <div style="color: #64748b;">Attn: ${clientContact}</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Invoice Details -->
+                    <div style="background: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;">
+                            <div>
+                                <div style="color: #64748b; font-size: 0.9rem; margin-bottom: 5px;">Invoice Number</div>
+                                <div style="font-weight: 600; color: ${colors.primary};">${invoiceNumber}</div>
+                            </div>
+                            <div>
+                                <div style="color: #64748b; font-size: 0.9rem; margin-bottom: 5px;">Invoice Date</div>
+                                <div style="font-weight: 600;">${formatDate(invoiceDate)}</div>
+                            </div>
+                            <div>
+                                <div style="color: #64748b; font-size: 0.9rem; margin-bottom: 5px;">Due Date</div>
+                                <div style="font-weight: 600; color: #dc2626;">${formatDate(dueDate)}</div>
+                            </div>
+                            <div>
+                                <div style="color: #64748b; font-size: 0.9rem; margin-bottom: 5px;">Payment Terms</div>
+                                <div style="font-weight: 600;">${paymentTerms}</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Items Table -->
+                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
+                        <thead>
+                            <tr style="background: ${colors.primary}; color: white;">
+                                <th style="padding: 15px; text-align: left; font-weight: 600;">Description</th>
+                                <th style="padding: 15px; text-align: right; font-weight: 600;">Quantity</th>
+                                <th style="padding: 15px; text-align: right; font-weight: 600;">Unit Price</th>
+                                <th style="padding: 15px; text-align: right; font-weight: 600;">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${invoiceItems.map(item => {
+                                const amount = item.quantity * item.price;
+                                return `
+                                    <tr style="border-bottom: 1px solid #e2e8f0;">
+                                        <td style="padding: 15px;">${item.description}</td>
+                                        <td style="padding: 15px; text-align: right;">${item.quantity}</td>
+                                        <td style="padding: 15px; text-align: right;">$${item.price.toFixed(2)}</td>
+                                        <td style="padding: 15px; text-align: right; font-weight: 600;">$${amount.toFixed(2)}</td>
+                                    </tr>
+                                `;
+                            }).join('')}
+                        </tbody>
+                    </table>
+                    
+                    <!-- Totals -->
+                    <div style="margin-left: auto; width: 300px;">
+                        <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #e2e8f0;">
+                            <span style="color: #64748b;">Subtotal:</span>
+                            <span style="font-weight: 600;">$${subtotal.toFixed(2)}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #e2e8f0;">
+                            <span style="color: #64748b;">Tax (${taxRate}%):</span>
+                            <span style="font-weight: 600;">$${tax.toFixed(2)}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 15px 0; margin-top: 10px; border-top: 2px solid ${colors.primary};">
+                            <span style="font-size: 1.2rem; font-weight: 700; color: ${colors.primary};">Total Amount:</span>
+                            <span style="font-size: 1.2rem; font-weight: 700; color: ${colors.primary};">$${total.toFixed(2)}</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Payment Instructions -->
+                    <div style="margin-top: 50px; padding: 20px; background: #f8fafc; border-radius: 8px; border-left: 4px solid ${colors.secondary};">
+                        <div style="color: ${colors.primary}; font-weight: 600; margin-bottom: 10px;">Payment Instructions</div>
+                        <div style="color: #64748b; line-height: 1.6;">
+                            Please make payment within ${paymentTerms} of the invoice date.<br>
+                            Bank Transfer Details: Account #123456789 | Routing #021000021<br>
+                            Checks payable to: ${businessName}<br>
+                            For any questions, please contact ${businessEmail} or call ${businessPhone}
+                        </div>
+                    </div>
+                    
+                    <!-- Footer -->
+                    <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #e2e8f0; text-align: center; color: #64748b; font-size: 0.9rem;">
+                        <div>Thank you for your business!</div>
+                        <div style="margin-top: 5px;">${businessName} | ${businessWebsite} | ${businessEmail}</div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('invoicePreview').innerHTML = invoiceHTML;
+        }
+        
+        function downloadPDF() {
+            const invoiceElement = document.getElementById('invoicePreview');
+            
+            // Set invoice element to A4 size for PDF
+            invoiceElement.style.width = '210mm';
+            invoiceElement.style.padding = '20mm';
+            
+            html2canvas(invoiceElement, {
+                scale: 2,
+                useCORS: true,
+                logging: false,
+                backgroundColor: '#ffffff'
+            }).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jspdf.jsPDF({
+                    orientation: 'portrait',
+                    unit: 'mm',
+                    format: 'a4'
+                });
+                
+                const imgWidth = 190;
+                const imgHeight = canvas.height * imgWidth / canvas.width;
+                
+                pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
+                
+                const invoiceNumber = document.getElementById('invoiceNumber').value;
+                pdf.save(`Invoice_${invoiceNumber}.pdf`);
+                
+                // Reset invoice element style
+                invoiceElement.style.width = '';
+                invoiceElement.style.padding = '';
+                
+                alert('Invoice downloaded as PDF successfully!');
+            }).catch(error => {
+                console.error('PDF generation error:', error);
+                alert('Error generating PDF. Please try again.');
+            });
+        }
+        
+        function printInvoice() {
+            const printContent = document.getElementById('invoicePreview').innerHTML;
+            const originalContent = document.body.innerHTML;
+            
+            document.body.innerHTML = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Print Invoice</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; padding: 20px; }
+                        @media print {
+                            @page { margin: 0; }
+                            body { padding: 0; }
+                        }
+                    </style>
+                </head>
+                <body>${printContent}</body>
+                </html>
+            `;
+            
+            window.print();
+            document.body.innerHTML = originalContent;
+            location.reload();
+        }
+    </script>
+</body>
+</html>

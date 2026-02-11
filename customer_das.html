@@ -1,0 +1,1659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POS & Customer Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            display: flex;
+            min-height: 100vh;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(180deg, #1a2b3c 0%, #2c3e50 100%);
+            color: white;
+            padding: 20px 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            box-shadow: 3px 0 15px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+        }
+
+        .logo {
+            text-align: center;
+            padding: 20px 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .logo h2 {
+            font-size: 24px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .logo span {
+            color: #4dabf7;
+        }
+
+        .menu {
+            list-style: none;
+            padding: 0 15px;
+        }
+
+        .menu li {
+            margin-bottom: 5px;
+        }
+
+        .menu a {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            color: #b0c4d4;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .menu a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .menu a.active {
+            background-color: #4dabf7;
+            color: white;
+            box-shadow: 0 4px 12px rgba(77, 171, 247, 0.3);
+        }
+
+        .menu i {
+            margin-right: 12px;
+            font-size: 18px;
+            width: 24px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e0e6ef;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-info img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #4dabf7;
+        }
+
+        /* POS Dashboard Styles */
+        .pos-dashboard {
+            display: block;
+        }
+
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            text-align: center;
+            transition: transform 0.3s;
+            border-top: 4px solid #3498db;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card:nth-child(2) {
+            border-top-color: #e74c3c;
+        }
+
+        .stat-card:nth-child(3) {
+            border-top-color: #27ae60;
+        }
+
+        .stat-card:nth-child(4) {
+            border-top-color: #f39c12;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-bottom: 15px;
+        }
+
+        .stat-today {
+            color: #27ae60;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* Details Section */
+        .details-section {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .details-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .details-card h3 {
+            font-size: 18px;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        /* Recent Activities */
+        .recent-activities {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+
+        .activities-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .activities-header h2 {
+            font-size: 22px;
+            color: #2c3e50;
+        }
+
+        .activities-tabs {
+            display: flex;
+            gap: 10px;
+        }
+
+        .tab-btn {
+            padding: 8px 16px;
+            border: 1px solid #ddd;
+            background: #f8f9fa;
+            color: #7f8c8d;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab-btn:hover {
+            background: #e9ecef;
+        }
+
+        .tab-btn.active {
+            background: #4dabf7;
+            color: white;
+            border-color: #4dabf7;
+        }
+
+        /* Table Styles */
+        .activities-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .activities-table th {
+            background: #f8f9fa;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #2c3e50;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .activities-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e9ecef;
+            color: #34495e;
+        }
+
+        .activities-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .status-paid {
+            background: #d4edda;
+            color: #155724;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        /* Dashboard Layout (Customer) */
+        .dashboard {
+            display: none;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 20px;
+        }
+
+        /* Profile Card */
+        .profile-card {
+            grid-column: span 4;
+            background-color: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+
+        .profile-pic-container {
+            position: relative;
+            width: 130px;
+            height: 130px;
+            margin: 0 auto 20px;
+        }
+
+        .profile-pic {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid #e9f7fe;
+        }
+
+        .upload-btn {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            background-color: #4dabf7;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .upload-btn i {
+            font-size: 16px;
+        }
+
+        .customer-name {
+            font-size: 24px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .customer-id {
+            color: #7b8a9e;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .engagement-badge {
+            display: inline-block;
+            background-color: #e9f7fe;
+            color: #4dabf7;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+
+        .location {
+            color: #7b8a9e;
+            margin-bottom: 25px;
+            font-size: 15px;
+        }
+
+        .location i {
+            margin-right: 8px;
+            color: #4dabf7;
+        }
+
+        /* Interests Section */
+        .interests-section {
+            margin-top: 20px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .interests {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .interest-tag {
+            background-color: #f0f4f8;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #5a6c7d;
+        }
+
+        .interest-tag.add {
+            background-color: #e9f7fe;
+            color: #4dabf7;
+            cursor: pointer;
+        }
+
+        /* Insights Card */
+        .insights-card {
+            grid-column: span 4;
+            background-color: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .insight-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #f0f4f8;
+        }
+
+        .insight-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .insight-icon {
+            background-color: #e9f7fe;
+            color: #4dabf7;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .insight-text {
+            color: #5a6c7d;
+            font-size: 15px;
+        }
+
+        /* Metrics Grid */
+        .metrics-grid {
+            grid-column: span 4;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .metric-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .metric-title {
+            font-size: 14px;
+            color: #7b8a9e;
+            margin-bottom: 10px;
+        }
+
+        .metric-value {
+            font-size: 24px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .metric-progress {
+            height: 6px;
+            background-color: #f0f4f8;
+            border-radius: 3px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            border-radius: 3px;
+        }
+
+        .churn-risk .progress-bar {
+            background-color: #ff6b6b;
+            width: 74.7%;
+        }
+
+        .engagement-score .progress-bar {
+            background-color: #4dabf7;
+            width: 40%;
+        }
+
+        /* Brands Card */
+        .brands-card {
+            grid-column: span 8;
+            background-color: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .brands-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .brand-tag {
+            background-color: #f0f4f8;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 15px;
+            color: #5a6c7d;
+            display: flex;
+            align-items: center;
+        }
+
+        .brand-tag.add {
+            background-color: #e9f7fe;
+            color: #4dabf7;
+            cursor: pointer;
+        }
+
+        .brand-tag i {
+            margin-right: 8px;
+        }
+
+        /* Timeline Card */
+        .timeline-card {
+            grid-column: span 4;
+            background-color: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .timeline-date {
+            font-size: 14px;
+            color: #7b8a9e;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .timeline-item {
+            display: flex;
+            margin-bottom: 20px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .timeline-item:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 5px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #4dabf7;
+        }
+
+        .timeline-time {
+            font-size: 13px;
+            color: #7b8a9e;
+            width: 70px;
+            flex-shrink: 0;
+        }
+
+        .timeline-content {
+            flex: 1;
+        }
+
+        .timeline-activity {
+            font-weight: 500;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .timeline-detail {
+            font-size: 14px;
+            color: #7b8a9e;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 22px;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #7b8a9e;
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #5a6c7d;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #e0e6ef;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: #4dabf7;
+            outline: none;
+        }
+
+        .submit-btn {
+            background-color: #4dabf7;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 14px 20px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+
+        .submit-btn:hover {
+            background-color: #3b99e6;
+        }
+
+        /* Customers List Page */
+        .customers-container {
+            display: none;
+        }
+
+        .page-title {
+            font-size: 28px;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .customers-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .add-customer-btn {
+            background-color: #4dabf7;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .customers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .customer-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+
+        .customer-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .customer-card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .customer-card-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .customer-card-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .customer-card-id {
+            font-size: 14px;
+            color: #7b8a9e;
+        }
+
+        .customer-card-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .customer-detail {
+            font-size: 14px;
+        }
+
+        .customer-detail-label {
+            color: #7b8a9e;
+            margin-bottom: 4px;
+        }
+
+        .customer-detail-value {
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .dashboard {
+                grid-template-columns: repeat(6, 1fr);
+            }
+            
+            .dashboard-stats, .details-section {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .profile-card, .insights-card, .timeline-card {
+                grid-column: span 3;
+            }
+            
+            .metrics-grid, .brands-card {
+                grid-column: span 6;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 220px;
+            }
+            
+            .main-content {
+                margin-left: 220px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+                overflow: hidden;
+            }
+            
+            .sidebar .logo h2 {
+                font-size: 0;
+            }
+            
+            .sidebar .logo h2:after {
+                content: "POS";
+                font-size: 20px;
+            }
+            
+            .menu a span {
+                display: none;
+            }
+            
+            .menu a {
+                justify-content: center;
+                padding: 15px;
+            }
+            
+            .menu i {
+                margin-right: 0;
+                font-size: 20px;
+            }
+            
+            .main-content {
+                margin-left: 70px;
+            }
+            
+            .dashboard, .dashboard-stats, .details-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .profile-card, .insights-card, .timeline-card, .metrics-grid, .brands-card {
+                grid-column: span 1;
+            }
+            
+            .customers-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .activities-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .activities-tabs {
+                flex-wrap: wrap;
+            }
+            
+            .activities-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">
+            <h2>CUSTOM<span>Dash</span></h2>
+        </div>
+        <ul class="menu">
+            <li><a href="#" class="active" id="pos-dashboard-link"><i class="fas fa-tachometer-alt"></i> <span>POS Dashboard</span></a></li>
+            <li><a href="#" id="customer-dashboard-link"><i class="fas fa-user-friends"></i> <span>Customer Dashboard</span></a></li>
+            <li><a href="#" id="customers-link"><i class="fas fa-users"></i> <span>Customers</span></a></li>
+            <li><a href="newwww.html" id="invoices-link"><i class="fas fa-file-invoice"></i> <span>Invoices</span></a></li>
+            <li><a href="#" id="payments-link"><i class="fas fa-credit-card"></i> <span>Payments</span></a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+
+        <!-- POS Dashboard Content -->
+        <div class="pos-dashboard" id="pos-dashboard-container">
+            <!-- Dashboard Stats -->
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <div class="stat-value">3,666</div>
+                    <div class="stat-label">TOTAL INVOICE</div>
+                    <div class="stat-today">TODAY: 100</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-value">852</div>
+                    <div class="stat-label">TOTAL CUSTOMER</div>
+                    <div class="stat-today">TODAY: 51</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-value">40</div>
+                    <div class="stat-label">TOTAL SUPPLIER</div>
+                    <div class="stat-today">TODAY: 15</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-value">25,156</div>
+                    <div class="stat-label">TOTAL PRODUCT</div>
+                    <div class="stat-today">TODAY: 210</div>
+                </div>
+            </div>
+
+            <!-- Details Section -->
+            <div class="details-section">
+                <div class="details-card">
+                    <h3>DETAILS</h3>
+                    <div style="color: #7f8c8d; font-size: 14px; line-height: 1.6;">
+                        Detailed information about invoices, customers, and products.
+                    </div>
+                </div>
+                
+                <div class="details-card">
+                    <h3>DETAILS</h3>
+                    <div style="color: #7f8c8d; font-size: 14px; line-height: 1.6;">
+                        Additional statistics and reports for better insights.
+                    </div>
+                </div>
+                
+                <div class="details-card">
+                    <h3>ANALYTICS</h3>
+                    <div style="color: #7f8c8d; font-size: 14px; line-height: 1.6;">
+                        Visual analytics and charts showing business trends.
+                    </div>
+                </div>
+                
+                <div class="details-card">
+                    <h3>SUMMARY</h3>
+                    <div style="color: #7f8c8d; font-size: 14px; line-height: 1.6;">
+                        Quick summary of monthly performance metrics.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activities -->
+            <div class="recent-activities">
+                <div class="activities-header">
+                    <h2>Recent Activities</h2>
+                    <div class="activities-tabs">
+                        <button class="tab-btn active">Sells</button>
+                        <button class="tab-btn">Quotations</button>
+                        <button class="tab-btn">Purchases</button>
+                        <button class="tab-btn">Transfers</button>
+                        <button class="tab-btn">Customers</button>
+                        <button class="tab-btn">Suppliers</button>
+                    </div>
+                </div>
+                
+                <table class="activities-table">
+                    <thead>
+                        <tr>
+                            <th>Invoice ID</th>
+                            <th>Created At</th>
+                            <th>Customer Name</th>
+                            <th>Amount</th>
+                            <th>Payment Status</th>
+                            <th>Sell Amount</th>
+                            <th>Discount Given</th>
+                            <th>Due Given</th>
+                            <th>Received Amount</th>
+                            <th>Overview Report</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>INV/20230600000004</td>
+                            <td>2023-06-15 16:48:25</td>
+                            <td>Tajmul</td>
+                            <td>$220.00</td>
+                            <td><span class="status-paid">Paid</span></td>
+                            <td>1,103.05</td>
+                            <td>0.00</td>
+                            <td>0.00</td>
+                            <td>220.00</td>
+                            <td><i class="fas fa-eye" style="color: #4dabf7; cursor: pointer;"></i></td>
+                        </tr>
+                        <tr>
+                            <td>INV/20230600000003</td>
+                            <td>2023-06-15 16:48:15</td>
+                            <td>Najmul Hossain</td>
+                            <td>$300.00</td>
+                            <td><span class="status-paid">Paid</span></td>
+                            <td>0.00</td>
+                            <td>0.00</td>
+                            <td>0.00</td>
+                            <td>300.00</td>
+                            <td><i class="fas fa-eye" style="color: #4dabf7; cursor: pointer;"></i></td>
+                        </tr>
+                        <tr>
+                            <td>INV/20230600000002</td>
+                            <td>2023-06-15 16:47:24</td>
+                            <td>Walking customer</td>
+                            <td>$700.00</td>
+                            <td><span class="status-paid">Paid</span></td>
+                            <td>403.05</td>
+                            <td>0.00</td>
+                            <td>0.00</td>
+                            <td>700.00</td>
+                            <td><i class="fas fa-eye" style="color: #4dabf7; cursor: pointer;"></i></td>
+                        </tr>
+                        <tr>
+                            <td>INV/20230600000001</td>
+                            <td>2023-06-15 16:46:49</td>
+                            <td>Today customer</td>
+                            <td>$100.00</td>
+                            <td><span class="status-paid">Paid</span></td>
+                            <td>700.00</td>
+                            <td>0.00</td>
+                            <td>0.00</td>
+                            <td>100.00</td>
+                            <td><i class="fas fa-eye" style="color: #4dabf7; cursor: pointer;"></i></td>
+                        </tr>
+                        <tr>
+                            <td>INV/20230600000005</td>
+                            <td>2023-06-15 16:45:30</td>
+                            <td>Regular Customer</td>
+                            <td>$450.00</td>
+                            <td><span class="status-paid">Paid</span></td>
+                            <td>250.75</td>
+                            <td>10.00</td>
+                            <td>0.00</td>
+                            <td>450.00</td>
+                            <td><i class="fas fa-eye" style="color: #4dabf7; cursor: pointer;"></i></td>
+                        </tr>
+                        <tr>
+                            <td>INV/20230600000006</td>
+                            <td>2023-06-15 16:44:15</td>
+                            <td>New Customer</td>
+                            <td>$150.00</td>
+                            <td><span class="status-paid">Paid</span></td>
+                            <td>150.00</td>
+                            <td>5.00</td>
+                            <td>0.00</td>
+                            <td>150.00</td>
+                            <td><i class="fas fa-eye" style="color: #4dabf7; cursor: pointer;"></i></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div style="margin-top: 20px; text-align: center; color: #7f8c8d; font-style: italic;">
+                    Sell List - Showing recent invoices
+                </div>
+            </div>
+        </div>
+
+        <!-- Customer Dashboard Content -->
+        <div class="dashboard" id="dashboard-container">
+            <!-- Profile Card -->
+            <div class="profile-card">
+                <div class="profile-pic-container">
+                    <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="Customer Profile" class="profile-pic" id="profile-pic">
+                    <button class="upload-btn" id="upload-trigger">
+                        <i class="fas fa-camera"></i>
+                    </button>
+                    <input type="file" id="profile-upload" accept="image/*" style="display: none;">
+                </div>
+                <div class="customer-name" id="customer-name">John Brown</div>
+                <div class="customer-id" id="customer-id">ID: CUST-001</div>
+                <div class="engagement-badge" id="engagement-badge">High engagement</div>
+                <div class="location">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span id="location-text">New York, USA</span>
+                </div>
+                
+                <div class="interests-section">
+                    <div class="section-title">Interests</div>
+                    <div class="interests" id="interests-container">
+                        <div class="interest-tag">Sports</div>
+                        <div class="interest-tag">Travel</div>
+                        <div class="interest-tag">Technology</div>
+                        <div class="interest-tag add" id="add-interest">+ Add</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Insights Card -->
+            <div class="insights-card">
+                <div class="section-title">Insights</div>
+                <div class="insight-item">
+                    <div class="insight-icon">
+                        <i class="fas fa-blog"></i>
+                    </div>
+                    <div class="insight-text">Last connected through blog, quarter ago</div>
+                </div>
+                <div class="insight-item">
+                    <div class="insight-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div class="insight-text">Average order value increased by 15% this month</div>
+                </div>
+                <div class="insight-item">
+                    <div class="insight-icon">
+                        <i class="fas fa-comment-dots"></i>
+                    </div>
+                    <div class="insight-text">Responds well to email marketing campaigns</div>
+                </div>
+            </div>
+
+            <!-- Metrics Grid -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-title">Average spending</div>
+                    <div class="metric-value" id="avg-spending">$2,209</div>
+                </div>
+                <div class="metric-card churn-risk">
+                    <div class="metric-title">Churn risk</div>
+                    <div class="metric-value" id="churn-risk">74.7%</div>
+                    <div class="metric-progress">
+                        <div class="progress-bar"></div>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">Customer lifetime value</div>
+                    <div class="metric-value" id="clv">$16,000</div>
+                </div>
+                <div class="metric-card engagement-score">
+                    <div class="metric-title">Engagement score</div>
+                    <div class="metric-value" id="engagement-score">40</div>
+                    <div class="metric-progress">
+                        <div class="progress-bar"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Brands Card -->
+            <div class="brands-card">
+                <div class="section-title">Preferred Brands</div>
+                <div class="brands-list" id="brands-container">
+                    <div class="brand-tag">Nike</div>
+                    <div class="brand-tag">Apple</div>
+                    <div class="brand-tag">Samsung</div>
+                    <div class="brand-tag">Amazon</div>
+                    <div class="brand-tag add" id="add-brand">
+                        <i class="fas fa-plus"></i> Add Brand
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timeline Card -->
+            <div class="timeline-card">
+                <div class="section-title">Recent Activity</div>
+                
+                <div class="timeline-date">Today</div>
+                <div class="timeline-item">
+                    <div class="timeline-time">3 min ago</div>
+                    <div class="timeline-content">
+                        <div class="timeline-activity">New purchase</div>
+                        <div class="timeline-detail">Order #ORD-7890 - $450</div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-time">8:12 AM</div>
+                    <div class="timeline-content">
+                        <div class="timeline-activity">Email opened</div>
+                        <div class="timeline-detail">Marketing newsletter</div>
+                    </div>
+                </div>
+                
+                <div class="timeline-date">Yesterday</div>
+                <div class="timeline-item">
+                    <div class="timeline-time">11:20 AM</div>
+                    <div class="timeline-content">
+                        <div class="timeline-activity">Support ticket</div>
+                        <div class="timeline-detail">Issue resolved - Refund processed</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Customers List Page -->
+        <div class="customers-container" id="customers-container">
+            <div class="customers-header">
+                <h2 class="page-title">Customers</h2>
+                <button class="add-customer-btn" id="add-customer-btn">
+                    <i class="fas fa-plus"></i> Add New Customer
+                </button>
+            </div>
+            
+            <div class="customers-grid" id="customers-grid">
+                <!-- Customer cards will be dynamically added here -->
+            </div>
+        </div>
+
+        <!-- Add Customer Modal -->
+        <div class="modal" id="add-customer-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">Add New Customer</div>
+                    <button class="close-btn" id="close-add-modal">&times;</button>
+                </div>
+                <form id="add-customer-form">
+                    <div class="form-group">
+                        <label for="new-customer-name">Full Name</label>
+                        <input type="text" id="new-customer-name" class="form-control" placeholder="Enter customer name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="new-customer-email">Email Address</label>
+                        <input type="email" id="new-customer-email" class="form-control" placeholder="Enter customer email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="new-customer-phone">Phone Number</label>
+                        <input type="tel" id="new-customer-phone" class="form-control" placeholder="Enter phone number">
+                    </div>
+                    <div class="form-group">
+                        <label for="new-customer-location">Location</label>
+                        <input type="text" id="new-customer-location" class="form-control" placeholder="Enter location">
+                    </div>
+                    <div class="form-group">
+                        <label for="new-customer-interests">Interests (comma separated)</label>
+                        <input type="text" id="new-customer-interests" class="form-control" placeholder="e.g., Sports, Technology, Travel">
+                    </div>
+                    <button type="submit" class="submit-btn">Add Customer</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Edit Customer Modal -->
+        <div class="modal" id="edit-customer-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">Edit Customer</div>
+                    <button class="close-btn" id="close-edit-modal">&times;</button>
+                </div>
+                <form id="edit-customer-form">
+                    <input type="hidden" id="edit-customer-index">
+                    <div class="form-group">
+                        <label for="edit-customer-name">Full Name</label>
+                        <input type="text" id="edit-customer-name" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-customer-email">Email Address</label>
+                        <input type="email" id="edit-customer-email" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-customer-phone">Phone Number</label>
+                        <input type="tel" id="edit-customer-phone" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-customer-location">Location</label>
+                        <input type="text" id="edit-customer-location" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-customer-interests">Interests</label>
+                        <input type="text" id="edit-customer-interests" class="form-control">
+                    </div>
+                    <button type="submit" class="submit-btn">Update Customer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize customers array with sample data
+        let customers = [
+            {
+                name: "John Brown",
+                email: "john.brown@email.com",
+                phone: "+1 (555) 123-4567",
+                location: "New York, USA",
+                interests: ["Sports", "Travel", "Technology"],
+                avatar: "https://randomuser.me/api/portraits/men/75.jpg",
+                id: "CUST-001",
+                avgSpending: "$2,209",
+                churnRisk: "74.7%",
+                clv: "$16,000",
+                engagementScore: "40",
+                engagementLevel: "High engagement",
+                brands: ["Nike", "Apple", "Samsung", "Amazon"],
+                lastActive: "Today"
+            },
+            {
+                name: "Sarah Johnson",
+                email: "sarah.j@email.com",
+                phone: "+1 (555) 987-6543",
+                location: "Los Angeles, USA",
+                interests: ["Fashion", "Art", "Music"],
+                avatar: "https://randomuser.me/api/portraits/women/65.jpg",
+                id: "CUST-002",
+                avgSpending: "$1,850",
+                churnRisk: "42.3%",
+                clv: "$12,500",
+                engagementScore: "68",
+                engagementLevel: "Medium engagement",
+                brands: ["Zara", "Spotify", "Adobe"],
+                lastActive: "2 days ago"
+            },
+            {
+                name: "Michael Chen",
+                email: "michael.chen@email.com",
+                phone: "+1 (555) 456-7890",
+                location: "San Francisco, USA",
+                interests: ["Technology", "Investing", "Gaming"],
+                avatar: "https://randomuser.me/api/portraits/men/32.jpg",
+                id: "CUST-003",
+                avgSpending: "$3,450",
+                churnRisk: "18.5%",
+                clv: "$24,800",
+                engagementScore: "85",
+                engagementLevel: "Very high engagement",
+                brands: ["Apple", "Tesla", "Microsoft", "Sony"],
+                lastActive: "Yesterday"
+            }
+        ];
+
+        // DOM Elements
+        const posDashboardLink = document.getElementById('pos-dashboard-link');
+        const customerDashboardLink = document.getElementById('customer-dashboard-link');
+        const customersLink = document.getElementById('customers-link');
+        
+        const posDashboardContainer = document.getElementById('pos-dashboard-container');
+        const dashboardContainer = document.getElementById('dashboard-container');
+        const customersContainer = document.getElementById('customers-container');
+        
+        const pageTitle = document.getElementById('page-title');
+        const addCustomerBtn = document.getElementById('add-customer-btn');
+        const customersGrid = document.getElementById('customers-grid');
+        
+        const addCustomerModal = document.getElementById('add-customer-modal');
+        const editCustomerModal = document.getElementById('edit-customer-modal');
+        const closeAddModal = document.getElementById('close-add-modal');
+        const closeEditModal = document.getElementById('close-edit-modal');
+        const addCustomerForm = document.getElementById('add-customer-form');
+        const editCustomerForm = document.getElementById('edit-customer-form');
+        
+        // Customer dashboard elements
+        const customerName = document.getElementById('customer-name');
+        const customerId = document.getElementById('customer-id');
+        const locationText = document.getElementById('location-text');
+        const interestsContainer = document.getElementById('interests-container');
+        const avgSpending = document.getElementById('avg-spending');
+        const churnRisk = document.getElementById('churn-risk');
+        const clv = document.getElementById('clv');
+        const engagementScore = document.getElementById('engagement-score');
+        const engagementBadge = document.getElementById('engagement-badge');
+        const brandsContainer = document.getElementById('brands-container');
+        const profilePic = document.getElementById('profile-pic');
+
+        // Tab buttons for POS dashboard
+        const tabButtons = document.querySelectorAll('.tab-btn');
+
+        let currentCustomerIndex = 0;
+
+        // Navigation functions
+        function showPOSDashboard() {
+            posDashboardContainer.style.display = 'block';
+            dashboardContainer.style.display = 'none';
+            customersContainer.style.display = 'none';
+            pageTitle.textContent = 'POS Dashboard';
+            updateActiveNav(posDashboardLink);
+        }
+
+        function showCustomerDashboard() {
+            posDashboardContainer.style.display = 'none';
+            dashboardContainer.style.display = 'grid';
+            customersContainer.style.display = 'none';
+            pageTitle.textContent = 'Customer Dashboard';
+            updateActiveNav(customerDashboardLink);
+            loadCustomerData(currentCustomerIndex);
+        }
+
+        function showCustomers() {
+            posDashboardContainer.style.display = 'none';
+            dashboardContainer.style.display = 'none';
+            customersContainer.style.display = 'block';
+            pageTitle.textContent = 'Customers';
+            updateActiveNav(customersLink);
+            renderCustomersGrid();
+        }
+
+        function updateActiveNav(activeLink) {
+            const navLinks = document.querySelectorAll('.menu a');
+            navLinks.forEach(link => link.classList.remove('active'));
+            activeLink.classList.add('active');
+        }
+
+        // Event listeners for navigation
+        posDashboardLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            showPOSDashboard();
+        });
+
+        customerDashboardLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            showCustomerDashboard();
+        });
+
+        customersLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            showCustomers();
+        });
+
+        // Tab switching for POS dashboard
+        tabButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Update table content based on selected tab
+                const tabName = this.textContent;
+                console.log(`Switched to ${tabName} tab`);
+            });
+        });
+
+        // Modal functions
+        addCustomerBtn.addEventListener('click', function() {
+            addCustomerModal.style.display = 'flex';
+        });
+
+        closeAddModal.addEventListener('click', function() {
+            addCustomerModal.style.display = 'none';
+        });
+
+        closeEditModal.addEventListener('click', function() {
+            editCustomerModal.style.display = 'none';
+        });
+
+        // Close modals when clicking outside
+        window.addEventListener('click', function(e) {
+            if (e.target === addCustomerModal) {
+                addCustomerModal.style.display = 'none';
+            }
+            if (e.target === editCustomerModal) {
+                editCustomerModal.style.display = 'none';
+            }
+        });
+
+        // Add customer form submission
+        addCustomerForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const newCustomer = {
+                name: document.getElementById('new-customer-name').value,
+                email: document.getElementById('new-customer-email').value,
+                phone: document.getElementById('new-customer-phone').value,
+                location: document.getElementById('new-customer-location').value,
+                interests: document.getElementById('new-customer-interests').value.split(',').map(i => i.trim()).filter(i => i),
+                avatar: `https://randomuser.me/api/portraits/${Math.random() > 0.5 ? 'men' : 'women'}/${Math.floor(Math.random() * 99)}.jpg`,
+                id: `CUST-${String(customers.length + 1).padStart(3, '0')}`,
+                avgSpending: `$${Math.floor(Math.random() * 3000) + 1000}`,
+                churnRisk: `${(Math.random() * 100).toFixed(1)}%`,
+                clv: `$${Math.floor(Math.random() * 30000) + 5000}`,
+                engagementScore: Math.floor(Math.random() * 100),
+                engagementLevel: Math.random() > 0.5 ? 'High engagement' : 'Medium engagement',
+                brands: ['Brand A', 'Brand B', 'Brand C'].sort(() => Math.random() - 0.5).slice(0, 3),
+                lastActive: 'Today'
+            };
+            
+            customers.push(newCustomer);
+            addCustomerModal.style.display = 'none';
+            addCustomerForm.reset();
+            renderCustomersGrid();
+            
+            alert('Customer added successfully!');
+        });
+
+        // Edit customer form submission
+        editCustomerForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const index = parseInt(document.getElementById('edit-customer-index').value);
+            const customer = customers[index];
+            
+            customer.name = document.getElementById('edit-customer-name').value;
+            customer.email = document.getElementById('edit-customer-email').value;
+            customer.phone = document.getElementById('edit-customer-phone').value;
+            customer.location = document.getElementById('edit-customer-location').value;
+            customer.interests = document.getElementById('edit-customer-interests').value.split(',').map(i => i.trim()).filter(i => i);
+            
+            // If editing the current customer, update dashboard
+            if (index === currentCustomerIndex) {
+                loadCustomerData(index);
+            }
+            
+            editCustomerModal.style.display = 'none';
+            renderCustomersGrid();
+            
+            alert('Customer updated successfully!');
+        });
+
+        // Render customers grid
+        function renderCustomersGrid() {
+            customersGrid.innerHTML = '';
+            
+            customers.forEach((customer, index) => {
+                const customerCard = document.createElement('div');
+                customerCard.className = 'customer-card';
+                customerCard.dataset.index = index;
+                
+                customerCard.innerHTML = `
+                    <div class="customer-card-header">
+                        <img src="${customer.avatar}" alt="${customer.name}" class="customer-card-avatar">
+                        <div>
+                            <div class="customer-card-name">${customer.name}</div>
+                            <div class="customer-card-id">${customer.id}</div>
+                        </div>
+                    </div>
+                    <div class="customer-card-details">
+                        <div class="customer-detail">
+                            <div class="customer-detail-label">Email</div>
+                            <div class="customer-detail-value">${customer.email}</div>
+                        </div>
+                        <div class="customer-detail">
+                            <div class="customer-detail-label">Phone</div>
+                            <div class="customer-detail-value">${customer.phone}</div>
+                        </div>
+                        <div class="customer-detail">
+                            <div class="customer-detail-label">Location</div>
+                            <div class="customer-detail-value">${customer.location}</div>
+                        </div>
+                        <div class="customer-detail">
+                            <div class="customer-detail-label">Last Active</div>
+                            <div class="customer-detail-value">${customer.lastActive}</div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 15px; display: flex; gap: 10px;">
+                        <button class="view-btn" style="background-color: #4dabf7; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 14px;">View</button>
+                        <button class="edit-btn" style="background-color: #f8f9fa; color: #5a6c7d; border: 1px solid #e0e6ef; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 14px;">Edit</button>
+                    </div>
+                `;
+                
+                customersGrid.appendChild(customerCard);
+                
+                // Add event listeners to buttons
+                const viewBtn = customerCard.querySelector('.view-btn');
+                const editBtn = customerCard.querySelector('.edit-btn');
+                
+                viewBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    currentCustomerIndex = index;
+                    showCustomerDashboard();
+                });
+                
+                editBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    openEditModal(index);
+                });
+            });
+        }
+
+        // Open edit modal with customer data
+        function openEditModal(index) {
+            const customer = customers[index];
+            
+            document.getElementById('edit-customer-index').value = index;
+            document.getElementById('edit-customer-name').value = customer.name;
+            document.getElementById('edit-customer-email').value = customer.email;
+            document.getElementById('edit-customer-phone').value = customer.phone;
+            document.getElementById('edit-customer-location').value = customer.location;
+            document.getElementById('edit-customer-interests').value = customer.interests.join(', ');
+            
+            editCustomerModal.style.display = 'flex';
+        }
+
+        // Load customer data to dashboard
+        function loadCustomerData(index) {
+            const customer = customers[index];
+            
+            customerName.textContent = customer.name;
+            customerId.textContent = `ID: ${customer.id}`;
+            locationText.textContent = customer.location;
+            avgSpending.textContent = customer.avgSpending;
+            churnRisk.textContent = customer.churnRisk;
+            clv.textContent = customer.clv;
+            engagementScore.textContent = customer.engagementScore;
+            engagementBadge.textContent = customer.engagementLevel;
+            profilePic.src = customer.avatar;
+            
+            // Update interests
+            interestsContainer.innerHTML = '';
+            customer.interests.forEach(interest => {
+                const interestTag = document.createElement('div');
+                interestTag.className = 'interest-tag';
+                interestTag.textContent = interest;
+                interestsContainer.appendChild(interestTag);
+            });
+            
+            // Add "Add interest" button
+            const addInterestBtn = document.createElement('div');
+            addInterestBtn.className = 'interest-tag add';
+            addInterestBtn.id = 'add-interest';
+            addInterestBtn.textContent = '+ Add';
+            interestsContainer.appendChild(addInterestBtn);
+            
+            addInterestBtn.addEventListener('click', function() {
+                const newInterest = prompt('Enter a new interest:');
+                if (newInterest && newInterest.trim() !== '') {
+                    customer.interests.push(newInterest.trim());
+                    loadCustomerData(index);
+                }
+            });
+            
+            // Update brands
+            brandsContainer.innerHTML = '';
+            customer.brands.forEach(brand => {
+                const brandTag = document.createElement('div');
+                brandTag.className = 'brand-tag';
+                brandTag.textContent = brand;
+                brandsContainer.appendChild(brandTag);
+            });
+            
+            // Add "Add brand" button
+            const addBrandBtn = document.createElement('div');
+            addBrandBtn.className = 'brand-tag add';
+            addBrandBtn.id = 'add-brand';
+            addBrandBtn.innerHTML = '<i class="fas fa-plus"></i> Add Brand';
+            brandsContainer.appendChild(addBrandBtn);
+            
+            addBrandBtn.addEventListener('click', function() {
+                const newBrand = prompt('Enter a new brand:');
+                if (newBrand && newBrand.trim() !== '') {
+                    customer.brands.push(newBrand.trim());
+                    loadCustomerData(index);
+                }
+            });
+        }
+
+        // Profile picture upload
+        const uploadTrigger = document.getElementById('upload-trigger');
+        const profileUpload = document.getElementById('profile-upload');
+
+        uploadTrigger.addEventListener('click', function() {
+            profileUpload.click();
+        });
+
+        profileUpload.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    profilePic.src = e.target.result;
+                    customers[currentCustomerIndex].avatar = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Initialize the application
+        function init() {
+            showPOSDashboard(); // Start with POS dashboard
+            renderCustomersGrid();
+        }
+
+        init();
+    </script>
+</body>
+</html>

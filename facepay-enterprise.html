@@ -1,0 +1,1976 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FacePay | Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --success: #4cc9f0;
+            --danger: #f72585;
+            --warning: #f8961e;
+            --dark: #212529;
+            --light: #f8f9fa;
+            --gray: #6c757d;
+            --sidebar-bg: #1e1e2d;
+            --sidebar-text: #9899ac;
+            --sidebar-active: #3699ff;
+            --border-radius: 8px;
+            --shadow: 0 0 30px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f8fa;
+            color: var(--dark);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background-color: var(--sidebar-bg);
+            color: var(--sidebar-text);
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            overflow-y: auto;
+            transition: var(--transition);
+            z-index: 1000;
+        }
+        
+        .sidebar-header {
+            padding: 20px 25px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .logo-icon {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+        
+        .logo-text {
+            font-size: 22px;
+            font-weight: 700;
+            color: white;
+        }
+        
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+        
+        .menu-section {
+            margin-bottom: 25px;
+        }
+        
+        .menu-title {
+            padding: 0 25px 10px;
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #6c757d;
+            letter-spacing: 0.5px;
+        }
+        
+        .menu-items {
+            list-style: none;
+        }
+        
+        .menu-item {
+            padding: 12px 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--sidebar-text);
+            text-decoration: none;
+            display: block;
+        }
+        
+        .menu-item:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: white;
+        }
+        
+        .menu-item.active {
+            background-color: rgba(54, 153, 255, 0.1);
+            color: var(--sidebar-active);
+            border-left: 3px solid var(--sidebar-active);
+        }
+        
+        .menu-item i {
+            width: 20px;
+            text-align: center;
+            font-size: 16px;
+        }
+        
+        .menu-item span {
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .submenu {
+            padding-left: 40px;
+            display: none;
+        }
+        
+        .submenu.active {
+            display: block;
+        }
+        
+        .submenu .menu-item {
+            padding: 10px 25px 10px 40px;
+            font-size: 13px;
+        }
+        
+        .menu-toggle {
+            margin-left: auto;
+            transition: var(--transition);
+        }
+        
+        .menu-item.has-submenu.active .menu-toggle {
+            transform: rotate(90deg);
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            transition: var(--transition);
+            min-height: 100vh;
+        }
+        
+        /* Top Header */
+        .top-header {
+            background-color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 15px rgba(0, 0, 0, 0.04);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .page-title h1 {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .search-box {
+            position: relative;
+        }
+        
+        .search-box input {
+            padding: 10px 15px 10px 40px;
+            border: 1px solid #e5e7eb;
+            border-radius: var(--border-radius);
+            width: 250px;
+            font-size: 14px;
+            transition: var(--transition);
+        }
+        
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+        }
+        
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+        
+        /* Dashboard Content */
+        .dashboard-content {
+            padding: 30px;
+        }
+        
+        .welcome-banner {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .welcome-text h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .welcome-text p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        
+        .notification-alert {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            max-width: 400px;
+        }
+        
+        .notification-alert i {
+            font-size: 20px;
+            color: var(--warning);
+        }
+        
+        /* Face Recognition Section */
+        .face-recognition-container {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .face-recognition-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .face-recognition-header h2 {
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+        
+        .face-recognition-header p {
+            color: var(--gray);
+        }
+        
+        .face-capture-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 25px;
+        }
+        
+        .camera-container {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 4px solid #e5e7eb;
+            box-shadow: 0 0 20px rgba(67, 97, 238, 0.2);
+            background: #f8f9fa;
+        }
+        
+        .camera-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scaleX(-1);
+        }
+        
+        .face-guide-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px dashed rgba(67, 97, 238, 0.5);
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .face-guide-overlay i {
+            font-size: 80px;
+            color: rgba(67, 97, 238, 0.2);
+        }
+        
+        .scan-line {
+            position: absolute;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            top: 0;
+            animation: scan 2s infinite linear;
+            display: none;
+        }
+        
+        @keyframes scan {
+            0% { top: 0; }
+            100% { top: 100%; }
+        }
+        
+        .face-instruction-box {
+            text-align: center;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            width: 100%;
+            max-width: 500px;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .instruction-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+        
+        .instruction-subtext {
+            font-size: 14px;
+            color: var(--gray);
+            margin-bottom: 15px;
+        }
+        
+        .progress-container {
+            width: 100%;
+            background: #e5e7eb;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .face-capture-steps {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .step-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #e5e7eb;
+            transition: all 0.3s ease;
+        }
+        
+        .step-indicator.active {
+            background: var(--primary);
+            transform: scale(1.2);
+        }
+        
+        .face-capture-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: var(--transition);
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
+        }
+        
+        .btn-secondary {
+            background-color: #f8f9fa;
+            color: var(--dark);
+            border: 1px solid #e5e7eb;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e9ecef;
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #3a9db8;
+        }
+        
+        .face-recognition-results {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: var(--border-radius);
+            margin-top: 20px;
+            border: 2px solid var(--success);
+        }
+        
+        .face-recognition-results.active {
+            display: block;
+        }
+        
+        .result-icon {
+            font-size: 48px;
+            color: var(--success);
+            margin-bottom: 15px;
+        }
+        
+        .result-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+        
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--primary);
+        }
+        
+        .stat-card.sales-return {
+            border-left-color: var(--danger);
+        }
+        
+        .stat-card.purchase {
+            border-left-color: var(--success);
+        }
+        
+        .stat-card.purchase-return {
+            border-left-color: var(--warning);
+        }
+        
+        .stat-card h3 {
+            font-size: 14px;
+            color: var(--gray);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .stat-card .value {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+        
+        .stat-card .change {
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .change.positive {
+            color: #0abb87;
+        }
+        
+        .change.negative {
+            color: var(--danger);
+        }
+        
+        /* Charts and Tables Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .chart-container, .table-container, .list-container {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+        }
+        
+        .chart-header, .table-header, .list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .chart-header h3, .table-header h3, .list-header h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .view-all {
+            color: var(--primary);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        
+        canvas {
+            width: 100% !important;
+            height: 300px !important;
+        }
+        
+        /* Tables */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .data-table th {
+            text-align: left;
+            padding: 12px 0;
+            font-weight: 600;
+            color: var(--gray);
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 13px;
+            text-transform: uppercase;
+        }
+        
+        .data-table td {
+            padding: 15px 0;
+            border-bottom: 1px solid #f1f1f1;
+            font-size: 14px;
+        }
+        
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .status {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .status.processing {
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+        }
+        
+        .status.completed {
+            background-color: rgba(76, 201, 240, 0.1);
+            color: var(--success);
+        }
+        
+        .status.cancelled {
+            background-color: rgba(247, 37, 133, 0.1);
+            color: var(--danger);
+        }
+        
+        .status.onhold {
+            background-color: rgba(248, 150, 30, 0.1);
+            color: var(--warning);
+        }
+        
+        /* Product Lists */
+        .product-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .product-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #f1f1f1;
+        }
+        
+        .product-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        
+        .product-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            background-color: #f5f8fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: var(--primary);
+        }
+        
+        .product-info h4 {
+            font-size: 15px;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        
+        .product-info p {
+            font-size: 13px;
+            color: var(--gray);
+        }
+        
+        .product-sales {
+            margin-left: auto;
+            text-align: right;
+        }
+        
+        .product-sales .amount {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .product-sales .sales-count {
+            font-size: 13px;
+            color: var(--gray);
+        }
+        
+        /* Low Stock List */
+        .stock-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #f1f1f1;
+        }
+        
+        .stock-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        
+        .stock-id {
+            font-size: 13px;
+            color: var(--gray);
+            font-family: monospace;
+        }
+        
+        .stock-amount {
+            margin-left: auto;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .stock-low {
+            color: var(--danger);
+        }
+        
+        /* Footer */
+        .footer {
+            background-color: white;
+            padding: 20px 30px;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--gray);
+            font-size: 14px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .menu-toggle-btn {
+                display: block;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .search-box input {
+                width: 200px;
+            }
+            
+            .welcome-banner {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+            }
+            
+            .camera-container {
+                width: 300px;
+                height: 300px;
+            }
+            
+            .face-capture-wrapper {
+                padding: 15px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .dashboard-content {
+                padding: 20px;
+            }
+            
+            .top-header {
+                padding: 15px 20px;
+            }
+            
+            .search-box input {
+                width: 150px;
+            }
+            
+            .camera-container {
+                width: 250px;
+                height: 250px;
+            }
+            
+            .face-recognition-container {
+                padding: 20px;
+            }
+        }
+        
+        /* Menu Toggle Button */
+        .menu-toggle-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: var(--dark);
+            cursor: pointer;
+        }
+        
+        /* Auth Pages */
+        .auth-page {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+        
+        .auth-container {
+            width: 100%;
+            max-width: 1200px;
+            padding: 20px;
+        }
+        
+        .auth-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07);
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 600px;
+        }
+        
+        .auth-left {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .auth-left h2 {
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+        
+        .auth-left p {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+        
+        .auth-features {
+            list-style: none;
+        }
+        
+        .auth-features li {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .auth-right {
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .auth-tabs {
+            display: flex;
+            border-bottom: 1px solid #e5e7eb;
+            margin-bottom: 30px;
+        }
+        
+        .auth-tab {
+            padding: 15px 30px;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--gray);
+            border-bottom: 3px solid transparent;
+        }
+        
+        .auth-tab.active {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+        }
+        
+        .auth-form {
+            display: none;
+        }
+        
+        .auth-form.active {
+            display: block;
+        }
+        
+        .auth-form h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+        
+        .auth-form p {
+            color: var(--gray);
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #e5e7eb;
+            border-radius: var(--border-radius);
+            font-size: 14px;
+            transition: var(--transition);
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+        }
+        
+        .btn-block {
+            width: 100%;
+        }
+        
+        .face-capture-section {
+            text-align: center;
+            margin-top: 30px;
+            padding: 30px;
+            border: 2px dashed #e5e7eb;
+            border-radius: var(--border-radius);
+        }
+        
+        .face-camera {
+            width: 200px;
+            height: 200px;
+            background-color: #f5f8fa;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            color: var(--gray);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .blink-overlay {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            opacity: 0;
+            transition: var(--transition);
+        }
+        
+        .blink-overlay.active {
+            opacity: 1;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        @media (max-width: 992px) {
+            .auth-card {
+                grid-template-columns: 1fr;
+            }
+            
+            .auth-left {
+                display: none;
+            }
+        }
+        
+        /* Hide elements */
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Authentication Page -->
+    <div class="auth-page" id="auth-page">
+        <div class="auth-container">
+            <div class="auth-card">
+                <div class="auth-left">
+                    <div class="logo" style="margin-bottom: 30px;">
+                        <div class="logo-icon">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                        <div class="logo-text">FacePay</div>
+                    </div>
+                    <h2>Secure Facial Recognition Payments</h2>
+                    <p>Experience the future of payments with our cutting-edge facial recognition technology. Fast, secure, and convenient.</p>
+                    <ul class="auth-features">
+                        <li><i class="fas fa-check-circle"></i> 99.7% Recognition Accuracy</li>
+                        <li><i class="fas fa-check-circle"></i> Bank-Level Security</li>
+                        <li><i class="fas fa-check-circle"></i> Instant Transactions</li>
+                        <li><i class="fas fa-check-circle"></i> 24/7 Customer Support</li>
+                    </ul>
+                </div>
+                <div class="auth-right">
+                    <div class="auth-tabs">
+                        <div class="auth-tab active" onclick="switchAuthTab('login')">Login</div>
+                        <div class="auth-tab" onclick="switchAuthTab('customer')">Customer Register</div>
+                        <div class="auth-tab" onclick="switchAuthTab('merchant')">Merchant Register</div>
+                    </div>
+
+                    <!-- Login Form -->
+                    <div class="auth-form active" id="login-form">
+                        <h3>Welcome Back</h3>
+                        <p>Login to access your FacePay account</p>
+                        <form onsubmit="handleLogin(event)">
+                            <div class="form-group">
+                                <label for="login-email">Email Address</label>
+                                <input type="email" id="login-email" class="form-control" placeholder="Enter your email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="login-password">Password</label>
+                                <input type="password" id="login-password" class="form-control" placeholder="Enter your password" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="login-role">Login As</label>
+                                <select id="login-role" class="form-control" required>
+                                    <option value="">Select Role</option>
+                                    <option value="customer">Customer</option>
+                                    <option value="merchant">Merchant</option>
+                                    <option value="admin">Administrator</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Login</button>
+                        </form>
+                        <div style="text-align: center; margin-top: 20px; color: var(--gray);">
+                            Don't have an account? <a href="#" onclick="switchAuthTab('customer')" style="color: var(--primary); font-weight: 500;">Register here</a>
+                        </div>
+                    </div>
+
+                    <!-- Customer Registration Form -->
+                    <div class="auth-form" id="customer-form">
+                        <h3>Customer Registration</h3>
+                        <p>Register to make payments with facial recognition</p>
+                        <form onsubmit="handleCustomerRegister(event)">
+                            <div class="form-group">
+                                <label for="customer-name">Full Name</label>
+                                <input type="text" id="customer-name" class="form-control" placeholder="Enter your full name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="customer-email">Email Address</label>
+                                <input type="email" id="customer-email" class="form-control" placeholder="Enter your email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="customer-password">Password</label>
+                                <input type="password" id="customer-password" class="form-control" placeholder="Create a password" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="customer-confirm-password">Confirm Password</label>
+                                <input type="password" id="customer-confirm-password" class="form-control" placeholder="Confirm your password" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Continue to Face Registration</button>
+                        </form>
+                        <div style="text-align: center; margin-top: 20px; color: var(--gray);">
+                            Already have an account? <a href="" onclick="switchAuthTab('login')" style="color: var(--primary); font-weight: 500;">Login here</a>
+                        </div>
+                    </div>
+
+                    <!-- Face Registration (Enhanced Version) -->
+                    <div class="auth-form" id="face-form">
+                        <h3>Face Registration</h3>
+                        <p>Register your face for secure payments</p>
+                        
+                        <!-- Enhanced Face Recognition Section -->
+                        <div class="face-recognition-container">
+                            <div class="face-recognition-header">
+                                <h2>Face Registration</h2>
+                                <p>Follow the instructions to complete face registration</p>
+                            </div>
+                            
+                            <div class="face-capture-wrapper">
+                                <div class="camera-container">
+                                    <video id="face-video" autoplay playsinline muted></video>
+                                    <div class="face-guide-overlay">
+                                        <i class="fas fa-user"></i>
+                                        <div class="scan-line" id="scan-line"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="face-instruction-box">
+                                    <div id="instruction-text" class="instruction-text">Initializing Camera...</div>
+                                    <div id="instruction-subtext" class="instruction-subtext">Please allow camera access</div>
+                                    
+                                    <div class="progress-container">
+                                        <div id="face-progress-bar" class="progress-bar"></div>
+                                    </div>
+                                    
+                                    <div class="face-capture-steps">
+                                        <div class="step-indicator" data-step="0"></div>
+                                        <div class="step-indicator" data-step="1"></div>
+                                        <div class="step-indicator" data-step="2"></div>
+                                        <div class="step-indicator" data-step="3"></div>
+                                        <div class="step-indicator" data-step="4"></div>
+                                    </div>
+                                    
+                                    <div class="face-capture-buttons">
+                                        <button type="button" class="btn btn-primary" id="start-capture-btn" onclick="startFaceCapture()">
+                                            <i class="fas fa-camera"></i> Start Face Capture
+                                        </button>
+                                        <button type="button" class="btn btn-secondary" id="cancel-capture-btn" onclick="cancelFaceCapture()">
+                                            <i class="fas fa-times"></i> Cancel
+                                        </button>
+                                        <button type="button" class="btn btn-success" id="complete-registration-btn" onclick="completeFaceRegistration()" style="display: none;">
+                                            <i class="fas fa-check"></i> Complete Registration
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="face-recognition-results" id="registration-results">
+                                <div class="result-icon">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <div class="result-text">Face Registration Successful!</div>
+                                <p>Your facial data has been securely registered.</p>
+                            </div>
+                        </div>
+                        
+                        <div style="text-align: center; margin-top: 20px;">
+                            <button type="button" class="btn btn-secondary" onclick="switchAuthTab('customer')">
+                                <i class="fas fa-arrow-left"></i> Back
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Merchant Registration Form -->
+                    <div class="auth-form" id="merchant-form">
+                        <h3>Merchant Registration</h3>
+                        <p>Register your business to accept FacePay payments</p>
+                        <form onsubmit="handleMerchantRegister(event)">
+                            <div class="form-group">
+                                <label for="merchant-company">Company Name</label>
+                                <input type="text" id="merchant-company" class="form-control" placeholder="Enter company name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="merchant-email">Email Address</label>
+                                <input type="email" id="merchant-email" class="form-control" placeholder="Enter company email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="merchant-password">Password</label>
+                                <input type="password" id="merchant-password" class="form-control" placeholder="Create a password" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="merchant-phone">Phone Number</label>
+                                <input type="tel" id="merchant-phone" class="form-control" placeholder="Enter phone number" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="merchant-address">Business Address</label>
+                                <textarea id="merchant-address" class="form-control" placeholder="Enter full business address" rows="3" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="merchant-bank">Bank Name</label>
+                                <input type="text" id="merchant-bank" class="form-control" placeholder="Enter bank name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="merchant-account">Bank Account Number</label>
+                                <input type="text" id="merchant-account" class="form-control" placeholder="Enter account number" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="merchant-ifsc">IFSC Code</label>
+                                <input type="text" id="merchant-ifsc" class="form-control" placeholder="Enter IFSC code" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Register as Merchant</button>
+                        </form>
+                        <div style="text-align: center; margin-top: 20px; color: var(--gray);">
+                            Already have an account? <a href="#" onclick="switchAuthTab('login')" style="color: var(--primary); font-weight: 500;">Login here</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar" style="display: none;">
+        <div class="sidebar-header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="logo-text">FacePay</div>
+            </div>
+        </div>
+        
+        <div class="sidebar-menu">
+            <div class="menu-section">
+                <div class="menu-title">Main</div>
+                <ul class="menu-items">
+                    <li>
+                        <a href="#" class="menu-item active" onclick="showDashboard()">
+                            <i class="fas fa-th-large"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="menu-section">
+                <div class="menu-title">Face Recognition</div>
+                <ul class="menu-items">
+                    <li><a href="#" class="menu-item" onclick="showFaceRecognition()"><i class="fas fa-camera"></i><span>Face Recognition</span></a></li>
+                    <li><a href="#" class="menu-item" onclick="showFaceRegistration()"><i class="fas fa-user-plus"></i><span>Register Face</span></a></li>
+                    <li><a href="#" class="menu-item" onclick="simulatePayment()"><i class="fas fa-credit-card"></i><span>Make Payment</span></a></li>
+                </ul>
+            </div>
+            
+            <div class="menu-section">
+                <div class="menu-title">Reports</div>
+                <ul class="menu-items">
+                    <li><a href="#" class="menu-item"><i class="fas fa-chart-bar"></i><span>Sales Report</span></a></li>
+                    <li><a href="#" class="menu-item"><i class="fas fa-users"></i><span>Customer Report</span></a></li>
+                    <li><a href="#" class="menu-item"><i class="fas fa-money-bill-wave"></i><span>Payment Report</span></a></li>
+                </ul>
+            </div>
+            
+            <div class="menu-section">
+                <div class="menu-title">User Management</div>
+                <ul class="menu-items">
+                    <li><a href="#" class="menu-item"><i class="fas fa-users-cog"></i><span>Users</span></a></li>
+                    <li><a href="#" class="menu-item"><i class="fas fa-user-shield"></i><span>Roles & Permissions</span></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content" id="main-content" style="display: none;">
+        <!-- Top Header -->
+        <div class="top-header">
+            <button class="menu-toggle-btn" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="page-title">
+                <h1>FacePay Dashboard</h1>
+            </div>
+            <div class="header-actions">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search...">
+                </div>
+                <div class="user-profile" onclick="showUserMenu()">
+                    <div class="user-avatar" id="user-avatar">U</div>
+                    <div>
+                        <div style="font-weight: 600;" id="user-name">User</div>
+                        <div style="font-size: 12px; color: var(--gray);" id="user-role">Customer</div>
+                    </div>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Content -->
+        <div class="dashboard-content" id="dashboard-content">
+            <!-- Welcome Banner -->
+            <div class="welcome-banner">
+                <div class="welcome-text">
+                    <h2 id="welcome-message">Welcome to FacePay</h2>
+                    <p>Secure payments with facial recognition technology</p>
+                </div>
+                <div class="notification-alert">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <div>
+                        <strong>Face Recognition System Active</strong>
+                        <p>Try the facial recognition feature below</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Total Payments</h3>
+                    <div class="value" id="total-payments">$48,988</div>
+                    <div class="change positive">+22%</div>
+                </div>
+                <div class="stat-card sales-return">
+                    <h3>Face Registrations</h3>
+                    <div class="value" id="face-registrations">1,204</div>
+                    <div class="change positive">+15%</div>
+                </div>
+                <div class="stat-card purchase">
+                    <h3>Successful Recognitions</h3>
+                    <div class="value" id="successful-recognitions">98.7%</div>
+                    <div class="change positive">+2%</div>
+                </div>
+                <div class="stat-card purchase-return">
+                    <h3>Active Users</h3>
+                    <div class="value" id="active-users">450</div>
+                    <div class="change positive">+12%</div>
+                </div>
+            </div>
+
+            <!-- Face Recognition Section in Dashboard -->
+            <div class="face-recognition-container">
+                <div class="face-recognition-header">
+                    <h2>Face Recognition Demo</h2>
+                    <p>Test the facial recognition system</p>
+                </div>
+                
+                <div class="face-capture-wrapper">
+                    <div class="camera-container">
+                        <video id="dashboard-video" autoplay playsinline muted></video>
+                        <div class="face-guide-overlay">
+                            <i class="fas fa-user"></i>
+                            <div class="scan-line" id="dashboard-scan-line"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="face-instruction-box">
+                        <div id="dashboard-instruction" class="instruction-text">Ready for Face Recognition</div>
+                        <div id="dashboard-subinstruction" class="instruction-subtext">Click start to begin face detection</div>
+                        
+                        <div class="progress-container">
+                            <div id="dashboard-progress" class="progress-bar"></div>
+                        </div>
+                        
+                        <div class="face-capture-buttons">
+                            <button type="button" class="btn btn-primary" onclick="startFaceRecognition()">
+                                <i class="fas fa-play"></i> Start Recognition
+                            </button>
+                            <button type="button" class="btn btn-secondary" onclick="stopFaceRecognition()">
+                                <i class="fas fa-stop"></i> Stop
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="face-recognition-results" id="recognition-results">
+                    <div class="result-icon">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <div class="result-text" id="recognition-result-text">Face Recognized!</div>
+                    <p id="recognition-details">User identified successfully</p>
+                    <div style="margin-top: 20px;">
+                        <button class="btn btn-primary" onclick="simulatePayment()">
+                            <i class="fas fa-dollar-sign"></i> Simulate Payment
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Payment Simulation Result -->
+            <div class="face-recognition-results" id="payment-results" style="display: none;">
+                <div class="result-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="result-text">Payment Successful!</div>
+                <p>Transaction completed using facial recognition</p>
+                <div style="margin-top: 15px;">
+                    <p><strong>Transaction ID:</strong> <span id="transaction-id">TX-789012</span></p>
+                    <p><strong>Amount:</strong> <span id="transaction-amount">$50.00</span></p>
+                    <p><strong>Time:</strong> <span id="transaction-time">Just now</span></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div>2014 - 2025 © FacePay. All Right Reserved</div>
+            <div>Designed & Developed By FacePay</div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let videoStream = null;
+        let isCapturing = false;
+        let captureInterval = null;
+        let currentStep = 0;
+        const totalSteps = 5;
+        let faceData = [];
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in
+            const isLoggedIn = localStorage.getItem('facepay_logged_in');
+            
+            if (isLoggedIn === 'true') {
+                showDashboard();
+            } else {
+                showAuthPage();
+            }
+            
+            // Initialize charts
+            initCharts();
+        });
+
+        // Toggle sidebar on mobile
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        }
+
+        // Switch between auth tabs
+        function switchAuthTab(tab) {
+            // Hide all forms
+            document.querySelectorAll('.auth-form').forEach(form => {
+                form.classList.remove('active');
+            });
+            
+            // Update tabs
+            document.querySelectorAll('.auth-tab').forEach(tabElement => {
+                tabElement.classList.remove('active');
+            });
+            
+            // Show selected form
+            if (tab === 'login') {
+                document.getElementById('login-form').classList.add('active');
+                document.querySelectorAll('.auth-tab')[0].classList.add('active');
+            } else if (tab === 'customer') {
+                document.getElementById('customer-form').classList.add('active');
+                document.querySelectorAll('.auth-tab')[1].classList.add('active');
+            } else if (tab === 'merchant') {
+                document.getElementById('merchant-form').classList.add('active');
+                document.querySelectorAll('.auth-tab')[2].classList.add('active');
+            } else if (tab === 'face') {
+                document.getElementById('face-form').classList.add('active');
+                // Initialize face registration if needed
+                setTimeout(() => {
+                    const isRegistered = localStorage.getItem('facepay_face_registered');
+                    if (isRegistered !== 'true') {
+                        // Reset face registration UI
+                        document.getElementById('registration-results').classList.remove('active');
+                        document.getElementById('start-capture-btn').style.display = 'block';
+                        document.getElementById('complete-registration-btn').style.display = 'none';
+                        document.getElementById('face-progress-bar').style.width = '0%';
+                        document.getElementById('instruction-text').textContent = 'Ready to Start';
+                        document.getElementById('instruction-subtext').textContent = 'Click Start Face Capture to begin';
+                        
+                        document.querySelectorAll('.step-indicator').forEach(indicator => {
+                            indicator.classList.remove('active');
+                            indicator.style.backgroundColor = '#e5e7eb';
+                        });
+                    }
+                }, 100);
+            }
+        }
+
+        // Handle login
+        function handleLogin(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            const role = document.getElementById('login-role').value;
+            
+            if (!email || !password || !role) {
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            // Store login state
+            localStorage.setItem('facepay_logged_in', 'true');
+            localStorage.setItem('facepay_user_email', email);
+            localStorage.setItem('facepay_user_role', role);
+            
+            // Set user name based on role
+            if (role === 'customer') {
+                const customerName = localStorage.getItem('facepay_customer_name') || email.split('@')[0];
+                localStorage.setItem('facepay_user_name', customerName);
+            } else if (role === 'merchant') {
+                const merchantName = localStorage.getItem('facepay_merchant_company') || email.split('@')[0];
+                localStorage.setItem('facepay_user_name', merchantName);
+            } else {
+                localStorage.setItem('facepay_user_name', 'Admin');
+            }
+            
+            // Show dashboard
+            showDashboard();
+        }
+
+        // Handle customer registration
+        function handleCustomerRegister(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('customer-name').value;
+            const email = document.getElementById('customer-email').value;
+            const password = document.getElementById('customer-password').value;
+            const confirmPassword = document.getElementById('customer-confirm-password').value;
+            
+            if (password !== confirmPassword) {
+                alert('Passwords do not match');
+                return;
+            }
+            
+            // Store customer data
+            localStorage.setItem('facepay_customer_name', name);
+            localStorage.setItem('facepay_customer_email', email);
+            
+            // Switch to face registration
+            switchAuthTab('face');
+        }
+
+        // Handle merchant registration
+        function handleMerchantRegister(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const company = document.getElementById('merchant-company').value;
+            const email = document.getElementById('merchant-email').value;
+            const phone = document.getElementById('merchant-phone').value;
+            const bank = document.getElementById('merchant-bank').value;
+            
+            // Store merchant data
+            localStorage.setItem('facepay_merchant_company', company);
+            localStorage.setItem('facepay_merchant_email', email);
+            
+            // Show success message and switch to login
+            alert('Merchant registration successful! You can now login.');
+            switchAuthTab('login');
+            
+            // Reset form
+            e.target.reset();
+        }
+
+        // Enhanced Face capture for registration
+        async function startFaceCapture() {
+            try {
+                const video = document.getElementById('face-video');
+                videoStream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { 
+                        width: { ideal: 640 },
+                        height: { ideal: 480 },
+                        facingMode: 'user' 
+                    } 
+                });
+                
+                video.srcObject = videoStream;
+                
+                document.getElementById('instruction-text').textContent = 'Camera Ready';
+                document.getElementById('instruction-subtext').textContent = 'Position your face in the circle';
+                document.getElementById('start-capture-btn').style.display = 'none';
+                document.getElementById('scan-line').style.display = 'block';
+                
+                startCaptureProcess();
+                
+            } catch (error) {
+                console.error('Camera access error:', error);
+                document.getElementById('instruction-text').textContent = 'Camera Access Denied';
+                document.getElementById('instruction-subtext').textContent = 'Please allow camera access and try again';
+                document.getElementById('start-capture-btn').style.display = 'block';
+            }
+        }
+
+        // Start the capture process
+        function startCaptureProcess() {
+            isCapturing = true;
+            currentStep = 0;
+            faceData = [];
+            
+            updateStepIndicator(0);
+            document.getElementById('face-progress-bar').style.width = '0%';
+            
+            captureInterval = setInterval(() => {
+                if (currentStep < totalSteps) {
+                    captureFaceStep();
+                } else {
+                    completeCaptureProcess();
+                }
+            }, 2000);
+        }
+
+        // Capture individual face steps
+        function captureFaceStep() {
+            const instructions = [
+                { text: 'Look straight at the camera', sub: 'Keep your face centered' },
+                { text: 'Turn head slightly left', sub: 'Hold position for 2 seconds' },
+                { text: 'Turn head slightly right', sub: 'Hold position for 2 seconds' },
+                { text: 'Look up slightly', sub: 'Hold position for 2 seconds' },
+                { text: 'Blink your eyes', sub: 'Liveness detection' }
+            ];
+            
+            document.getElementById('instruction-text').textContent = instructions[currentStep].text;
+            document.getElementById('instruction-subtext').textContent = instructions[currentStep].sub;
+            
+            // Simulate capturing face data
+            const faceDataPoint = {
+                step: currentStep,
+                timestamp: Date.now(),
+                instruction: instructions[currentStep].text
+            };
+            
+            faceData.push(faceDataPoint);
+            
+            // Update progress
+            const progress = ((currentStep + 1) / totalSteps) * 100;
+            document.getElementById('face-progress-bar').style.width = `${progress}%`;
+            
+            // Update step indicator
+            updateStepIndicator(currentStep);
+            
+            currentStep++;
+        }
+
+        // Update step indicators
+        function updateStepIndicator(step) {
+            document.querySelectorAll('.step-indicator').forEach((indicator, index) => {
+                if (index === step) {
+                    indicator.classList.add('active');
+                } else if (index < step) {
+                    indicator.style.backgroundColor = 'var(--primary)';
+                } else {
+                    indicator.classList.remove('active');
+                    indicator.style.backgroundColor = '#e5e7eb';
+                }
+            });
+        }
+
+        // Complete the capture process
+        function completeCaptureProcess() {
+            clearInterval(captureInterval);
+            isCapturing = false;
+            
+            document.getElementById('instruction-text').textContent = 'Capture Complete!';
+            document.getElementById('instruction-subtext').textContent = 'All face data has been captured';
+            document.getElementById('scan-line').style.display = 'none';
+            document.getElementById('complete-registration-btn').style.display = 'block';
+            document.getElementById('face-progress-bar').style.width = '100%';
+            
+            // Store face data in localStorage (simulated)
+            localStorage.setItem('facepay_face_data', JSON.stringify(faceData));
+            
+            console.log('Face data captured:', faceData);
+        }
+
+        // Complete face registration
+        function completeFaceRegistration() {
+            localStorage.setItem('facepay_face_registered', 'true');
+            
+            document.getElementById('registration-results').classList.add('active');
+            document.getElementById('complete-registration-btn').style.display = 'none';
+            
+            // Stop camera
+            if (videoStream) {
+                videoStream.getTracks().forEach(track => track.stop());
+            }
+            
+            setTimeout(() => {
+                alert('Face registration successful! You can now login.');
+                switchAuthTab('login');
+            }, 2000);
+        }
+
+        // Cancel face capture
+        function cancelFaceCapture() {
+            if (captureInterval) {
+                clearInterval(captureInterval);
+            }
+            
+            if (videoStream) {
+                videoStream.getTracks().forEach(track => track.stop());
+            }
+            
+            document.getElementById('instruction-text').textContent = 'Capture Cancelled';
+            document.getElementById('instruction-subtext').textContent = 'Face registration was cancelled';
+            document.getElementById('scan-line').style.display = 'none';
+            document.getElementById('start-capture-btn').style.display = 'block';
+            document.getElementById('complete-registration-btn').style.display = 'none';
+            document.getElementById('face-progress-bar').style.width = '0%';
+            
+            // Reset step indicators
+            document.querySelectorAll('.step-indicator').forEach(indicator => {
+                indicator.classList.remove('active');
+                indicator.style.backgroundColor = '#e5e7eb';
+            });
+        }
+
+        // Start face recognition in dashboard
+        async function startFaceRecognition() {
+            try {
+                const video = document.getElementById('dashboard-video');
+                videoStream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { 
+                        width: { ideal: 640 },
+                        height: { ideal: 480 },
+                        facingMode: 'user' 
+                    } 
+                });
+                
+                video.srcObject = videoStream;
+                
+                document.getElementById('dashboard-instruction').textContent = 'Face Detection Active';
+                document.getElementById('dashboard-subinstruction').textContent = 'Looking for faces...';
+                document.getElementById('dashboard-scan-line').style.display = 'block';
+                
+                // Simulate face recognition process
+                simulateFaceRecognition();
+                
+            } catch (error) {
+                console.error('Camera access error:', error);
+                document.getElementById('dashboard-instruction').textContent = 'Camera Error';
+                document.getElementById('dashboard-subinstruction').textContent = 'Cannot access camera';
+            }
+        }
+
+        // Simulate face recognition
+        function simulateFaceRecognition() {
+            let recognitionProgress = 0;
+            const recognitionInterval = setInterval(() => {
+                recognitionProgress += 20;
+                document.getElementById('dashboard-progress').style.width = `${recognitionProgress}%`;
+                
+                if (recognitionProgress >= 100) {
+                    clearInterval(recognitionInterval);
+                    completeFaceRecognition();
+                }
+            }, 500);
+        }
+
+        // Complete face recognition
+        function completeFaceRecognition() {
+            document.getElementById('dashboard-scan-line').style.display = 'none';
+            document.getElementById('recognition-results').classList.add('active');
+            
+            // Simulate user recognition
+            const userName = localStorage.getItem('facepay_user_name') || 'Demo User';
+            const isFaceRegistered = localStorage.getItem('facepay_face_registered');
+            
+            if (isFaceRegistered === 'true') {
+                document.getElementById('recognition-result-text').textContent = `Welcome, ${userName}!`;
+                document.getElementById('recognition-details').textContent = 'Face matched successfully';
+            } else {
+                document.getElementById('recognition-result-text').textContent = 'Face Not Registered';
+                document.getElementById('recognition-details').textContent = 'Please register your face first';
+            }
+            
+            // Stop camera after recognition
+            setTimeout(() => {
+                if (videoStream) {
+                    videoStream.getTracks().forEach(track => track.stop());
+                }
+            }, 3000);
+        }
+
+        // Stop face recognition
+        function stopFaceRecognition() {
+            if (videoStream) {
+                videoStream.getTracks().forEach(track => track.stop());
+            }
+            
+            document.getElementById('dashboard-instruction').textContent = 'Recognition Stopped';
+            document.getElementById('dashboard-subinstruction').textContent = 'Click start to begin again';
+            document.getElementById('dashboard-scan-line').style.display = 'none';
+            document.getElementById('recognition-results').classList.remove('active');
+            document.getElementById('dashboard-progress').style.width = '0%';
+        }
+
+        // Simulate payment
+        function simulatePayment() {
+            const isFaceRegistered = localStorage.getItem('facepay_face_registered');
+            
+            if (isFaceRegistered !== 'true') {
+                alert('Please register your face first before making payments.');
+                return;
+            }
+            
+            document.getElementById('recognition-results').classList.remove('active');
+            
+            // Generate random transaction ID
+            const transactionId = 'TX-' + Math.floor(100000 + Math.random() * 900000);
+            const amount = (Math.random() * 100 + 1).toFixed(2);
+            
+            document.getElementById('transaction-id').textContent = transactionId;
+            document.getElementById('transaction-amount').textContent = `$${amount}`;
+            document.getElementById('transaction-time').textContent = new Date().toLocaleTimeString();
+            
+            document.getElementById('payment-results').style.display = 'block';
+            
+            // Update total payments
+            const currentTotal = parseFloat(document.getElementById('total-payments').textContent.replace('$', '').replace(',', '')) || 0;
+            const newTotal = currentTotal + parseFloat(amount);
+            document.getElementById('total-payments').textContent = `$${newTotal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            
+            // Store transaction
+            const transaction = {
+                id: transactionId,
+                amount: amount,
+                timestamp: new Date().toISOString(),
+                status: 'completed'
+            };
+            
+            let transactions = JSON.parse(localStorage.getItem('facepay_transactions') || '[]');
+            transactions.push(transaction);
+            localStorage.setItem('facepay_transactions', JSON.stringify(transactions));
+        }
+
+        // Show dashboard
+        function showDashboard() {
+            document.getElementById('auth-page').style.display = 'none';
+            document.getElementById('main-content').style.display = 'block';
+            document.getElementById('sidebar').style.display = 'block';
+            
+            // Update user info
+            const userName = localStorage.getItem('facepay_user_name') || 'User';
+            const userEmail = localStorage.getItem('facepay_user_email') || 'user@example.com';
+            const userRole = localStorage.getItem('facepay_user_role') || 'customer';
+            
+            document.getElementById('user-avatar').textContent = userName.charAt(0);
+            document.getElementById('user-name').textContent = userName;
+            document.getElementById('user-role').textContent = userRole.charAt(0).toUpperCase() + userRole.slice(1);
+            document.getElementById('welcome-message').textContent = `Welcome, ${userName}`;
+            
+            // Update stats based on stored data
+            const transactions = JSON.parse(localStorage.getItem('facepay_transactions') || '[]');
+            const totalPayments = transactions.reduce((sum, transaction) => sum + parseFloat(transaction.amount), 0);
+            document.getElementById('total-payments').textContent = `$${totalPayments.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            
+            const isFaceRegistered = localStorage.getItem('facepay_face_registered');
+            if (isFaceRegistered === 'true') {
+                document.getElementById('face-registrations').textContent = '1';
+            }
+        }
+
+        // Show auth page
+        function showAuthPage() {
+            document.getElementById('auth-page').style.display = 'flex';
+            document.getElementById('main-content').style.display = 'none';
+            document.getElementById('sidebar').style.display = 'none';
+        }
+
+        // Show face recognition section
+        function showFaceRecognition() {
+            alert('Face recognition feature is active. Use the interface on the dashboard.');
+        }
+
+        // Show face registration
+        function showFaceRegistration() {
+            const isLoggedIn = localStorage.getItem('facepay_logged_in');
+            if (isLoggedIn !== 'true') {
+                alert('Please login first');
+                return;
+            }
+            
+            const isFaceRegistered = localStorage.getItem('facepay_face_registered');
+            if (isFaceRegistered === 'true') {
+                alert('Your face is already registered.');
+            } else {
+                alert('Go to Customer Registration -> Face Registration to register your face.');
+            }
+        }
+
+        // Logout
+        function logout() {
+            if (videoStream) {
+                videoStream.getTracks().forEach(track => track.stop());
+            }
+            
+            localStorage.removeItem('facepay_logged_in');
+            localStorage.removeItem('facepay_user_name');
+            localStorage.removeItem('facepay_user_email');
+            localStorage.removeItem('facepay_user_role');
+            
+            showAuthPage();
+        }
+
+        // Initialize charts
+        function initCharts() {
+            // Sales & Purchase Chart
+            const salesPurchaseCtx = document.getElementById('salesPurchaseChart');
+            if (salesPurchaseCtx) {
+                new Chart(salesPurchaseCtx.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                        datasets: [
+                            {
+                                label: 'Total Purchase',
+                                data: [3000, 4000, 3500, 5000, 4500, 6000, 5500, 7000, 6500, 8000, 7500, 9000],
+                                backgroundColor: 'rgba(67, 97, 238, 0.7)',
+                                borderColor: 'rgba(67, 97, 238, 1)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Total Sales',
+                                data: [1000, 2000, 1500, 3000, 2500, 4000, 3500, 5000, 4500, 6000, 5500, 7000],
+                                backgroundColor: 'rgba(247, 37, 133, 0.7)',
+                                borderColor: 'rgba(247, 37, 133, 1)',
+                                borderWidth: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: function(value) {
+                                        return value/1000 + 'K';
+                                    }
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // Show user menu (simulated)
+        function showUserMenu() {
+            const shouldLogout = confirm('Do you want to logout?');
+            if (shouldLogout) {
+                logout();
+            }
+        }
+    </script>
+</body>
+</html>
