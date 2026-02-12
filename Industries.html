@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Pay - Industries</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+        body {
+            background: #000;
+            color: white;
+        }
+        nav {
+            background: #0a0a0a;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #222;
+        }
+        .logo { font-size: 1.8rem; font-weight: 700; color: #00ff9d; }
+        .nav-links { display: flex; gap: 2rem; }
+        .nav-links a { color: #888; text-decoration: none; }
+        .nav-links a:hover { color: #00ff9d; }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+        .industry-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        .industry-item {
+            background: #111;
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid #222;
+            transition: 0.3s;
+        }
+        .industry-item:hover {
+            border-color: #00ff9d;
+            transform: translateY(-5px);
+        }
+        .tag {
+            display: inline-block;
+            background: #00ff9d20;
+            color: #00ff9d;
+            padding: 0.2rem 1rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="index.html" class="logo">FACE PAY</a>
+        <div class="nav-links">
+            <a href="#">Industries</a>
+           
+        </div>
+    </nav>
+    
+    <div class="container">
+        <h1 style="font-size: 3rem;">Industries <span style="color: #00ff9d;">Transformed</span></h1>
+        <p style="color: #888; font-size: 1.2rem;">Face Pay is revolutionizing payments across sectors</p>
+        
+        <div class="industry-grid">
+            <div class="industry-item">
+                <h2>🏪 Convenience Stores</h2>
+                <p style="color: #aaa; margin: 1rem 0;">7,500+ locations using Face Pay daily</p>
+                <span class="tag">32% avg. ticket increase</span>
+            </div>
+            <div class="industry-item">
+                <h2>🏥 Healthcare</h2>
+                <p style="color: #aaa; margin: 1rem 0;">HIPAA-compliant patient check-in & billing</p>
+                <span class="tag">200+ hospitals</span>
+            </div>
+            <div class="industry-item">
+                <h2>🎓 Education</h2>
+                <p style="color: #aaa; margin: 1rem 0;">Campus payments without cards or phones</p>
+                <span class="tag">50+ universities</span>
+            </div>
+            <div class="industry-item">
+                <h2>🎰 Entertainment</h2>
+                <p style="color: #aaa; margin: 1rem 0;">Stadiums, theaters, and theme parks</p>
+                <span class="tag">1.2M monthly users</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

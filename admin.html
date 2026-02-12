@@ -38,46 +38,78 @@
             background-color: #f9fafb;
         }
         .hidden {
-            display: none;
+            display: none !important;
         }
-        .toggle-switch {
-            position: relative;
-            display: inline-block;
-            width: 60px;
-            height: 34px;
+        /* Mobile dropdown styles */
+        @media (max-width: 768px) {
+            #filterDropdown {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 90%;
+                max-width: 300px;
+                z-index: 50;
+            }
+            .dropdown-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 40;
+                display: none;
+            }
         }
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
+        /* Delete button animation */
+        .delete-btn {
+            transition: all 0.3s ease;
         }
-        .toggle-slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 34px;
+        .delete-btn:hover {
+            transform: scale(1.1);
         }
-        .toggle-slider:before {
-            position: absolute;
-            content: "";
-            height: 26px;
-            width: 26px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-        input:checked + .toggle-slider {
+        /* Toggle switch styling */
+        .toggle-checkbox:checked + .toggle-label {
             background-color: #10b981;
         }
-        input:checked + .toggle-slider:before {
-            transform: translateX(26px);
+        .toggle-checkbox:checked + .toggle-label::before {
+            transform: translateX(24px);
+        }
+        .toggle-label {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 24px;
+            background-color: #d1d5db;
+            border-radius: 9999px;
+            transition: background-color 0.3s;
+            cursor: pointer;
+        }
+        .toggle-label::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            border-radius: 9999px;
+            transition: transform 0.3s;
+        }
+        /* Notification styles */
+        .custom-notification {
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
     </style>
 </head>
@@ -89,7 +121,7 @@
             <!-- Logo -->
             <div class="p-6 border-b">
                 <h1 class="text-2xl font-bold text-blue-600">
-                    <i class="fas fa-lock mr-2"></i>Admin Panel
+                    <a href="index.html" class="fas fa-lock mr-2"></a>Admin Panel
                 </h1>
                 <p class="text-gray-500 text-sm mt-1">Payment Platform</p>
             </div>
@@ -274,9 +306,7 @@
                                         <th class="text-left py-3">Time</th>
                                     </tr>
                                 </thead>
-                                <tbody id="recent-activity">
-                                    <!-- Activity rows will be populated by JavaScript -->
-                                </tbody>
+                                <tbody id="recent-activity"></tbody>
                             </table>
                         </div>
                     </div>
@@ -285,19 +315,50 @@
                 <!-- User Management Section -->
                 <div id="users" class="content-section hidden">
                     <div class="bg-white rounded-xl shadow p-6">
-                        <div class="flex justify-between items-center mb-6">
+                        <div class="flex flex-wrap justify-between items-center mb-6 gap-4">
                             <h3 class="text-lg font-semibold">User Management</h3>
-                            <div class="flex space-x-4">
+                            <div class="flex flex-wrap items-center gap-3">
+                                <button id="deletedUsersBtn" class="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded text-sm">
+                                    <i class="fas fa-user-slash"></i>
+                                    <span class="hidden sm:inline">Deleted Users</span>
+                                </button>
+                                
                                 <div class="relative">
-                                    <input type="text" placeholder="Search users..." class="pl-10 pr-4 py-2 border rounded-lg">
+                                    <input type="text" id="userSearchInput" placeholder="Search users..." class="pl-10 pr-4 py-2 border rounded-lg w-full sm:w-64">
                                     <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
                                 </div>
-                                <select class="border rounded-lg px-4 py-2">
-                                    <option>All Users</option>
-                                    <option>Merchants</option>
-                                    <option>Customers</option>
-                                    <option>Admins</option>
-                                </select>
+                                
+                                <!-- Filter Dropdown -->
+                                <div class="relative">
+                                    <button id="filterDropdownButton" class="border rounded-lg px-4 py-2 flex items-center space-x-2 bg-white hover:bg-gray-50">
+                                        <span>All Users</span>
+                                        <i class="fas fa-chevron-down text-sm"></i>
+                                    </button>
+                                    <div id="filterDropdown" class="absolute hidden bg-white border rounded-lg shadow-lg mt-1 w-56 z-10">
+                                        <ul class="py-1">
+                                            <li>
+                                                <button class="filter-option w-full text-left px-4 py-2 hover:bg-gray-100" data-filter="all">
+                                                    <i class="fas fa-users mr-2 text-gray-500"></i>All Users
+                                                </button>
+                                            </li>
+                                            <li>
+                                                <button class="filter-option w-full text-left px-4 py-2 hover:bg-gray-100" data-filter="merchant">
+                                                    <i class="fas fa-store mr-2 text-blue-500"></i>Merchants
+                                                </button>
+                                            </li>
+                                            <li>
+                                                <button class="filter-option w-full text-left px-4 py-2 hover:bg-gray-100" data-filter="customer">
+                                                    <i class="fas fa-user mr-2 text-purple-500"></i>Customers
+                                                </button>
+                                            </li>
+                                            <li>
+                                                <button class="filter-option w-full text-left px-4 py-2 hover:bg-gray-100" data-filter="admin">
+                                                    <i class="fas fa-user-shield mr-2 text-red-500"></i>Admins
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         
@@ -314,17 +375,13 @@
                                         <th class="text-left py-3">Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody id="user-table">
-                                    <!-- User rows will be populated by JavaScript -->
-                                </tbody>
+                                <tbody id="user-table"></tbody>
                             </table>
                         </div>
                         
                         <!-- Pagination -->
-                        <div class="flex justify-between items-center mt-6">
-                            <div class="text-gray-600">
-                                Showing 1 to 10 of 1,254 users
-                            </div>
+                        <div class="flex flex-wrap justify-between items-center mt-6">
+                            <div class="text-gray-600">Showing 1 to 10 of 1,254 users</div>
                             <div class="flex space-x-2">
                                 <button class="px-3 py-1 border rounded-lg bg-gray-100"><i class="fas fa-chevron-left"></i></button>
                                 <button class="px-3 py-1 border rounded-lg bg-blue-600 text-white">1</button>
@@ -341,19 +398,40 @@
                 <!-- Transaction List Section -->
                 <div id="transactions" class="content-section hidden">
                     <div class="bg-white rounded-xl shadow p-6">
-                        <div class="flex justify-between items-center mb-6">
+                        <div class="flex flex-wrap items-center justify-between mb-6 gap-3">
                             <h3 class="text-lg font-semibold">Transaction List</h3>
-                            <div class="flex space-x-4">
-                                <input type="date" class="border rounded-lg px-4 py-2">
-                                <select class="border rounded-lg px-4 py-2">
-                                    <option>All Status</option>
-                                    <option>Success</option>
-                                    <option>Pending</option>
-                                    <option>Failed</option>
-                                </select>
-                                <button class="bg-blue-600 text-white px-4 py-2 rounded-lg">
-                                    <i class="fas fa-download mr-2"></i>Export
-                                </button>
+                            
+                            <div class="flex items-center gap-3">
+                                <!-- Status Dropdown -->
+                                <div class="relative">
+                                    <button id="statusDropdownBtn" class="border rounded-lg px-4 py-2 flex items-center gap-2 bg-white hover:bg-gray-50">
+                                        <span id="statusDropdownText">All Status</span>
+                                        <i class="fas fa-chevron-down text-sm"></i>
+                                    </button>
+                                    <div id="statusDropdown" class="absolute right-0 mt-1 hidden bg-white border rounded-lg shadow-lg w-40 z-20">
+                                        <button class="status-option block w-full text-left px-4 py-2 hover:bg-gray-100" data-status="all">All</button>
+                                        <button class="status-option block w-full text-left px-4 py-2 hover:bg-gray-100" data-status="success">Success</button>
+                                        <button class="status-option block w-full text-left px-4 py-2 hover:bg-gray-100" data-status="pending">Pending</button>
+                                        <button class="status-option block w-full text-left px-4 py-2 hover:bg-gray-100" data-status="failed">Failed</button>
+                                    </div>
+                                </div>
+
+                                <!-- Export Wrapper -->
+                                <div class="relative inline-block group">
+                                    <button id="exportBtn" class="flex items-center gap-2 bg-blue-600 text-white px-3 py-2 md:px-4 rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v14m7-7H5" />
+                                        </svg>
+                                        <span class="hidden md:inline">Export</span>
+                                    </button>
+                                    <div class="absolute top-full mt-1 left-1/2 -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 md:hidden">
+                                        Export
+                                    </div>
+                                    <div id="exportMenu" class="hidden absolute right-0 mt-2 w-32 bg-white border rounded-lg shadow-md z-10">
+                                        <button id="exportCSV" class="block w-full px-4 py-2 text-left hover:bg-gray-100">Export CSV</button>
+                                        <button id="exportPDF" class="block w-full px-4 py-2 text-left hover:bg-gray-100">Export PDF</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         
@@ -370,9 +448,7 @@
                                         <th class="text-left py-3">Date</th>
                                     </tr>
                                 </thead>
-                                <tbody id="transaction-table">
-                                    <!-- Transaction rows will be populated by JavaScript -->
-                                </tbody>
+                                <tbody id="transaction-table"></tbody>
                             </table>
                         </div>
                     </div>
@@ -454,9 +530,9 @@
                                             <p class="font-medium">Enable Face Pay Registration</p>
                                             <p class="text-sm text-gray-500">Allow customers to register using face capture</p>
                                         </div>
-                                        <label class="toggle-switch">
-                                            <input type="checkbox" checked>
-                                            <span class="toggle-slider"></span>
+                                        <label class="relative inline-block w-12 h-6">
+                                            <input type="checkbox" class="toggle-checkbox hidden" checked>
+                                            <span class="toggle-label"></span>
                                         </label>
                                     </div>
                                     
@@ -465,9 +541,9 @@
                                             <p class="font-medium">Require UPI ID for Merchants</p>
                                             <p class="text-sm text-gray-500">Merchants must provide UPI ID during registration</p>
                                         </div>
-                                        <label class="toggle-switch">
-                                            <input type="checkbox" checked>
-                                            <span class="toggle-slider"></span>
+                                        <label class="relative inline-block w-12 h-6">
+                                            <input type="checkbox" class="toggle-checkbox hidden" checked>
+                                            <span class="toggle-label"></span>
                                         </label>
                                     </div>
                                     
@@ -476,9 +552,9 @@
                                             <p class="font-medium">Auto-capture Face Embeddings</p>
                                             <p class="text-sm text-gray-500">Enable guided auto-capture flow for customers</p>
                                         </div>
-                                        <label class="toggle-switch">
-                                            <input type="checkbox" checked>
-                                            <span class="toggle-slider"></span>
+                                        <label class="relative inline-block w-12 h-6">
+                                            <input type="checkbox" class="toggle-checkbox hidden" checked>
+                                            <span class="toggle-label"></span>
                                         </label>
                                     </div>
                                 </div>
@@ -493,7 +569,7 @@
                                         <label class="block font-medium mb-2">Face Match Threshold</label>
                                         <div class="flex items-center">
                                             <input type="range" min="0.5" max="1.0" step="0.05" value="0.75" class="w-full">
-                                            <span id="threshold-value" class="ml-4 font-bold">0.75</span>
+                                            <span class="ml-4 font-bold">0.75</span>
                                         </div>
                                         <p class="text-sm text-gray-500 mt-1">Higher values increase security but may cause false rejections</p>
                                     </div>
@@ -513,8 +589,8 @@
                         
                         <!-- Save Settings Button -->
                         <div class="mt-8 pt-6 border-t flex justify-end">
-                            <button class="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition">
-                                <i class="fas fa-save mr-2"></i>Save Settings
+                            <button class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
+                                Save Settings
                             </button>
                         </div>
                     </div>
@@ -523,6 +599,9 @@
         </div>
     </div>
     
+    <!-- Dropdown Overlay -->
+    <div class="dropdown-overlay" id="dropdownOverlay"></div>
+
     <script>
         // Set current date
         document.getElementById('current-date').textContent = new Date().toLocaleDateString('en-US', { 
@@ -531,7 +610,7 @@
             month: 'long', 
             day: 'numeric' 
         });
-        
+
         // Navigation functionality
         document.querySelectorAll('.sidebar-link').forEach(link => {
             link.addEventListener('click', function(e) {
@@ -563,7 +642,7 @@
                 document.getElementById(targetId).classList.remove('hidden');
             });
         });
-        
+
         // Generate sample data for recent activity
         const recentActivity = [
             { user: 'Rajesh Kumar', type: 'Face Pay', amount: '₹1,500', status: 'Success', time: '10 min ago' },
@@ -572,7 +651,7 @@
             { user: 'Amit Patel', type: 'Face Pay', amount: '₹850', status: 'Failed', time: '2 hours ago' },
             { user: 'FashionHub', type: 'Invoice Generated', amount: '₹5,400', status: 'Pending', time: '3 hours ago' }
         ];
-        
+
         const recentActivityTable = document.getElementById('recent-activity');
         recentActivity.forEach(activity => {
             const statusClass = activity.status === 'Success' || activity.status === 'Completed' 
@@ -582,7 +661,7 @@
                 : 'bg-yellow-100 text-yellow-800';
             
             const row = document.createElement('tr');
-            row.className = 'border-b hover:bg-gray-50';
+            row.className = 'table-row border-b';
             row.innerHTML = `
                 <td class="py-3">
                     <div class="flex items-center">
@@ -601,7 +680,7 @@
             `;
             recentActivityTable.appendChild(row);
         });
-        
+
         // Generate sample user data
         const users = [
             { id: 'USR001', name: 'Rahul Mehta', email: 'rahul@example.com', role: 'Customer', date: '2023-10-15', status: 'Active' },
@@ -611,11 +690,11 @@
             { id: 'USR005', name: 'Vikram Joshi', email: 'vikram@example.com', role: 'Customer', date: '2023-09-20', status: 'Active' },
             { id: 'USR006', name: 'Fashion Boutique', email: 'contact@fashionboutique.com', role: 'Merchant', date: '2023-09-15', status: 'Pending' },
             { id: 'USR007', name: 'Priya Nair', email: 'priya@example.com', role: 'Customer', date: '2023-09-10', status: 'Active' },
-            { id: 'USR008', name: 'FoodCorner', email: 'orders@foodcorner.com', role: 'Merchant', date: '2023-09-05', status: 'Active' },
+            { id: 'USR008', name: 'FoodCorner', email: 'orders@foodcorner.com', role: 'Merchant', date: '2023-09-05', status: 'Pending' },
             { id: 'USR009', name: 'Arun Kumar', email: 'arun@example.com', role: 'Customer', date: '2023-08-28', status: 'Inactive' },
             { id: 'USR010', name: 'BookWorld', email: 'support@bookworld.com', role: 'Merchant', date: '2023-08-20', status: 'Active' }
         ];
-        
+
         const userTable = document.getElementById('user-table');
         users.forEach(user => {
             const statusClass = user.status === 'Active' 
@@ -631,7 +710,7 @@
                 : 'bg-red-100 text-red-800';
             
             const row = document.createElement('tr');
-            row.className = 'border-b hover:bg-gray-50';
+            row.className = 'table-row border-b';
             row.innerHTML = `
                 <td class="py-3 font-medium">${user.id}</td>
                 <td class="py-3">${user.name}</td>
@@ -647,14 +726,14 @@
                     <button class="text-blue-600 hover:text-blue-800 mr-3" title="Edit">
                         <i class="fas fa-edit"></i>
                     </button>
-                    <button class="text-red-600 hover:text-red-800" title="Delete">
+                    <button class="text-red-600 hover:text-red-800 delete-btn" title="Delete">
                         <i class="fas fa-trash"></i>
                     </button>
                 </td>
             `;
             userTable.appendChild(row);
         });
-        
+
         // Generate sample transaction data
         const transactions = [
             { id: 'TXN1001', merchant: 'Sunita Traders', customer: 'Rahul Mehta', amount: '₹1,500', method: 'Face Pay', status: 'Success', date: '2023-10-20' },
@@ -666,7 +745,7 @@
             { id: 'TXN1007', merchant: 'TechGadgets Inc', customer: 'Anjali Singh', amount: '₹5,600', method: 'Face Pay', status: 'Success', date: '2023-10-14' },
             { id: 'TXN1008', merchant: 'FoodCorner', customer: 'Vikram Joshi', amount: '₹920', method: 'UPI', status: 'Success', date: '2023-10-13' }
         ];
-        
+
         const transactionTable = document.getElementById('transaction-table');
         transactions.forEach(transaction => {
             const statusClass = transaction.status === 'Success' 
@@ -680,7 +759,7 @@
                 : 'bg-blue-100 text-blue-800';
             
             const row = document.createElement('tr');
-            row.className = 'border-b hover:bg-gray-50';
+            row.className = 'table-row border-b';
             row.innerHTML = `
                 <td class="py-3 font-medium">${transaction.id}</td>
                 <td class="py-3">${transaction.merchant}</td>
@@ -696,141 +775,346 @@
             `;
             transactionTable.appendChild(row);
         });
-        
+
         // Initialize charts
-        function initializeCharts() {
+        document.addEventListener('DOMContentLoaded', function() {
             // Transaction Chart
-            const transactionCtx = document.getElementById('transactionChart');
-            if (transactionCtx) {
-                new Chart(transactionCtx, {
-                    type: 'line',
-                    data: {
-                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
-                        datasets: [{
-                            label: 'Transaction Volume',
-                            data: [1200, 1900, 1500, 2200, 1800, 2500, 3000, 2800, 3200, 4000],
-                            borderColor: '#3b82f6',
-                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                            fill: true,
-                            tension: 0.4
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                display: false
-                            }
-                        },
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                grid: {
-                                    display: true
-                                }
-                            },
-                            x: {
-                                grid: {
-                                    display: false
-                                }
-                            }
-                        }
+            const transactionCtx = document.getElementById('transactionChart').getContext('2d');
+            new Chart(transactionCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
+                    datasets: [{
+                        label: 'Transaction Volume',
+                        data: [1200, 1900, 1500, 2200, 1800, 2500, 3000, 2800, 3200, 4000],
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, grid: { display: true } },
+                        x: { grid: { display: false } }
                     }
-                });
-            }
+                }
+            });
             
             // User Growth Chart
-            const userCtx = document.getElementById('userChart');
-            if (userCtx) {
-                new Chart(userCtx, {
-                    type: 'bar',
-                    data: {
-                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
-                        datasets: [
-                            {
-                                label: 'Customers',
-                                data: [400, 500, 450, 600, 550, 700, 750, 800, 850, 900],
-                                backgroundColor: '#8b5cf6',
-                                borderRadius: 6
-                            },
-                            {
-                                label: 'Merchants',
-                                data: [20, 25, 30, 35, 40, 45, 50, 55, 60, 65],
-                                backgroundColor: '#10b981',
-                                borderRadius: 6
-                            }
-                        ]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'top',
-                            }
+            const userCtx = document.getElementById('userChart').getContext('2d');
+            new Chart(userCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
+                    datasets: [
+                        {
+                            label: 'Customers',
+                            data: [400, 500, 450, 600, 550, 700, 750, 800, 850, 900],
+                            backgroundColor: '#8b5cf6',
+                            borderRadius: 6
                         },
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                grid: {
-                                    display: true
-                                }
-                            },
-                            x: {
-                                grid: {
-                                    display: false
-                                }
-                            }
+                        {
+                            label: 'Merchants',
+                            data: [20, 25, 30, 35, 40, 45, 50, 55, 60, 65],
+                            backgroundColor: '#10b981',
+                            borderRadius: 6
                         }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'top' } },
+                    scales: {
+                        y: { beginAtZero: true, grid: { display: true } },
+                        x: { grid: { display: false } }
                     }
-                });
-            }
-        }
-        
-        // Initialize charts when DOM is loaded
-        document.addEventListener('DOMContentLoaded', initializeCharts);
-        
-        // Toggle switch functionality
-        document.querySelectorAll('.toggle-switch input[type="checkbox"]').forEach(checkbox => {
-            checkbox.addEventListener('change', function() {
-                const toggle = this.nextElementSibling;
-                if (this.checked) {
-                    toggle.style.backgroundColor = '#10b981'; // Green
-                } else {
-                    toggle.style.backgroundColor = '#ccc'; // Gray
                 }
             });
         });
-        
+
         // Range slider functionality
         const thresholdSlider = document.querySelector('input[type="range"]');
         if (thresholdSlider) {
             thresholdSlider.addEventListener('input', function() {
-                document.getElementById('threshold-value').textContent = this.value;
+                this.nextElementSibling.textContent = this.value;
             });
         }
-        
-        // Settings save button
-        const saveButton = document.querySelector('#settings button.bg-blue-600');
-        if (saveButton) {
-            saveButton.addEventListener('click', function() {
-                // Show loading state
-                const originalText = this.innerHTML;
-                this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Saving...';
-                this.disabled = true;
+
+        // Filter dropdown functionality
+        const filterDropdownButton = document.getElementById('filterDropdownButton');
+        const filterDropdown = document.getElementById('filterDropdown');
+        const dropdownOverlay = document.getElementById('dropdownOverlay');
+
+        if (filterDropdownButton && filterDropdown) {
+            filterDropdownButton.addEventListener('click', function(e) {
+                e.stopPropagation();
+                filterDropdown.classList.toggle('hidden');
                 
-                // Simulate API call
-                setTimeout(() => {
-                    // Show success message
-                    alert('Settings saved successfully!');
+                if (window.innerWidth <= 768) {
+                    dropdownOverlay.style.display = filterDropdown.classList.contains('hidden') ? 'none' : 'block';
+                }
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!filterDropdown.contains(e.target) && !filterDropdownButton.contains(e.target)) {
+                    filterDropdown.classList.add('hidden');
+                    dropdownOverlay.style.display = 'none';
+                }
+            });
+
+            // Close dropdown on overlay click
+            dropdownOverlay.addEventListener('click', function() {
+                filterDropdown.classList.add('hidden');
+                dropdownOverlay.style.display = 'none';
+            });
+
+            // Filter option selection
+            document.querySelectorAll('.filter-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const filter = this.getAttribute('data-filter');
+                    const buttonText = this.textContent.trim().replace(/^.+?\)/, '').trim();
                     
-                    // Restore button
-                    this.innerHTML = originalText;
-                    this.disabled = false;
-                }, 1500);
+                    filterDropdownButton.querySelector('span').textContent = buttonText;
+                    filterUsers(filter);
+                    
+                    filterDropdown.classList.add('hidden');
+                    dropdownOverlay.style.display = 'none';
+                });
             });
         }
+
+        // Filter users function
+        function filterUsers(filterType) {
+            const rows = document.querySelectorAll('#user-table tr');
+            
+            rows.forEach(row => {
+                const roleCell = row.querySelector('td:nth-child(4) span');
+                if (roleCell) {
+                    const role = roleCell.textContent.toLowerCase();
+                    
+                    switch(filterType) {
+                        case 'all':
+                            row.style.display = '';
+                            break;
+                        case 'merchant':
+                            row.style.display = role.includes('merchant') ? '' : 'none';
+                            break;
+                        case 'customer':
+                            row.style.display = role.includes('customer') ? '' : 'none';
+                            break;
+                        case 'admin':
+                            row.style.display = role.includes('admin') ? '' : 'none';
+                            break;
+                        default:
+                            row.style.display = '';
+                    }
+                }
+            });
+        }
+
+        // Delete user functionality
+        function addDeleteFunctionality() {
+            const userTable = document.getElementById('user-table');
+            
+            userTable.addEventListener('click', function(e) {
+                if (e.target.closest('.fa-trash') || e.target.classList.contains('fa-trash')) {
+                    const deleteBtn = e.target.closest('button');
+                    const row = deleteBtn.closest('tr');
+                    const userName = row.querySelector('td:nth-child(2)').textContent;
+                    const userId = row.querySelector('td:nth-child(1)').textContent;
+                    
+                    if (confirm(`Are you sure you want to delete user "${userName}" (${userId})?`)) {
+                        row.style.transition = 'all 0.3s ease';
+                        row.style.opacity = '0.5';
+                        row.style.backgroundColor = '#fee2e2';
+                        
+                        setTimeout(() => {
+                            row.remove();
+                            showNotification(`User "${userName}" has been deleted successfully.`, 'success');
+                        }, 500);
+                    }
+                }
+            });
+        }
+
+        // Show notification function
+        function showNotification(message, type = 'success') {
+            const existingNotification = document.querySelector('.custom-notification');
+            if (existingNotification) existingNotification.remove();
+            
+            const notification = document.createElement('div');
+            notification.className = `custom-notification fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-lg text-white ${
+                type === 'success' ? 'bg-green-500' : 'bg-red-500'
+            }`;
+            
+            notification.innerHTML = `
+                <div class="flex items-center">
+                    <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'} mr-3"></i>
+                    <span>${message}</span>
+                    <button class="ml-4 text-white hover:text-gray-200" onclick="this.parentElement.parentElement.remove()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentElement) notification.remove();
+            }, 5000);
+        }
+
+        // Initialize delete functionality
+        addDeleteFunctionality();
+
+        // User search functionality
+        const searchInput = document.getElementById('userSearchInput');
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                const searchValue = this.value.toLowerCase();
+                const rows = document.querySelectorAll('#user-table tr');
+                
+                rows.forEach(row => {
+                    const name = row.children[1]?.textContent.toLowerCase() || '';
+                    const email = row.children[2]?.textContent.toLowerCase() || '';
+                    const role = row.children[3]?.textContent.toLowerCase() || '';
+                    
+                    row.style.display = name.includes(searchValue) || email.includes(searchValue) || role.includes(searchValue) ? '' : 'none';
+                });
+            });
+        }
+
+        // Transaction status dropdown
+        const statusBtn = document.getElementById('statusDropdownBtn');
+        const statusDropdown = document.getElementById('statusDropdown');
+        const statusText = document.getElementById('statusDropdownText');
+
+        if (statusBtn && statusDropdown) {
+            statusBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                statusDropdown.classList.toggle('hidden');
+            });
+
+            document.addEventListener('click', () => {
+                statusDropdown.classList.add('hidden');
+            });
+
+            document.querySelectorAll('.status-option').forEach(option => {
+                option.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const status = this.dataset.status;
+                    statusText.textContent = this.textContent;
+                    filterTransactions(status);
+                    statusDropdown.classList.add('hidden');
+                });
+            });
+        }
+
+        function filterTransactions(status) {
+            const rows = document.querySelectorAll('#transaction-table tr');
+            
+            rows.forEach(row => {
+                const statusCell = row.querySelector('td:nth-child(6) span');
+                if (!statusCell) return;
+                
+                const rowStatus = statusCell.textContent.toLowerCase();
+                row.style.display = status === 'all' || rowStatus === status ? '' : 'none';
+            });
+        }
+
+        // Export functionality
+        const exportBtn = document.getElementById('exportBtn');
+        const exportMenu = document.getElementById('exportMenu');
+
+        if (exportBtn && exportMenu) {
+            exportBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (!exportBtn.disabled) {
+                    exportMenu.classList.toggle('hidden');
+                }
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!exportBtn.contains(e.target)) {
+                    exportMenu.classList.add('hidden');
+                }
+            });
+
+            // CSV Export
+            document.getElementById('exportCSV')?.addEventListener('click', () => {
+                const rows = document.querySelectorAll('#transaction-table tr');
+                if (rows.length === 0) {
+                    showNotification('No data available to export', 'error');
+                    return;
+                }
+
+                let csv = 'Transaction ID,Merchant,Customer,Amount,Method,Status,Date\n';
+                
+                rows.forEach(row => {
+                    const cols = row.querySelectorAll('td');
+                    const data = Array.from(cols).map(td => `"${td.innerText.replace(/"/g, '""')}"`);
+                    csv += data.join(',') + '\n';
+                });
+
+                const blob = new Blob([csv], { type: 'text/csv' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = 'transactions.csv';
+                link.click();
+                
+                showNotification('CSV downloaded successfully ✅', 'success');
+                exportMenu.classList.add('hidden');
+            });
+
+            // PDF Export
+            document.getElementById('exportPDF')?.addEventListener('click', () => {
+                const rows = document.querySelectorAll('#transaction-table tr');
+                if (rows.length === 0) {
+                    showNotification('No data available to export', 'error');
+                    return;
+                }
+
+                let html = `
+                    <h2 style="text-align:center;">Transaction Report</h2>
+                    <table border="1" cellspacing="0" cellpadding="6" width="100%">
+                    <tr>
+                        <th>ID</th><th>Merchant</th><th>Customer</th>
+                        <th>Amount</th><th>Method</th><th>Status</th><th>Date</th>
+                    </tr>
+                `;
+
+                rows.forEach(row => {
+                    html += '<tr>';
+                    row.querySelectorAll('td').forEach(td => {
+                        html += `<td>${td.innerText}</td>`;
+                    });
+                    html += '</tr>';
+                });
+
+                html += '</table>';
+
+                const win = window.open('', '', 'width=900,height=700');
+                win.document.write(html);
+                win.document.close();
+                win.print();
+                
+                showNotification('PDF downloaded successfully ✅', 'success');
+                exportMenu.classList.add('hidden');
+            });
+        }
+
+        // Handle window resize for dropdown
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                dropdownOverlay.style.display = 'none';
+            }
+        });
     </script>
 </body>
 </html>

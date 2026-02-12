@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Pay - Resources</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+        body {
+            background: #f8fafc;
+            color: #0f172a;
+        }
+        nav {
+            background: white;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+        .logo { font-size: 1.8rem; font-weight: 700; color: #0f172a; }
+        .nav-links { display: flex; gap: 2rem; }
+        .nav-links a { color: #475569; text-decoration: none; }
+        .nav-links a:hover { color: #0f172a; }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+        h1 { font-size: 3rem; margin-bottom: 1rem; }
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        .resource-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+        }
+        .resource-type {
+            color: #3b82f6;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+        .download-btn {
+            display: inline-block;
+            margin-top: 1.5rem;
+            padding: 0.5rem 1.5rem;
+            background: #0f172a;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="index.html" class="logo">FACE PAY</a>
+        <div class="nav-links">
+            <a href="#">Resources</a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <h1>Knowledge Hub</h1>
+        <p style="color: #475569; font-size: 1.2rem;">Whitepapers, case studies, and technical documentation</p>
+        
+        <div class="resource-grid">
+            <div class="resource-card">
+                <div class="resource-type">📘 WHITEPAPER</div>
+                <h2 style="margin: 1rem 0;">The Future of Biometric Payments</h2>
+                <p style="color: #475569;">2026 market analysis and adoption trends across 15 countries.</p>
+                <a href="#" class="download-btn">Download PDF →</a>
+            </div>
+            <div class="resource-card">
+                <div class="resource-type">📊 CASE STUDY</div>
+                <h2 style="margin: 1rem 0;">How Carrefour Cut Checkout Time by 70%</h2>
+                <p style="color: #475569;">Implementation of Face Pay across 120 hypermarkets.</p>
+                <a href="#" class="download-btn">Read case study →</a>
+            </div>
+            <div class="resource-card">
+                <div class="resource-type">🎥 WEBINAR</div>
+                <h2 style="margin: 1rem 0;">Anti-spoofing Deep Dive</h2>
+                <p style="color: #475569;">Live demo of liveness detection v3.0.</p>
+                <a href="#" class="download-btn">Watch recording →</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

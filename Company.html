@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Pay - Company</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+        body {
+            background: #fff;
+        }
+        nav {
+            background: white;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .logo { font-size: 1.8rem; font-weight: 700; color: #0f172a; }
+        .nav-links { display: flex; gap: 2rem; }
+        .nav-links a { color: #475569; text-decoration: none; }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+        .company-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        h1 { font-size: 3.5rem; color: #0f172a; }
+        .mission {
+            font-size: 1.3rem;
+            color: #475569;
+            max-width: 800px;
+            margin: 2rem auto;
+        }
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        .team-member {
+            text-align: center;
+            padding: 2rem;
+            background: #f8fafc;
+            border-radius: 16px;
+        }
+        .avatar {
+            font-size: 3rem;
+            background: #e2e8f0;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+        }
+        .stats-company {
+            display: flex;
+            justify-content: space-around;
+            margin: 4rem 0;
+            padding: 2rem;
+            background: #0f172a;
+            color: white;
+            border-radius: 16px;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="index.html" class="logo">FACE PAY</a>
+        <div class="nav-links">
+            <a href="#">Company</a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <div class="company-header">
+            <h1>We are Face Pay</h1>
+            <div class="mission">Making payments invisible. Founded in 2020, we're on a mission to eliminate friction from commerce through ethical facial recognition.</div>
+        </div>
+        
+        <div class="stats-company">
+            <div><strong style="font-size: 2rem;">$2.5B+</strong><br>processed</div>
+            <div><strong style="font-size: 2rem;">45M+</strong><br>users</div>
+            <div><strong style="font-size: 2rem;">15</strong><br>countries</div>
+        </div>
+        
+        <h2 style="margin-bottom: 2rem;">Leadership Team</h2>
+        <div class="team-grid">
+            <div class="team-member">
+                <div class="avatar">👩‍💼</div>
+                <h3>Sarah Chen</h3>
+                <p style="color: #3b82f6;">CEO & Co-founder</p>
+                <p style="color: #64748b;">Ex-Google AI</p>
+            </div>
+            <div class="team-member">
+                <div class="avatar">👨‍💻</div>
+                <h3>Marcus Rodriguez</h3>
+                <p style="color: #3b82f6;">CTO</p>
+                <p style="color: #64748b;">20+ patents in biometrics</p>
+            </div>
+            <div class="team-member">
+                <div class="avatar">👩‍🔬</div>
+                <h3>Dr. Aisha Khan</h3>
+                <p style="color: #3b82f6;">Chief AI Scientist</p>
+                <p style="color: #64748b;">Former Stanford researcher</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

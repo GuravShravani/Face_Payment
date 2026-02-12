@@ -778,15 +778,15 @@
                     <div class="cart-summary">
                         <div class="summary-row">
                             <span>Subtotal:</span>
-                            <span id="subtotal">$0.00</span>
+                            <span id="subtotal">0.00</span>
                         </div>
                         <div class="summary-row">
                             <span>Tax (10%):</span>
-                            <span id="tax">$0.00</span>
+                            <span id="tax">0.00</span>
                         </div>
                         <div class="summary-row total">
                             <span>Total:</span>
-                            <span id="total">$0.00</span>
+                            <span id="total">0.00</span>
                         </div>
                     </div>
 
@@ -868,7 +868,7 @@
                     
                     <div class="form-group">
                         <label for="facepay-amount">Payment Amount</label>
-                        <input type="text" id="facepay-amount" class="form-control" value="$0.00" readonly>
+                        <input type="text" id="facepay-amount" class="form-control" value="0.00" readonly>
                     </div>
                     
                     <div class="form-group">
@@ -897,7 +897,7 @@
                     </div>
                     <div class="form-group">
                         <label for="cash-change">Change Due</label>
-                        <input type="text" id="cash-change" class="form-control" value="$0.00" readonly>
+                        <input type="text" id="cash-change" class="form-control" value="0.00" readonly>
                     </div>
                 </div>
 
@@ -905,7 +905,7 @@
                     <div class="form-title">Card Payment</div>
                     <div class="form-group">
                         <label for="card-amount">Amount</label>
-                        <input type="text" id="card-amount" class="form-control" value="$0.00" readonly>
+                        <input type="text" id="card-amount" class="form-control" value="0.00" readonly>
                     </div>
                     <div class="form-group">
                         <label for="card-number">Card Number</label>
@@ -982,7 +982,7 @@
             </div>
             
             <div class="receipt-total" id="receipt-total">
-                Total: $0.00
+                Total: 0.00
             </div>
             
             <!-- PDF Preview -->
@@ -1031,6 +1031,8 @@
         let isCameraActive = false;
         let currentTransactionId = null;
         let capturedFaceImage = null;
+        // FIX: Add flag to track face verification status
+        let isFaceVerified = false;
 
         // DOM Elements
         const cartItemsEl = document.getElementById('cart-items');
@@ -1263,9 +1265,20 @@
                     cart = [];
                     updateCart();
                     updatePaymentAmounts();
+                    // Reset face verification when cart cleared
+                    resetFaceVerification();
                 }
             }
         });
+
+        // Helper to reset face verification
+        function resetFaceVerification() {
+            isFaceVerified = false;
+            capturedFaceImage = null;
+            capturedImage.classList.remove('show');
+            faceMatchStatus.classList.remove('success', 'failed');
+            faceMatchStatus.style.display = 'none';
+        }
 
         // Payment Method Selection
         paymentMethods.forEach(method => {
@@ -1291,6 +1304,10 @@
                 if (methodName !== 'facepay' && isCameraActive) {
                     stopCamera();
                 }
+                // Reset face verification when switching to facepay
+                if (methodName === 'facepay') {
+                    // Do not auto reset, user can start fresh
+                }
             });
         });
 
@@ -1306,9 +1323,8 @@
                 });
                 cameraFeed.srcObject = stream;
                 isCameraActive = true;
-                capturedImage.classList.remove('show');
-                faceMatchStatus.classList.remove('success', 'failed');
-                faceMatchStatus.style.display = 'none';
+                // Do not reset verification automatically, but clear any old failed status if user recaptures
+                // We'll let the capture button handle resetting for a fresh attempt
             } catch (err) {
                 alert('Error accessing camera: ' + err.message);
             }
@@ -1316,14 +1332,18 @@
 
         // Stop Camera
         stopCameraBtn.addEventListener('click', function() {
+            stopCamera();
+        });
+
+        function stopCamera() {
             if (cameraFeed.srcObject) {
                 cameraFeed.srcObject.getTracks().forEach(track => track.stop());
                 cameraFeed.srcObject = null;
                 isCameraActive = false;
             }
-        });
+        }
 
-        // Capture Image
+        // Capture Image - FIXED: Now properly sets verification to SUCCESS
         captureBtn.addEventListener('click', function() {
             if (!isCameraActive) {
                 alert('Please start the camera first');
@@ -1347,26 +1367,36 @@
             // Stop camera after capture
             stopCamera();
             
-            // Simulate face recognition - ALWAYS FAILS (to match screenshot)
-            simulateFaceRecognition();
+            // FIX: Simulate face recognition - NOW SUCCESSFUL to solve the error
+            simulateFaceRecognition(true); // Pass true for success
         });
 
-        // Simulate Face Recognition - FIXED: Always fails to match screenshot
-        function simulateFaceRecognition() {
+        // Simulate Face Recognition - FIXED: Always succeeds now when called from capture
+        // but keep the parameter to allow success/failure (default to success for capture)
+        function simulateFaceRecognition(shouldSucceed = true) {
             faceMatchStatus.textContent = 'Processing face recognition...';
             faceMatchStatus.className = 'face-match-status';
             faceMatchStatus.style.display = 'block';
             
             // Simulate API call delay
             setTimeout(() => {
-                // ALWAYS FAIL - to match the screenshot
-                faceMatchStatus.textContent = 'Face recognition failed. Please try again.';
-                faceMatchStatus.className = 'face-match-status failed';
-                capturedFaceImage = null;
-            }, 2000);
+                if (shouldSucceed) {
+                    // SUCCESS - fixes the face payment error
+                    faceMatchStatus.textContent = 'Face recognized successfully! ✓';
+                    faceMatchStatus.className = 'face-match-status success';
+                    isFaceVerified = true;
+                } else {
+                    // FAIL - for demonstration if needed
+                    faceMatchStatus.textContent = 'Face recognition failed. Please try again.';
+                    faceMatchStatus.className = 'face-match-status failed';
+                    isFaceVerified = false;
+                    capturedFaceImage = null; // Clear captured image on failure
+                    capturedImage.classList.remove('show');
+                }
+            }, 1500); // Slightly faster
         }
 
-        // Process Payment - FIXED: Shows exact error from screenshot
+        // Process Payment - FIXED: Now checks the isFaceVerified flag
         processPaymentBtn.addEventListener('click', function() {
             if (cart.length === 0) {
                 alert('Cart is empty! Add items to cart first.');
@@ -1380,19 +1410,19 @@
             let message = '';
             
             if (currentPaymentMethod === 'facepay') {
+                // FIX: Use the isFaceVerified flag instead of checking classList
                 if (!capturedFaceImage) {
                     isValid = false;
                     message = 'Please capture your face first';
-                } else if (!faceMatchStatus.classList.contains('success')) {
+                } else if (!isFaceVerified) {
                     isValid = false;
-                    // EXACT ERROR MESSAGE FROM SCREENSHOT
                     message = 'Face recognition failed. Please try again.';
                 }
             }
             
             if (!isValid) {
-                // Show the EXACT alert from screenshot
-                alert('Payment Error: Face recognition failed. Please try again.');
+                // Show the appropriate error alert
+                alert(`Payment Error: ${message}`);
                 return;
             }
             
@@ -1427,7 +1457,7 @@
             receiptId.textContent = `Transaction ID: ${currentTransactionId}`;
             
             // Set face image if available
-            if (capturedFaceImage && currentPaymentMethod === 'facepay') {
+            if (capturedFaceImage && currentPaymentMethod === 'facepay' && isFaceVerified) {
                 faceImagePreview.src = capturedFaceImage;
                 faceImagePreview.style.display = 'block';
             } else {
@@ -1491,7 +1521,7 @@
                 doc.text(`Payment Method: ${currentPaymentMethod.charAt(0).toUpperCase() + currentPaymentMethod.slice(1)}`, pageWidth / 2, 36, { align: 'center' });
                 
                 // Add face image if available
-                if (capturedFaceImage && currentPaymentMethod === 'facepay') {
+                if (capturedFaceImage && currentPaymentMethod === 'facepay' && isFaceVerified) {
                     // Add face image
                     doc.addImage(capturedFaceImage, 'JPEG', 20, 45, 40, 40);
                     
@@ -1518,7 +1548,7 @@
                 }
                 
                 // Add items
-                let yPosition = capturedFaceImage ? 100 : 55;
+                let yPosition = (capturedFaceImage && currentPaymentMethod === 'facepay' && isFaceVerified) ? 100 : 55;
                 cart.forEach(item => {
                     const itemText = `${item.name} x${item.quantity}`;
                     const itemPrice = `$${(item.price * item.quantity).toFixed(2)}`;
@@ -1592,7 +1622,7 @@
             receiptText += `Payment Method: ${currentPaymentMethod.charAt(0).toUpperCase() + currentPaymentMethod.slice(1)}\n`;
             receiptText += `===============================\n`;
             
-            if (capturedFaceImage && currentPaymentMethod === 'facepay') {
+            if (capturedFaceImage && currentPaymentMethod === 'facepay' && isFaceVerified) {
                 const customerName = document.getElementById('facepay-name').value || 'Customer';
                 const customerPhone = document.getElementById('facepay-phone').value || 'N/A';
                 receiptText += `CUSTOMER DETAILS:\n`;
@@ -1651,6 +1681,10 @@
             updatePaymentAmounts();
         });
 
+        // Expose functions to global scope for onclick handlers
+        window.updateQuantity = updateQuantity;
+        window.removeFromCart = removeFromCart;
+        
         // Initialize the app
         init();
     </script>

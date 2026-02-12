@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Pay - Pricing</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+        body {
+            background: linear-gradient(145deg, #0b1120 0%, #0f172a 100%);
+            color: white;
+        }
+        nav {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #1e293b;
+        }
+        .logo { font-size: 1.8rem; font-weight: 700; }
+        .nav-links { display: flex; gap: 2rem; }
+        .nav-links a { color: #94a3b8; text-decoration: none; }
+        .nav-links a:hover { color: white; }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        .pricing-card {
+            background: #1e293b;
+            padding: 2rem;
+            border-radius: 24px;
+            transition: 0.3s;
+            position: relative;
+        }
+        .pricing-card.popular {
+            background: #3b82f6;
+            transform: scale(1.05);
+        }
+        .price {
+            font-size: 3rem;
+            font-weight: 700;
+            margin: 1rem 0;
+        }
+        .feature-list {
+            list-style: none;
+            margin: 2rem 0;
+        }
+        .feature-list li {
+            margin: 0.8rem 0;
+            color: #cbd5e1;
+        }
+        .popular .feature-list li { color: white; }
+        .btn {
+            display: block;
+            text-align: center;
+            padding: 0.8rem;
+            background: white;
+            color: #0f172a;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+        .popular .btn {
+            background: #0f172a;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="index.html" class="logo">FACE PAY</a>
+        <div class="nav-links">
+            <a href="#">Pricing</a>
+            
+        </div>
+    </nav>
+    
+    <div class="container">
+        <h1 style="font-size: 3rem;">Transparent Pricing</h1>
+        <p style="color: #94a3b8; font-size: 1.2rem;">No hidden fees. Cancel anytime.</p>
+        
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <h2>Starter</h2>
+                <div class="price">$0</div>
+                <p style="color: #94a3b8;">/month</p>
+                <ul class="feature-list">
+                    <li>✓ Up to 1,000 transactions/mo</li>
+                    <li>✓ Basic SDK access</li>
+                    <li>✓ Email support</li>
+                </ul>
+                <a href="#" class="btn">Get started</a>
+            </div>
+            <div class="pricing-card popular">
+                <h2>Pro</h2>
+                <div class="price">$299</div>
+                <p style="color: #bfdbfe;">/month</p>
+                <ul class="feature-list">
+                    <li>✓ 50,000 transactions included</li>
+                    <li>✓ Advanced analytics</li>
+                    <li>✓ Priority support 24/7</li>
+                    <li>✓ Custom integration</li>
+                </ul>
+                <a href="#" class="btn">Start free trial</a>
+            </div>
+            <div class="pricing-card">
+                <h2>Enterprise</h2>
+                <div class="price">Custom</div>
+                <p style="color: #94a3b8;">/contact us</p>
+                <ul class="feature-list">
+                    <li>✓ Unlimited transactions</li>
+                    <li>✓ SLA guarantee</li>
+                    <li>✓ Dedicated account manager</li>
+                    <li>✓ On-premise option</li>
+                </ul>
+                <a href="#" class="btn">Contact sales</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
