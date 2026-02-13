@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request Demo - Product Tour</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            align-items: center;
+        }
+
+        /* Left Side - Info Section */
+        .info-section {
+            color: white;
+            padding-right: 40px;
+        }
+
+        .badge {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 16px;
+            border-radius: 50px;
+            display: inline-block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .info-section h1 {
+            font-size: 48px;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 20px;
+        }
+
+        .info-section p {
+            font-size: 18px;
+            line-height: 1.6;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+
+        .features {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+        }
+
+        .feature-item span {
+            background: rgba(255,255,255,0.2);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* Right Side - Form Section */
+        .card {
+            background: white;
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .card-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .card-header h2 {
+            color: #1a1a1a;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .card-header p {
+            color: #666;
+            font-size: 15px;
+        }
+
+        .demo-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group label {
+            color: #4a5568;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group input.error,
+        .form-group select.error {
+            border-color: #f56565;
+            background-color: #fff5f5;
+        }
+
+        .error-message {
+            color: #f56565;
+            font-size: 12px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-direction: row;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #667eea;
+        }
+
+        .checkbox-group label {
+            font-weight: normal;
+            color: #4a5568;
+            font-size: 14px;
+        }
+
+        .checkbox-group a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            width: 100%;
+        }
+
+        .btn-demo {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-demo:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-demo:active {
+            transform: translateY(0);
+        }
+
+        .btn-demo:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-tour {
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-tour:hover {
+            background: rgba(102, 126, 234, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .btn-tour:active {
+            transform: translateY(0);
+        }
+
+        .success-message {
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e6f3ff 100%);
+            border-radius: 16px;
+            color: #1e3a8a;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .success-message h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #1e3a8a;
+        }
+
+        .success-message p {
+            margin-bottom: 10px;
+            color: #2c5282;
+        }
+
+        .success-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+            vertical-align: middle;
+            display: none;
+        }
+
+        .btn-demo.loading .loading-spinner {
+            display: inline-block;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .reset-link {
+            background: none;
+            border: none;
+            color: #667eea;
+            text-decoration: underline;
+            margin-top: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            
+            .info-section {
+                padding-right: 0;
+                text-align: center;
+            }
+            
+            .info-section h1 {
+                font-size: 36px;
+            }
+            
+            .features {
+                align-items: center;
+            }
+            
+            .card {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Left Side - Product Info -->
+        <div class="info-section">
+            <span class="badge">⚡ LIMITED TIME OFFER</span>
+            <h1>Transform Your Business Today</h1>
+            <p>Join 10,000+ companies already using our platform to automate workflows, increase productivity, and drive growth.</p>
+            
+            <div class="features">
+                <div class="feature-item">
+                    <span>✓</span>
+                    AI-Powered Analytics
+                </div>
+                <div class="feature-item">
+                    <span>✓</span>
+                    Seamless Integration
+                </div>
+                <div class="feature-item">
+                    <span>✓</span>
+                    24/7 Premium Support
+                </div>
+                <div class="feature-item">
+                    <span>✓</span>
+                    Enterprise-Grade Security
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side - Request Demo Form -->
+        <div class="card" id="demoCard">
+            <div class="card-header">
+                <h2>Request a Demo</h2>
+                <p>Get a personalized walkthrough of our platform</p>
+            </div>
+
+            <!-- Demo Request Form -->
+            <form id="demoForm" class="demo-form">
+                <div class="form-group">
+                    <label for="fullName">Full Name *</label>
+                    <input type="text" id="fullName" name="fullName" placeholder="John Smith">
+                    <span class="error-message" id="nameError">Please enter your full name</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Work Email *</label>
+                    <input type="email" id="email" name="email" placeholder="john@company.com">
+                    <span class="error-message" id="emailError">Please enter a valid email address</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="company">Company Name *</label>
+                    <input type="text" id="company" name="company" placeholder="Your Company">
+                    <span class="error-message" id="companyError">Please enter your company name</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" placeholder="+1 (555) 123-4567">
+                </div>
+
+                <div class="form-group">
+                    <label for="employees">Company Size *</label>
+                    <select id="employees" name="employees">
+                        <option value="">Select company size</option>
+                        <option value="1-10">1-10 employees</option>
+                        <option value="11-50">11-50 employees</option>
+                        <option value="51-200">51-200 employees</option>
+                        <option value="201-500">201-500 employees</option>
+                        <option value="500+">500+ employees</option>
+                    </select>
+                    <span class="error-message" id="employeesError">Please select company size</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="interest">Primary Interest</label>
+                    <select id="interest" name="interest">
+                        <option value="">What are you most interested in?</option>
+                        <option value="analytics">Analytics & Reporting</option>
+                        <option value="automation">Workflow Automation</option>
+                        <option value="integration">API & Integrations</option>
+                        <option value="security">Security Features</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group checkbox-group">
+                    <input type="checkbox" id="consent" name="consent">
+                    <label for="consent">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a> *</label>
+                    <span class="error-message" id="consentError">You must agree to continue</span>
+                </div>
+
+                <div class="button-group">
+                    <button type="submit" id="requestDemoBtn" class="btn btn-demo">
+                        <span class="loading-spinner"></span>
+                        REQUEST A DEMO
+                    </button>
+                    
+                    <button type="button" id="startTourBtn" class="btn btn-tour">
+                        START GUIDED TOUR
+                    </button>
+                </div>
+            </form>
+
+            <!-- Success Message -->
+            <div id="successMessage" class="success-message">
+                <div class="success-icon">🎉</div>
+                <h3>Demo Request Sent!</h3>
+                <p>Thank you <span id="submittedName"></span>!</p>
+                <p>Our team will contact you at <strong id="submittedEmail"></strong></p>
+                <p>within 24 hours to schedule your personalized demo.</p>
+                <button onclick="resetDemoForm()" class="reset-link">Request another demo →</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Main JavaScript for Demo Request Program
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // ============ ELEMENTS ============
+            const demoForm = document.getElementById('demoForm');
+            const requestDemoBtn = document.getElementById('requestDemoBtn');
+            const startTourBtn = document.getElementById('startTourBtn');
+            const successMessage = document.getElementById('successMessage');
+            const submittedName = document.getElementById('submittedName');
+            const submittedEmail = document.getElementById('submittedEmail');
+
+            // Form fields
+            const fullName = document.getElementById('fullName');
+            const email = document.getElementById('email');
+            const company = document.getElementById('company');
+            const phone = document.getElementById('phone');
+            const employees = document.getElementById('employees');
+            const interest = document.getElementById('interest');
+            const consent = document.getElementById('consent');
+
+            // Error message elements
+            const nameError = document.getElementById('nameError');
+            const emailError = document.getElementById('emailError');
+            const companyError = document.getElementById('companyError');
+            const employeesError = document.getElementById('employeesError');
+            const consentError = document.getElementById('consentError');
+
+            // ============ UTILITY FUNCTIONS ============
+            function removeError(input, errorElement) {
+                input.classList.remove('error');
+                errorElement.classList.remove('show');
+            }
+
+            function addError(input, errorElement) {
+                input.classList.add('error');
+                errorElement.classList.add('show');
+            }
+
+            function isValidEmail(email) {
+                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return re.test(email);
+            }
+
+            function formatPhoneNumber(value) {
+                let phoneNumber = value.replace(/\D/g, '');
+                if (phoneNumber.length > 0) {
+                    if (phoneNumber.length <= 3) {
+                        return phoneNumber;
+                    } else if (phoneNumber.length <= 6) {
+                        return `(${phoneNumber.slice(0,3)}) ${phoneNumber.slice(3)}`;
+                    } else {
+                        return `(${phoneNumber.slice(0,3)}) ${phoneNumber.slice(3,6)}-${phoneNumber.slice(6,10)}`;
+                    }
+                }
+                return value;
+            }
+
+            // ============ VALIDATION ============
+            function validateForm() {
+                let isValid = true;
+
+                // Name validation
+                if (!fullName.value.trim()) {
+                    addError(fullName, nameError);
+                    isValid = false;
+                } else {
+                    removeError(fullName, nameError);
+                }
+
+                // Email validation
+                if (!email.value.trim() || !isValidEmail(email.value.trim())) {
+                    addError(email, emailError);
+                    isValid = false;
+                } else {
+                    removeError(email, emailError);
+                }
+
+                // Company validation
+                if (!company.value.trim()) {
+                    addError(company, companyError);
+                    isValid = false;
+                } else {
+                    removeError(company, companyError);
+                }
+
+                // Employees validation
+                if (!employees.value) {
+                    addError(employees, employeesError);
+                    isValid = false;
+                } else {
+                    removeError(employees, employeesError);
+                }
+
+                // Consent validation
+                if (!consent.checked) {
+                    consent.classList.add('error');
+                    consentError.classList.add('show');
+                    isValid = false;
+                } else {
+                    consent.classList.remove('error');
+                    consentError.classList.remove('show');
+                }
+
+                return isValid;
+            }
+
+            // ============ DEMO REQUEST HANDLER ============
+            demoForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                if (validateForm()) {
+                    // Show loading state
+                    requestDemoBtn.classList.add('loading');
+                    requestDemoBtn.disabled = true;
+
+                    // Simulate API call
+                    setTimeout(() => {
+                        // Hide loading state
+                        requestDemoBtn.classList.remove('loading');
+                        requestDemoBtn.disabled = false;
+
+                        // Create demo request object
+                        const demoRequest = {
+                            id: Date.now(),
+                            name: fullName.value.trim(),
+                            email: email.value.trim(),
+                            company: company.value.trim(),
+                            phone: phone.value.trim(),
+                            employees: employees.value,
+                            interest: interest.value || 'Not specified',
+                            consent: consent.checked,
+                            timestamp: new Date().toISOString(),
+                            status: 'pending'
+                        };
+
+                        // Save to localStorage
+                        const demoRequests = JSON.parse(localStorage.getItem('demoRequests') || '[]');
+                        demoRequests.push(demoRequest);
+                        localStorage.setItem('demoRequests', JSON.stringify(demoRequests));
+                        localStorage.setItem('lastDemoRequest', JSON.stringify(demoRequest));
+
+                        // Show success message
+                        submittedName.textContent = demoRequest.name.split(' ')[0];
+                        submittedEmail.textContent = demoRequest.email;
+                        demoForm.style.display = 'none';
+                        successMessage.classList.add('show');
+
+                        // Log to console
+                        console.log('✅ Demo Request Submitted:', demoRequest);
+                        console.log(`📊 Total Demo Requests: ${demoRequests.length}`);
+
+                        // Track conversion
+                        trackConversion(demoRequest);
+
+                    }, 1500);
+                }
+            });
+
+            // ============ GUIDED TOUR HANDLER ============
+            startTourBtn.addEventListener('click', function() {
+                // Visual feedback
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = 'scale(1)';
+                }, 200);
+
+                // Get last demo request if exists
+                const lastRequest = JSON.parse(localStorage.getItem('lastDemoRequest') || 'null');
+                
+                let tourMessage;
+                if (lastRequest) {
+                    tourMessage = `🚀 Welcome ${lastRequest.name.split(' ')[0]}!\n\n` +
+                                 `Thanks for your interest in our platform.\n` +
+                                 `Let's take a quick 2-minute tour to show you:\n` +
+                                 `• How to automate your workflows\n` +
+                                 `• Real-time analytics dashboard\n` +
+                                 `• Integration with your tools\n\n` +
+                                 `Click OK to start the interactive tour!`;
+                } else {
+                    tourMessage = `🚀 Welcome to our guided tour!\n\n` +
+                                 `This quick tour will show you:\n` +
+                                 `• Platform overview & key features\n` +
+                                 `• How to request a personalized demo\n` +
+                                 `• Success stories from our customers\n\n` +
+                                 `Ready to get started?`;
+                }
+
+                if (confirm(tourMessage)) {
+                    alert('🎯 Tour started! Follow the highlights to learn more.');
+                    startGuidedTour();
+                }
+            });
+
+            // ============ GUIDED TOUR FUNCTION ============
+            function startGuidedTour() {
+                // Create tour overlay
+                const tourSteps = [
+                    {
+                        element: '#requestDemoBtn',
+                        title: 'Request a Demo',
+                        message: 'Click here to get a personalized walkthrough from our team.'
+                    },
+                    {
+                        element: '.info-section h1',
+                        title: 'Transform Your Business',
+                        message: 'See how our platform can help you achieve your goals.'
+                    },
+                    {
+                        element: '.features',
+                        title: 'Key Features',
+                        message: 'Explore our powerful features designed for your success.'
+                    }
+                ];
+
+                let currentStep = 0;
+
+                function showTourStep(index) {
+                    if (index >= tourSteps.length) {
+                        alert('✨ Tour complete! Ready to request your demo?');
+                        return;
+                    }
+
+                    const step = tourSteps[index];
+                    const element = document.querySelector(step.element);
+                    
+                    if (element) {
+                        element.style.transition = 'all 0.3s';
+                        element.style.boxShadow = '0 0 0 4px rgba(102, 126, 234, 0.5)';
+                        element.style.transform = 'scale(1.02)';
+                        
+                        setTimeout(() => {
+                            element.style.boxShadow = 'none';
+                            element.style.transform = 'scale(1)';
+                            showTourStep(index + 1);
+                        }, 2000);
+                    } else {
+                        showTourStep(index + 1);
+                    }
+                }
+
+                showTourStep(0);
+            }
+
+            // ============ CONVERSION TRACKING ============
+            function trackConversion(demoRequest) {
+                // Track in Google Analytics (if available)
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'demo_request', {
+                        'event_category': 'conversion',
+                        'event_label': demoRequest.company,
+                        'value': 1
+                    });
+                }
+
+                // Track in Facebook Pixel (if available)
+                if (typeof fbq !== 'undefined') {
+                    fbq('track', 'Lead', {
+                        content_name: 'Demo Request',
+                        content_category: 'Form Submission',
+                        value: 1,
+                        currency: 'USD'
+                    });
+                }
+
+                // Store conversion data
+                const conversions = JSON.parse(localStorage.getItem('conversions') || '[]');
+                conversions.push({
+                    type: 'demo_request',
+                    timestamp: new Date().toISOString(),
+                    data: demoRequest
+                });
+                localStorage.setItem('conversions', JSON.stringify(conversions));
+            }
+
+            // ============ AUTO-SAVE DRAFT ============
+            function saveDraft() {
+                const draft = {
+                    name: fullName.value,
+                    email: email.value,
+                    company: company.value,
+                    phone: phone.value,
+                    employees: employees.value,
+                    interest: interest.value,
+                    timestamp: new Date().toISOString()
+                };
+                localStorage.setItem('demoFormDraft', JSON.stringify(draft));
+            }
+
+            function loadDraft() {
+                const draft = localStorage.getItem('demoFormDraft');
+                if (draft) {
+                    const data = JSON.parse(draft);
+                    fullName.value = data.name || '';
+                    email.value = data.email || '';
+                    company.value = data.company || '';
+                    phone.value = data.phone || '';
+                    employees.value = data.employees || '';
+                    interest.value = data.interest || '';
+                }
+            }
+
+            // Auto-save on input
+            [fullName, email, company, phone, employees, interest].forEach(field => {
+                if (field) {
+                    field.addEventListener('input', saveDraft);
+                }
+            });
+
+            // Load saved draft
+            loadDraft();
+
+            // ============ PHONE FORMATTING ============
+            phone.addEventListener('input', function(e) {
+                this.value = formatPhoneNumber(this.value);
+            });
+
+            // ============ REMOVE ERRORS ON INPUT ============
+            fullName.addEventListener('input', () => removeError(fullName, nameError));
+            email.addEventListener('input', () => removeError(email, emailError));
+            company.addEventListener('input', () => removeError(company, companyError));
+            employees.addEventListener('change', () => removeError(employees, employeesError));
+            consent.addEventListener('change', function() {
+                if (this.checked) {
+                    this.classList.remove('error');
+                    consentError.classList.remove('show');
+                }
+            });
+
+            // ============ KEYBOARD ACCESSIBILITY ============
+            requestDemoBtn.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    this.click();
+                }
+            });
+
+            startTourBtn.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    this.click();
+                }
+            });
+
+            // ============ ANALYTICS ============
+            console.log('🚀 Demo Request Program Loaded');
+            console.log('📋 Ready to accept demo requests');
+            
+            const existingRequests = JSON.parse(localStorage.getItem('demoRequests') || '[]');
+            console.log(`📊 Previous demo requests: ${existingRequests.length}`);
+        });
+
+        // ============ GLOBAL RESET FUNCTION ============
+        window.resetDemoForm = function() {
+            const demoForm = document.getElementById('demoForm');
+            const successMessage = document.getElementById('successMessage');
+            
+            demoForm.reset();
+            demoForm.style.display = 'block';
+            successMessage.classList.remove('show');
+            
+            // Clear draft
+            localStorage.removeItem('demoFormDraft');
+            
+            console.log('🔄 Form reset complete');
+        };
+
+        // ============ EXPORT DEMO REQUESTS ============
+        window.exportDemoRequests = function() {
+            const requests = JSON.parse(localStorage.getItem('demoRequests') || '[]');
+            const dataStr = JSON.stringify(requests, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const exportFileDefaultName = `demo-requests-${new Date().toISOString().split('T')[0]}.json`;
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+            
+            console.log(`📥 Exported ${requests.length} demo requests`);
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Barcode Scanner - With Name & Price</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Html5Qrcode - RELIABLE BARCODE SCANNER -->
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <!-- PDF.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            color: #2d3748;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .stats {
+            background: #48bb78;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 25px;
+        }
+
+        @media (max-width: 768px) {
+            .row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: white;
+            border-radius: 24px;
+            padding: 28px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            border: 1px solid rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .card-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #1a202c;
+            border-bottom: 3px solid #edf2f7;
+            padding-bottom: 15px;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border-radius: 12px;
+            border: none;
+            font-size: 15px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: white;
+            border: 2px solid #e2e8f0;
+            color: #2d3748;
+        }
+
+        .btn-primary {
+            background: #4299e1;
+            border-color: #4299e1;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #3182ce;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(66,153,225,0.3);
+        }
+
+        .btn-success {
+            background: #48bb78;
+            border-color: #48bb78;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #38a169;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: #f56565;
+            border-color: #f56565;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #e53e3e;
+        }
+
+        .scanner-container {
+            background: #1a202c;
+            border-radius: 16px;
+            padding: 16px;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .scanner-container.active {
+            display: block;
+        }
+
+        #reader {
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #4a5568;
+            font-size: 14px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: #4299e1;
+            box-shadow: 0 0 0 3px rgba(66,153,225,0.1);
+            outline: none;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 15px;
+            align-items: flex-end;
+        }
+
+        .input-group .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .upload-area {
+            background: #f7fafc;
+            border: 3px dashed #cbd5e0;
+            border-radius: 20px;
+            padding: 35px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 20px 0;
+        }
+
+        .upload-area:hover {
+            border-color: #4299e1;
+            background: #ebf8ff;
+        }
+
+        .upload-area i {
+            font-size: 48px;
+            color: #4299e1;
+            margin-bottom: 15px;
+        }
+
+        .product-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .product-table th {
+            background: #f7fafc;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #2d3748;
+            border-bottom: 3px solid #e2e8f0;
+        }
+
+        .product-table td {
+            padding: 20px 15px;
+            border-bottom: 1px solid #edf2f7;
+            vertical-align: middle;
+        }
+
+        .product-table tr:hover {
+            background: #faf5ff;
+        }
+
+        .barcode-badge {
+            background: #9f7aea;
+            color: white;
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-family: monospace;
+            font-size: 14px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .price-tag {
+            background: #fefcbf;
+            color: #975a16;
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-weight: 700;
+            display: inline-block;
+        }
+
+        .source-badge {
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .status-message {
+            padding: 16px 24px;
+            border-radius: 12px;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 500;
+        }
+
+        .status-success {
+            background: #c6f6d5;
+            color: #22543d;
+            border-left: 6px solid #48bb78;
+        }
+
+        .status-error {
+            background: #fed7d7;
+            color: #742a2a;
+            border-left: 6px solid #f56565;
+        }
+
+        .status-info {
+            background: #bee3f8;
+            color: #2c5282;
+            border-left: 6px solid #4299e1;
+        }
+
+        .total-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 16px;
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .delete-btn {
+            color: #e53e3e;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .delete-btn:hover {
+            background: #fff5f5;
+            transform: scale(1.1);
+        }
+
+        .preview-container {
+            margin-top: 20px;
+            display: none;
+        }
+
+        .preview-image {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 12px;
+            border: 3px solid #4299e1;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .currency {
+            font-size: 14px;
+            margin-right: 4px;
+            color: #718096;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Header -->
+        <div class="header">
+            <h1>
+                <i class="fas fa-barcode" style="color: #4299e1;"></i>
+                Product Scanner Pro
+            </h1>
+            <div class="stats" id="totalStats">
+                <i class="fas fa-shopping-cart"></i>
+                <span id="totalItems">0</span> items · 
+                $<span id="totalPrice">0.00</span>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Left Column - Input Forms -->
+            <div>
+                <!-- Live Scanner Card -->
+                <div class="card">
+                    <div class="card-title">
+                        <i class="fas fa-camera" style="color: #4299e1;"></i>
+                        Live Barcode Scanner
+                    </div>
+                    <div style="display: flex; gap: 12px; margin-bottom: 20px;">
+                        <button id="startScannerBtn" class="btn btn-primary">
+                            <i class="fas fa-play"></i> Start Camera
+                        </button>
+                        <button id="stopScannerBtn" class="btn">
+                            <i class="fas fa-stop"></i> Stop Camera
+                        </button>
+                    </div>
+                    <div id="scannerContainer" class="scanner-container">
+                        <div id="reader"></div>
+                        <div id="scannerStatus" class="status-message status-info" style="margin-top: 16px;">
+                            <i class="fas fa-info-circle"></i>
+                            Click "Start Camera" to begin scanning
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Manual Entry Card -->
+                <div class="card">
+                    <div class="card-title">
+                        <i class="fas fa-pencil-alt" style="color: #48bb78;"></i>
+                        Add Product Manually
+                    </div>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 20px;">
+                        <div class="form-group">
+                            <label><i class="fas fa-barcode"></i> Barcode Number</label>
+                            <input type="text" id="barcodeInput" class="form-control" placeholder="Enter barcode...">
+                        </div>
+                        
+                        <div class="input-group">
+                            <div class="form-group">
+                                <label><i class="fas fa-tag"></i> Product Name</label>
+                                <input type="text" id="productNameInput" class="form-control" placeholder="Product name">
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fas fa-dollar-sign"></i> Price</label>
+                                <input type="number" id="priceInput" class="form-control" placeholder="0.00" step="0.01" min="0">
+                            </div>
+                        </div>
+                        
+                        <button id="addProductBtn" class="btn btn-success" style="width: 100%;">
+                            <i class="fas fa-plus-circle"></i>
+                            Add Product to List
+                        </button>
+                    </div>
+                </div>
+
+                <!-- File Upload Card -->
+                <div class="card">
+                    <div class="card-title">
+                        <i class="fas fa-file-upload" style="color: #9f7aea;"></i>
+                        Extract from Image/PDF
+                    </div>
+
+                    <div id="uploadArea" class="upload-area">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <h3 style="margin-bottom: 10px;">Click to upload file</h3>
+                        <p style="color: #718096;">Supports images (PNG, JPG) and PDF files</p>
+                        <p style="color: #9f7aea; margin-top: 15px; font-weight: 600;">
+                            <i class="fas fa-barcode"></i> Barcode will be auto-detected
+                        </p>
+                    </div>
+                    <input type="file" id="fileInput" accept="image/*,.pdf" style="display: none;">
+                    
+                    <div id="preview-container" class="preview-container">
+                        <img id="preview-image" class="preview-image" src="" alt="Preview">
+                    </div>
+                    
+                    <div id="fileStatus" class="status-message status-info" style="margin-top: 20px;">
+                        <i class="fas fa-info-circle"></i>
+                        Upload an image or PDF to extract barcode
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column - Product List -->
+            <div class="card" style="height: fit-content;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                    <div class="card-title" style="margin-bottom: 0; border-bottom: none; padding-bottom: 0;">
+                        <i class="fas fa-shopping-bag" style="color: #ed8936;"></i>
+                        Product Inventory
+                    </div>
+                    <button id="clearAllBtn" class="btn btn-danger">
+                        <i class="fas fa-trash-alt"></i>
+                        Clear All
+                    </button>
+                </div>
+
+                <!-- Product Table -->
+                <div style="overflow-x: auto;">
+                    <table class="product-table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Barcode</th>
+                                <th>Price</th>
+                                <th>Source</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="productTableBody">
+                            <!-- Products will be inserted here -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="emptyState" style="text-align: center; padding: 60px 20px;">
+                    <i class="fas fa-box-open" style="font-size: 64px; color: #cbd5e0; margin-bottom: 20px;"></i>
+                    <h3 style="font-size: 20px; color: #718096; margin-bottom: 10px;">No products yet</h3>
+                    <p style="color: #a0aec0;">Add products by scanning, manual entry, or file upload</p>
+                </div>
+
+                <!-- Total Section -->
+                <div class="total-section">
+                    <span><i class="fas fa-calculator"></i> Total Value</span>
+                    <span>$<span id="grandTotal">0.00</span></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize PDF.js
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+
+        // ==================== STATE MANAGEMENT ====================
+        let products = [];
+        let html5QrcodeScanner = null;
+        let isScanning = false;
+
+        // DOM Elements
+        const barcodeInput = document.getElementById('barcodeInput');
+        const productNameInput = document.getElementById('productNameInput');
+        const priceInput = document.getElementById('priceInput');
+        const addProductBtn = document.getElementById('addProductBtn');
+        const startScannerBtn = document.getElementById('startScannerBtn');
+        const stopScannerBtn = document.getElementById('stopScannerBtn');
+        const scannerContainer = document.getElementById('scannerContainer');
+        const scannerStatus = document.getElementById('scannerStatus');
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const fileStatus = document.getElementById('fileStatus');
+        const previewContainer = document.getElementById('preview-container');
+        const previewImage = document.getElementById('preview-image');
+        const productTableBody = document.getElementById('productTableBody');
+        const emptyState = document.getElementById('emptyState');
+        const totalItems = document.getElementById('totalItems');
+        const totalPrice = document.getElementById('totalPrice');
+        const grandTotal = document.getElementById('grandTotal');
+        const clearAllBtn = document.getElementById('clearAllBtn');
+
+        // ==================== PRODUCT FUNCTIONS ====================
+        function addProduct(barcode, name, price, source) {
+            // Validate inputs
+            if (!barcode || barcode.trim() === '') {
+                showStatus('Please enter a barcode', 'error', 'fileStatus');
+                return false;
+            }
+
+            if (!name || name.trim() === '') {
+                showStatus('Please enter product name', 'error', 'fileStatus');
+                return false;
+            }
+
+            if (!price || price <= 0) {
+                showStatus('Please enter a valid price', 'error', 'fileStatus');
+                return false;
+            }
+
+            const cleanBarcode = barcode.trim();
+            const cleanName = name.trim();
+            const cleanPrice = parseFloat(price).toFixed(2);
+
+            // Add to products array
+            products.push({
+                id: Date.now() + Math.random(),
+                barcode: cleanBarcode,
+                name: cleanName,
+                price: cleanPrice,
+                source: source,
+                time: new Date().toLocaleString()
+            });
+
+            // Render and update totals
+            renderProducts();
+            updateTotals();
+            showStatus(`✅ Added: ${cleanName} - $${cleanPrice}`, 'success', 'fileStatus');
+
+            // Clear manual inputs if added manually
+            if (source === 'manual') {
+                barcodeInput.value = '';
+                productNameInput.value = '';
+                priceInput.value = '';
+            }
+
+            return true;
+        }
+
+        function removeProduct(id) {
+            products = products.filter(p => p.id !== id);
+            renderProducts();
+            updateTotals();
+            showStatus('Product removed', 'info', 'fileStatus');
+        }
+
+        function clearAllProducts() {
+            if (products.length > 0 && confirm('Remove all products from inventory?')) {
+                products = [];
+                renderProducts();
+                updateTotals();
+                showStatus('All products cleared', 'info', 'fileStatus');
+            }
+        }
+
+        function renderProducts() {
+            if (products.length === 0) {
+                productTableBody.innerHTML = '';
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+            
+            let html = '';
+            products.forEach(p => {
+                let sourceIcon = '';
+                let sourceColor = '';
+                
+                switch(p.source) {
+                    case 'camera': sourceIcon = 'fa-camera'; sourceColor = '#4299e1'; break;
+                    case 'manual': sourceIcon = 'fa-keyboard'; sourceColor = '#48bb78'; break;
+                    case 'image': sourceIcon = 'fa-image'; sourceColor = '#9f7aea'; break;
+                    case 'pdf': sourceIcon = 'fa-file-pdf'; sourceColor = '#f56565'; break;
+                }
+
+                html += `
+                    <tr>
+                        <td>
+                            <div style="font-weight: 700; color: #2d3748;">${escapeHTML(p.name)}</div>
+                            <div style="font-size: 12px; color: #718096; margin-top: 4px;">
+                                <i class="far fa-clock"></i> ${new Date(p.time).toLocaleTimeString()}
+                            </div>
+                        </td>
+                        <td>
+                            <span class="barcode-badge">
+                                <i class="fas fa-barcode"></i> ${escapeHTML(p.barcode)}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="price-tag">
+                                <span class="currency">$</span>${p.price}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="source-badge" style="background: ${sourceColor}20; color: ${sourceColor};">
+                                <i class="fas ${sourceIcon}"></i>
+                                ${p.source}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <button onclick="removeProduct(${p.id})" class="delete-btn">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            productTableBody.innerHTML = html;
+        }
+
+        function updateTotals() {
+            const itemCount = products.length;
+            const total = products.reduce((sum, p) => sum + parseFloat(p.price), 0);
+            
+            totalItems.innerText = itemCount;
+            totalPrice.innerText = total.toFixed(2);
+            grandTotal.innerText = total.toFixed(2);
+        }
+
+        function escapeHTML(str) {
+            return String(str).replace(/[&<>"]/g, function(c) {
+                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+            });
+        }
+
+        function showStatus(message, type = 'info', target = 'fileStatus') {
+            const el = document.getElementById(target);
+            if (!el) return;
+
+            el.className = 'status-message';
+            let icon = 'fa-info-circle';
+
+            if (type === 'success') {
+                el.classList.add('status-success');
+                icon = 'fa-check-circle';
+            } else if (type === 'error') {
+                el.classList.add('status-error');
+                icon = 'fa-exclamation-triangle';
+            } else {
+                el.classList.add('status-info');
+            }
+
+            el.innerHTML = `<i class="fas ${icon}"></i> ${message}`;
+        }
+
+        // ==================== CAMERA SCANNER ====================
+        startScannerBtn.addEventListener('click', function() {
+            scannerContainer.style.display = 'block';
+            
+            html5QrcodeScanner = new Html5Qrcode("reader");
+            
+            html5QrcodeScanner.start(
+                { facingMode: "environment" },
+                {
+                    fps: 10,
+                    qrbox: 250
+                },
+                (decodedText) => {
+                    // Auto-fill barcode when scanned
+                    barcodeInput.value = decodedText;
+                    showStatus(`✅ Barcode scanned: ${decodedText}`, 'success', 'scannerStatus');
+                    
+                    // Vibrate if supported
+                    if (navigator.vibrate) navigator.vibrate(200);
+                    
+                    // Focus on product name for quick entry
+                    productNameInput.focus();
+                },
+                (errorMessage) => {
+                    // Ignore errors - normal when no barcode detected
+                }
+            ).then(() => {
+                isScanning = true;
+                showStatus('Scanner active - point camera at barcode', 'info', 'scannerStatus');
+            }).catch((err) => {
+                showStatus('Camera error: ' + err, 'error', 'scannerStatus');
+            });
+        });
+
+        stopScannerBtn.addEventListener('click', function() {
+            if (html5QrcodeScanner && isScanning) {
+                html5QrcodeScanner.stop().then(() => {
+                    scannerContainer.style.display = 'none';
+                    isScanning = false;
+                    showStatus('Scanner stopped', 'info', 'scannerStatus');
+                });
+            }
+        });
+
+        // ==================== MANUAL PRODUCT ADD ====================
+        addProductBtn.addEventListener('click', function() {
+            const barcode = barcodeInput.value.trim();
+            const name = productNameInput.value.trim();
+            const price = priceInput.value.trim();
+            
+            addProduct(barcode, name, price, 'manual');
+        });
+
+        // Enter key to add product
+        priceInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                addProductBtn.click();
+            }
+        });
+
+        // ==================== FILE UPLOAD ====================
+        uploadArea.addEventListener('click', function() {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', async function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            showStatus('🔄 Processing file...', 'info', 'fileStatus');
+
+            // Show preview for images
+            if (file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImage.src = e.target.result;
+                    previewContainer.style.display = 'block';
+                    
+                    // Scan barcode from image
+                    const html5Qrcode = new Html5Qrcode("reader");
+                    html5Qrcode.scanFile(file, true)
+                        .then(decodedText => {
+                            // Auto-fill barcode
+                            barcodeInput.value = decodedText;
+                            showStatus(`✅ Barcode found: ${decodedText}`, 'success', 'fileStatus');
+                            
+                            // Focus on product name
+                            productNameInput.focus();
+                        })
+                        .catch(err => {
+                            showStatus('❌ No barcode found in image', 'error', 'fileStatus');
+                        });
+                };
+                reader.readAsDataURL(file);
+            }
+            
+            // Handle PDF files
+            else if (file.type === 'application/pdf') {
+                showStatus('📄 PDF support: Please save as image first', 'error', 'fileStatus');
+            }
+
+            // Reset file input
+            fileInput.value = '';
+        });
+
+        // ==================== CLEAR ALL ====================
+        clearAllBtn.addEventListener('click', clearAllProducts);
+
+        // ==================== GLOBAL FUNCTIONS ====================
+        window.removeProduct = removeProduct;
+
+        // ==================== INITIAL RENDER ====================
+        renderProducts();
+        updateTotals();
+        showStatus('Ready to add products', 'info', 'fileStatus');
+        showStatus('Click "Start Camera" to begin scanning', 'info', 'scannerStatus');
+
+        // Cleanup
+        window.addEventListener('beforeunload', function() {
+            if (html5QrcodeScanner && isScanning) {
+                html5QrcodeScanner.stop();
+            }
+        });
+
+        // Add sample product for demonstration
+        setTimeout(() => {
+            if (products.length === 0) {
+                // Uncomment to add sample product
+                // addProduct('9780141439518', 'Sample Product', '19.99', 'manual');
+            }
+        }, 1000);
+    </script>
+</body>
+</html>

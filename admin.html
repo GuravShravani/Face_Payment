@@ -37,83 +37,430 @@
         .table-row:hover {
             background-color: #f9fafb;
         }
-        .hidden {
-            display: none !important;
-        }
-        /* Mobile dropdown styles */
-        @media (max-width: 768px) {
-            #filterDropdown {
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                width: 90%;
-                max-width: 300px;
-                z-index: 50;
-            }
-            .dropdown-overlay {
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background: rgba(0, 0, 0, 0.5);
-                z-index: 40;
-                display: none;
-            }
-        }
-        /* Delete button animation */
-        .delete-btn {
-            transition: all 0.3s ease;
-        }
-        .delete-btn:hover {
-            transform: scale(1.1);
-        }
-        /* Toggle switch styling */
-        .toggle-checkbox:checked + .toggle-label {
-            background-color: #10b981;
-        }
-        .toggle-checkbox:checked + .toggle-label::before {
-            transform: translateX(24px);
-        }
-        .toggle-label {
-            position: relative;
-            display: inline-block;
-            width: 48px;
-            height: 24px;
-            background-color: #d1d5db;
-            border-radius: 9999px;
-            transition: background-color 0.3s;
-            cursor: pointer;
-        }
-        .toggle-label::before {
-            content: '';
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            left: 2px;
-            bottom: 2px;
-            background-color: white;
-            border-radius: 9999px;
-            transition: transform 0.3s;
-        }
-        /* Notification styles */
-        .custom-notification {
-            animation: slideIn 0.3s ease-out;
-        }
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
+        /* Add these styles to your existing style section */
+@media (max-width: 768px) {
+    #filterDropdown {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 90%;
+        max-width: 300px;
+        z-index: 50;
+    }
+    .dropdown-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 40;
+        display: none;
+    }
+}
+
+/* Delete button animation */
+.delete-btn {
+    transition: all 0.3s ease;
+}
+
+.delete-btn:hover {
+    transform: scale(1.1);
+}
+
+/* Edit button animation */
+.edit-btn {
+    transition: all 0.3s ease;
+}
+
+.edit-btn:hover {
+    transform: scale(1.1);
+}
+
+/* Logout button animation */
+.logout-btn-header {
+    transition: all 0.3s ease;
+}
+
+.logout-btn-header:hover {
+    transform: scale(1.1);
+}
+
+/* Status filter styles */
+.status-filter-btn.active {
+    background-color: #3b82f6;
+    color: white;
+    border-color: #3b82f6;
+}
+
+/* Mobile responsive styles for status filter */
+@media (max-width: 768px) {
+    #statusFilterMobile {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 90%;
+        max-width: 300px;
+        z-index: 50;
+    }
+    .status-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 40;
+        display: none;
+    }
+    .mobile-status-btn {
+        width: 100%;
+        justify-content: center;
+        margin-bottom: 8px;
+    }
+}
+/* Deleted Users Modal Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 100;
+    display: none;
+}
+.deleted-users-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border-radius: 0.75rem;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    z-index: 101;
+    width: 90%;
+    max-width: 800px;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+@media (max-width: 640px) {
+    .deleted-users-modal {
+        width: 95%;
+        max-height: 85vh;
+    }
+}
+
+/* Notification Panel Styles */
+.notification-panel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border-radius: 0.75rem;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    z-index: 101;
+    width: 90%;
+    max-width: 400px;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.notification-item {
+    transition: all 0.3s ease;
+}
+
+.notification-item:hover {
+    background-color: #f9fafb;
+}
+
+.notification-badge {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+/* Mobile action buttons */
+@media (max-width: 640px) {
+    .action-buttons {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: flex-start;
+    }
+    
+    .action-btn {
+        padding: 0.5rem;
+        border-radius: 0.5rem;
+    }
+}
+
+/* Responsive header */
+@media (max-width: 768px) {
+    .header-right {
+        gap: 0.5rem;
+    }
+    
+    .notification-btn {
+        position: relative;
+    }
+    
+    .logout-btn-header span {
+        display: none;
+    }
+    
+    .logout-btn-header {
+        padding: 0.5rem;
+    }
+}
+
+/* Edit modal styles */
+.edit-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border-radius: 0.75rem;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    z-index: 101;
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.edit-form-field {
+    transition: all 0.3s ease;
+}
+
+.edit-form-field:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Header Logout Button Styles */
+.header-logout-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    color: #4b5563;
+    transition: all 0.3s ease;
+}
+
+.header-logout-btn:hover {
+    background-color: #fee2e2;
+    color: #dc2626;
+}
+
+@media (max-width: 768px) {
+    .header-logout-btn span {
+        display: none;
+    }
+    
+    .header-logout-btn {
+        padding: 0.5rem;
+    }
+}
+
+/* ============== RESPONSIVE PAGINATION STYLES ============== */
+@media (max-width: 640px) {
+    .pagination-container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .pagination-info {
+        width: 100%;
+        text-align: left;
+    }
+    
+    .pagination-controls {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .pagination-controls button {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.875rem;
+    }
+    
+    .pagination-controls .page-number {
+        display: none;
+    }
+    
+    .pagination-controls .page-number-mobile {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.5rem 0.75rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.5rem;
+        background-color: white;
+        color: #374151;
+    }
+    
+    .pagination-controls .active-page {
+        background-color: #3b82f6;
+        color: white;
+        border-color: #3b82f6;
+    }
+}
+
+@media (min-width: 641px) {
+    .pagination-controls .page-number-mobile {
+        display: none;
+    }
+}
+
+/* Hide middle page numbers on very small screens */
+@media (max-width: 480px) {
+    .pagination-controls .hide-on-mobile {
+        display: none;
+    }
+    
+    .pagination-controls button:not(.prev-next):not(.active-page) {
+        display: none;
+    }
+    
+    .pagination-controls .prev-next {
+        display: inline-flex;
+    }
+}
     </style>
 </head>
 <body class="bg-gray-50">
+    <!-- Deleted Users Modal -->
+    <div id="deletedUsersModalOverlay" class="modal-overlay"></div>
+    <div id="deletedUsersModal" class="deleted-users-modal hidden">
+        <div class="p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-semibold text-gray-800">
+                    <i class="fas fa-trash-alt mr-2 text-red-500"></i>Deleted Users
+                </h3>
+                <button id="closeDeletedModal" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr class="border-b">
+                            <th class="text-left py-3">ID</th>
+                            <th class="text-left py-3">Name</th>
+                            <th class="text-left py-3">Email</th>
+                            <th class="text-left py-3">Role</th>
+                        </tr>
+                    </thead>
+                    <tbody id="deleted-user-table">
+                        <tr>
+                            <td colspan="4" class="text-center py-8 text-gray-500">
+                                <i class="fas fa-inbox text-4xl mb-3 block text-gray-300"></i>
+                                No deleted users yet
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="mt-6 flex justify-end">
+                <button id="closeDeletedModalBtn" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit User Modal -->
+    <div id="editUserModalOverlay" class="modal-overlay"></div>
+    <div id="editUserModal" class="edit-modal hidden">
+        <div class="p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-semibold text-gray-800">
+                    <i class="fas fa-user-edit mr-2 text-blue-500"></i>Edit User
+                </h3>
+                <button id="closeEditModal" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+            <form id="editUserForm" class="space-y-4">
+                <input type="hidden" id="editUserId">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                    <input type="text" id="editName" class="edit-form-field w-full px-4 py-2 border rounded-lg focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                    <input type="email" id="editEmail" class="edit-form-field w-full px-4 py-2 border rounded-lg focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Role</label>
+                    <select id="editRole" class="edit-form-field w-full px-4 py-2 border rounded-lg focus:outline-none">
+                        <option value="Customer">Customer</option>
+                        <option value="Merchant">Merchant</option>
+                        <option value="Admin">Admin</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                    <select id="editStatus" class="edit-form-field w-full px-4 py-2 border rounded-lg focus:outline-none">
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
+                        <option value="Pending">Pending</option>
+                    </select>
+                </div>
+                <div class="flex justify-end gap-3 mt-6">
+                    <button type="button" id="cancelEditBtn" class="px-6 py-2 border rounded-lg hover:bg-gray-50">
+                        Cancel
+                    </button>
+                    <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                        Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notification Panel -->
+    <div id="notificationModalOverlay" class="modal-overlay"></div>
+    <div id="notificationPanel" class="notification-panel hidden">
+        <div class="p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-semibold text-gray-800">
+                    <i class="fas fa-bell mr-2 text-blue-500"></i>Notifications
+                </h3>
+                <div class="flex items-center gap-3">
+                    <button id="markAllReadBtn" class="text-sm text-blue-600 hover:text-blue-800">
+                        Mark all read
+                    </button>
+                    <button id="closeNotificationPanel" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+            <div id="notificationList" class="space-y-3 max-h-96 overflow-y-auto">
+                <!-- Notifications will be populated here -->
+            </div>
+            <div class="mt-6 flex justify-end">
+                <button id="viewAllNotificationsBtn" class="text-blue-600 hover:text-blue-800 text-sm">
+                    View all notifications
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Main Container -->
     <div class="flex h-screen">
         <!-- Sidebar -->
@@ -162,7 +509,7 @@
                 </ul>
             </nav>
             
-            <!-- Admin Profile -->
+            <!-- Admin Profile - Logout Button Removed -->
             <div class="p-4 border-t">
                 <div class="flex items-center">
                     <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
@@ -172,9 +519,6 @@
                         <p class="font-medium">Administrator</p>
                         <p class="text-gray-500 text-sm">admin@paymentplatform.com</p>
                     </div>
-                    <a href="/" class="ml-auto text-gray-500 hover:text-red-600" title="Logout">
-                        <i class="fas fa-sign-out-alt"></i>
-                    </a>
                 </div>
             </div>
         </div>
@@ -184,14 +528,26 @@
             <!-- Header -->
             <header class="bg-white shadow-sm p-4 flex justify-between items-center">
                 <h2 class="text-xl font-semibold text-gray-800" id="page-title">Dashboard Overview</h2>
-                <div class="flex items-center space-x-4">
-                    <div class="relative">
-                        <i class="fas fa-bell text-gray-600"></i>
-                        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">3</span>
+                <div class="flex items-center space-x-4 header-right">
+                    <!-- Responsive Notification Button -->
+                    <div class="relative notification-btn">
+                        <button id="notificationBellBtn" class="relative p-2 text-gray-600 hover:text-blue-600 transition-all duration-300 hover:scale-110">
+                            <i class="fas fa-bell text-xl"></i>
+                            <span id="notificationBadge" class="notification-badge absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">3</span>
+                        </button>
+                        <!-- Mobile tooltip -->
+                        <div class="absolute top-full mt-1 left-1/2 -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 md:hidden hidden">
+                            Notifications
+                        </div>
                     </div>
                     <div class="text-sm text-gray-600">
                         <span id="current-date">Loading...</span>
                     </div>
+                    <!-- Responsive Logout Button in Header -->
+                    <a href="/" id="headerLogoutBtn" class="header-logout-btn logout-btn-header" title="Logout">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span class="hidden md:inline">Logout</span>
+                    </a>
                 </div>
             </header>
             
@@ -306,153 +662,225 @@
                                         <th class="text-left py-3">Time</th>
                                     </tr>
                                 </thead>
-                                <tbody id="recent-activity"></tbody>
+                                <tbody id="recent-activity">
+                                    <!-- Activity rows will be populated by JavaScript -->
+                                </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
                 
                 <!-- User Management Section -->
-                <div id="users" class="content-section hidden">
-                    <div class="bg-white rounded-xl shadow p-6">
-                        <div class="flex flex-wrap justify-between items-center mb-6 gap-4">
-                            <h3 class="text-lg font-semibold">User Management</h3>
-                            <div class="flex flex-wrap items-center gap-3">
-                                <button id="deletedUsersBtn" class="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded text-sm">
-                                    <i class="fas fa-user-slash"></i>
-                                    <span class="hidden sm:inline">Deleted Users</span>
+<div id="users" class="content-section hidden">
+    <div class="bg-white rounded-xl shadow p-6">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-lg font-semibold">User Management</h3>
+            <div class="flex space-x-4">
+                <!-- Deleted Users Button -->
+                <button id="deletedUsersBtn" class="border rounded-lg px-4 py-2 flex items-center space-x-2 bg-white hover:bg-gray-50 text-gray-700">
+                    <i class="fas fa-trash-alt text-red-500"></i>
+                    <span class="hidden sm:inline">Deleted Users</span>
+                    <span id="deletedUsersCount" class="bg-red-100 text-red-600 px-2 py-0.5 rounded-full text-xs">0</span>
+                </button>
+
+                <div class="relative">
+  <input
+    type="text"
+    id="userSearchInput"
+    placeholder="Search users..."
+    class="pl-10 pr-4 py-2 border rounded-lg w-full sm:w-64"
+  >
+  <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+</div>
+
+                <!-- Replace the select with this dropdown -->
+                <div class="relative">
+                    <button id="filterDropdownButton" class="border rounded-lg px-4 py-2 flex items-center space-x-2 bg-white hover:bg-gray-50">
+                        <span>All Users</span>
+                        <i class="fas fa-chevron-down text-sm"></i>
+                    </button>
+                    <div id="filterDropdown" class="absolute hidden bg-white border rounded-lg shadow-lg mt-1 w-56 z-10">
+                        <ul class="py-1">
+                            <li>
+                                <button class="filter-option w-full text-left px-4 py-2 hover:bg-gray-100" data-filter="all">
+                                    <i class="fas fa-users mr-2 text-gray-500"></i>All Users
                                 </button>
-                                
-                                <div class="relative">
-                                    <input type="text" id="userSearchInput" placeholder="Search users..." class="pl-10 pr-4 py-2 border rounded-lg w-full sm:w-64">
-                                    <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
-                                </div>
-                                
-                                <!-- Filter Dropdown -->
-                                <div class="relative">
-                                    <button id="filterDropdownButton" class="border rounded-lg px-4 py-2 flex items-center space-x-2 bg-white hover:bg-gray-50">
-                                        <span>All Users</span>
-                                        <i class="fas fa-chevron-down text-sm"></i>
-                                    </button>
-                                    <div id="filterDropdown" class="absolute hidden bg-white border rounded-lg shadow-lg mt-1 w-56 z-10">
-                                        <ul class="py-1">
-                                            <li>
-                                                <button class="filter-option w-full text-left px-4 py-2 hover:bg-gray-100" data-filter="all">
-                                                    <i class="fas fa-users mr-2 text-gray-500"></i>All Users
-                                                </button>
-                                            </li>
-                                            <li>
-                                                <button class="filter-option w-full text-left px-4 py-2 hover:bg-gray-100" data-filter="merchant">
-                                                    <i class="fas fa-store mr-2 text-blue-500"></i>Merchants
-                                                </button>
-                                            </li>
-                                            <li>
-                                                <button class="filter-option w-full text-left px-4 py-2 hover:bg-gray-100" data-filter="customer">
-                                                    <i class="fas fa-user mr-2 text-purple-500"></i>Customers
-                                                </button>
-                                            </li>
-                                            <li>
-                                                <button class="filter-option w-full text-left px-4 py-2 hover:bg-gray-100" data-filter="admin">
-                                                    <i class="fas fa-user-shield mr-2 text-red-500"></i>Admins
-                                                </button>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="overflow-x-auto">
-                            <table class="w-full">
-                                <thead>
-                                    <tr class="border-b">
-                                        <th class="text-left py-3">ID</th>
-                                        <th class="text-left py-3">Name</th>
-                                        <th class="text-left py-3">Email</th>
-                                        <th class="text-left py-3">Role</th>
-                                        <th class="text-left py-3">Registration Date</th>
-                                        <th class="text-left py-3">Status</th>
-                                        <th class="text-left py-3">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="user-table"></tbody>
-                            </table>
-                        </div>
-                        
-                        <!-- Pagination -->
-                        <div class="flex flex-wrap justify-between items-center mt-6">
-                            <div class="text-gray-600">Showing 1 to 10 of 1,254 users</div>
-                            <div class="flex space-x-2">
-                                <button class="px-3 py-1 border rounded-lg bg-gray-100"><i class="fas fa-chevron-left"></i></button>
-                                <button class="px-3 py-1 border rounded-lg bg-blue-600 text-white">1</button>
-                                <button class="px-3 py-1 border rounded-lg">2</button>
-                                <button class="px-3 py-1 border rounded-lg">3</button>
-                                <button class="px-3 py-1 border rounded-lg">...</button>
-                                <button class="px-3 py-1 border rounded-lg">10</button>
-                                <button class="px-3 py-1 border rounded-lg"><i class="fas fa-chevron-right"></i></button>
-                            </div>
-                        </div>
+                            </li>
+                            <li>
+                                <button class="filter-option w-full text-left px-4 py-2 hover:bg-gray-100" data-filter="merchant">
+                                    <i class="fas fa-store mr-2 text-blue-500"></i>Merchants
+                                </button>
+                            </li>
+                            <li>
+                                <button class="filter-option w-full text-left px-4 py-2 hover:bg-gray-100" data-filter="customer">
+                                    <i class="fas fa-user mr-2 text-purple-500"></i>Customers
+                                </button>
+                            </li>
+                            <li>
+                                <button class="filter-option w-full text-left px-4 py-2 hover:bg-gray-100" data-filter="admin">
+                                    <i class="fas fa-user-shield mr-2 text-red-500"></i>Admins
+                                </button>
+                            </li>
+                            
+                        </ul>
                     </div>
                 </div>
+            </div>
+        </div>
+        
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead>
+                    <tr class="border-b">
+                        <th class="text-left py-3">ID</th>
+                        <th class="text-left py-3">Name</th>
+                        <th class="text-left py-3">Email</th>
+                        <th class="text-left py-3">Role</th>
+                        <th class="text-left py-3">Registration Date</th>
+                        <th class="text-left py-3">Status</th>
+                        <th class="text-left py-3">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="user-table">
+                    <!-- User rows will be populated by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Pagination - Now with responsive classes -->
+        <div class="flex justify-between items-center mt-6 pagination-container">
+            <div class="text-gray-600 pagination-info">
+                Showing 1 to 10 of 1,254 users
+            </div>
+            <div class="flex space-x-2 pagination-controls">
+                <button class="px-3 py-1 border rounded-lg bg-gray-100 prev-next">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="px-3 py-1 border rounded-lg bg-blue-600 text-white page-number active-page">1</button>
+                <button class="px-3 py-1 border rounded-lg page-number hide-on-mobile">2</button>
+                <button class="px-3 py-1 border rounded-lg page-number hide-on-mobile">3</button>
+                <span class="page-number-mobile px-3 py-1 border rounded-lg bg-white">
+                    Page 1 of 10
+                </span>
+                <button class="px-3 py-1 border rounded-lg page-number hide-on-mobile">...</button>
+                <button class="px-3 py-1 border rounded-lg page-number hide-on-mobile">10</button>
+                <button class="px-3 py-1 border rounded-lg prev-next">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Transaction List Section -->
                 
                 <!-- Transaction List Section -->
                 <div id="transactions" class="content-section hidden">
-                    <div class="bg-white rounded-xl shadow p-6">
-                        <div class="flex flex-wrap items-center justify-between mb-6 gap-3">
-                            <h3 class="text-lg font-semibold">Transaction List</h3>
-                            
-                            <div class="flex items-center gap-3">
-                                <!-- Status Dropdown -->
-                                <div class="relative">
-                                    <button id="statusDropdownBtn" class="border rounded-lg px-4 py-2 flex items-center gap-2 bg-white hover:bg-gray-50">
-                                        <span id="statusDropdownText">All Status</span>
-                                        <i class="fas fa-chevron-down text-sm"></i>
-                                    </button>
-                                    <div id="statusDropdown" class="absolute right-0 mt-1 hidden bg-white border rounded-lg shadow-lg w-40 z-20">
-                                        <button class="status-option block w-full text-left px-4 py-2 hover:bg-gray-100" data-status="all">All</button>
-                                        <button class="status-option block w-full text-left px-4 py-2 hover:bg-gray-100" data-status="success">Success</button>
-                                        <button class="status-option block w-full text-left px-4 py-2 hover:bg-gray-100" data-status="pending">Pending</button>
-                                        <button class="status-option block w-full text-left px-4 py-2 hover:bg-gray-100" data-status="failed">Failed</button>
-                                    </div>
-                                </div>
+    <div class="bg-white rounded-xl shadow p-6">
+        <div class="flex items-center justify-between mb-6">
+    
+    <!-- Left: Title -->
+    <h3 class="text-lg font-semibold">Transaction List</h3>
 
-                                <!-- Export Wrapper -->
-                                <div class="relative inline-block group">
-                                    <button id="exportBtn" class="flex items-center gap-2 bg-blue-600 text-white px-3 py-2 md:px-4 rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v14m7-7H5" />
-                                        </svg>
-                                        <span class="hidden md:inline">Export</span>
-                                    </button>
-                                    <div class="absolute top-full mt-1 left-1/2 -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 md:hidden">
-                                        Export
-                                    </div>
-                                    <div id="exportMenu" class="hidden absolute right-0 mt-2 w-32 bg-white border rounded-lg shadow-md z-10">
-                                        <button id="exportCSV" class="block w-full px-4 py-2 text-left hover:bg-gray-100">Export CSV</button>
-                                        <button id="exportPDF" class="block w-full px-4 py-2 text-left hover:bg-gray-100">Export PDF</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="overflow-x-auto">
-                            <table class="w-full">
-                                <thead>
-                                    <tr class="border-b">
-                                        <th class="text-left py-3">Transaction ID</th>
-                                        <th class="text-left py-3">Merchant</th>
-                                        <th class="text-left py-3">Customer</th>
-                                        <th class="text-left py-3">Amount</th>
-                                        <th class="text-left py-3">Payment Method</th>
-                                        <th class="text-left py-3">Status</th>
-                                        <th class="text-left py-3">Date</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="transaction-table"></tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+    <!-- Right: Status + Export -->
+    <div class="flex items-center gap-3">
+        
+        <!-- Status Dropdown -->
+        <div class="relative">
+            <button id="statusDropdownBtn"
+                class="border rounded-lg px-4 py-2 flex items-center gap-2 bg-white hover:bg-gray-50">
+                <span id="statusDropdownText">All Status</span>
+                <i class="fas fa-chevron-down text-sm"></i>
+            </button>
+
+            <div id="statusDropdown"
+                class="absolute right-0 mt-1 hidden bg-white border rounded-lg shadow-lg w-40 z-20">
+                <button class="status-option block w-full text-left px-4 py-2 hover:bg-gray-100" data-status="all">All</button>
+                <button class="status-option block w-full text-left px-4 py-2 hover:bg-gray-100" data-status="success">Success</button>
+                <button class="status-option block w-full text-left px-4 py-2 hover:bg-gray-100" data-status="pending">Pending</button>
+                <button class="status-option block w-full text-left px-4 py-2 hover:bg-gray-100" data-status="failed">Failed</button>
+            </div>
+        </div>
+
+        <!-- Export Wrapper -->
+<div class="relative inline-block group">
+
+  <!-- Export Button -->
+  <button
+    id="exportBtn"
+    class="flex items-center gap-2 bg-blue-600 text-white
+           px-3 py-2 md:px-4 rounded-lg
+           hover:bg-blue-700
+           disabled:bg-gray-300 disabled:cursor-not-allowed">
+
+    <!-- Icon (always visible) -->
+    <svg xmlns="http://www.w3.org/2000/svg"
+         class="w-5 h-5"
+         fill="none" viewBox="0 0 24 24"
+         stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 5v14m7-7H5" />
+    </svg>
+
+    <!-- Text (desktop only) -->
+    <span class="hidden md:inline">Export</span>
+  </button>
+
+  <!-- Tooltip (mobile only) -->
+  <div
+    class="absolute top-full mt-1 left-1/2 -translate-x-1/2
+           bg-black text-white text-xs px-2 py-1 rounded
+           opacity-0 group-hover:opacity-100
+           md:hidden">
+    Export
+  </div>
+
+  <!-- Dropdown -->
+  <div id="exportMenu"
+  class="hidden absolute right-0 mt-2 w-32
+         bg-white border rounded-lg shadow-md z-10">
+
+  <button id="exportCSV"
+    class="block w-full px-4 py-2 text-left hover:bg-gray-100">
+    Export CSV
+  </button>
+
+  <button id="exportPDF"
+    class="block w-full px-4 py-2 text-left hover:bg-gray-100">
+    Export PDF
+  </button>
+
+</div>
+
+
+</div>
+
+
+
+    </div>
+</div>
+
+        
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead>
+                    <tr class="border-b">
+                        <th class="text-left py-3">Transaction ID</th>
+                        <th class="text-left py-3">Merchant</th>
+                        <th class="text-left py-3">Customer</th>
+                        <th class="text-left py-3">Amount</th>
+                        <th class="text-left py-3">Payment Method</th>
+                        <th class="text-left py-3">Status</th>
+                        <th class="text-left py-3">Date</th>
+                    </tr>
+                </thead>
+                <tbody id="transaction-table">
+                    <!-- Transaction rows are populated exactly as in your image -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
                 
                 <!-- Analytics Section -->
                 <div id="analytics" class="content-section hidden">
@@ -531,8 +959,8 @@
                                             <p class="text-sm text-gray-500">Allow customers to register using face capture</p>
                                         </div>
                                         <label class="relative inline-block w-12 h-6">
-                                            <input type="checkbox" class="toggle-checkbox hidden" checked>
-                                            <span class="toggle-label"></span>
+                                            <input type="checkbox" class="opacity-0 w-0 h-0" checked>
+                                            <span class="absolute cursor-pointer top-0 left-0 right-0 bottom-0 bg-green-500 rounded-full transition duration-300 before:absolute before:content-[''] before:w-5 before:h-5 before:left-1 before:bottom-0.5 before:bg-white before:rounded-full before:transition before:duration-300"></span>
                                         </label>
                                     </div>
                                     
@@ -542,8 +970,8 @@
                                             <p class="text-sm text-gray-500">Merchants must provide UPI ID during registration</p>
                                         </div>
                                         <label class="relative inline-block w-12 h-6">
-                                            <input type="checkbox" class="toggle-checkbox hidden" checked>
-                                            <span class="toggle-label"></span>
+                                            <input type="checkbox" class="opacity-0 w-0 h-0" checked>
+                                            <span class="absolute cursor-pointer top-0 left-0 right-0 bottom-0 bg-green-500 rounded-full transition duration-300 before:absolute before:content-[''] before:w-5 before:h-5 before:left-1 before:bottom-0.5 before:bg-white before:rounded-full before:transition before:duration-300"></span>
                                         </label>
                                     </div>
                                     
@@ -553,8 +981,8 @@
                                             <p class="text-sm text-gray-500">Enable guided auto-capture flow for customers</p>
                                         </div>
                                         <label class="relative inline-block w-12 h-6">
-                                            <input type="checkbox" class="toggle-checkbox hidden" checked>
-                                            <span class="toggle-label"></span>
+                                            <input type="checkbox" class="opacity-0 w-0 h-0" checked>
+                                            <span class="absolute cursor-pointer top-0 left-0 right-0 bottom-0 bg-green-500 rounded-full transition duration-300 before:absolute before:content-[''] before:w-5 before:h-5 before:left-1 before:bottom-0.5 before:bg-white before:rounded-full before:transition before:duration-300"></span>
                                         </label>
                                     </div>
                                 </div>
@@ -589,9 +1017,9 @@
                         
                         <!-- Save Settings Button -->
                         <div class="mt-8 pt-6 border-t flex justify-end">
-                            <button class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
-                                Save Settings
-                            </button>
+                            <button class="text-red-600 hover:text-red-800 delete-btn" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
                         </div>
                     </div>
                 </div>
@@ -599,9 +1027,6 @@
         </div>
     </div>
     
-    <!-- Dropdown Overlay -->
-    <div class="dropdown-overlay" id="dropdownOverlay"></div>
-
     <script>
         // Set current date
         document.getElementById('current-date').textContent = new Date().toLocaleDateString('en-US', { 
@@ -610,7 +1035,7 @@
             month: 'long', 
             day: 'numeric' 
         });
-
+        
         // Navigation functionality
         document.querySelectorAll('.sidebar-link').forEach(link => {
             link.addEventListener('click', function(e) {
@@ -642,7 +1067,7 @@
                 document.getElementById(targetId).classList.remove('hidden');
             });
         });
-
+        
         // Generate sample data for recent activity
         const recentActivity = [
             { user: 'Rajesh Kumar', type: 'Face Pay', amount: '₹1,500', status: 'Success', time: '10 min ago' },
@@ -651,7 +1076,7 @@
             { user: 'Amit Patel', type: 'Face Pay', amount: '₹850', status: 'Failed', time: '2 hours ago' },
             { user: 'FashionHub', type: 'Invoice Generated', amount: '₹5,400', status: 'Pending', time: '3 hours ago' }
         ];
-
+        
         const recentActivityTable = document.getElementById('recent-activity');
         recentActivity.forEach(activity => {
             const statusClass = activity.status === 'Success' || activity.status === 'Completed' 
@@ -680,10 +1105,9 @@
             `;
             recentActivityTable.appendChild(row);
         });
-
-        // Generate sample user data
+        
+        // Generate sample user data with exactly the users from your image
         const users = [
-            { id: 'USR001', name: 'Rahul Mehta', email: 'rahul@example.com', role: 'Customer', date: '2023-10-15', status: 'Active' },
             { id: 'USR002', name: 'Sunita Traders', email: 'sunita@store.com', role: 'Merchant', date: '2023-10-10', status: 'Active' },
             { id: 'USR003', name: 'Anjali Singh', email: 'anjali@example.com', role: 'Customer', date: '2023-10-05', status: 'Inactive' },
             { id: 'USR004', name: 'TechGadgets Inc', email: 'info@techgadgets.com', role: 'Merchant', date: '2023-09-28', status: 'Active' },
@@ -691,10 +1115,9 @@
             { id: 'USR006', name: 'Fashion Boutique', email: 'contact@fashionboutique.com', role: 'Merchant', date: '2023-09-15', status: 'Pending' },
             { id: 'USR007', name: 'Priya Nair', email: 'priya@example.com', role: 'Customer', date: '2023-09-10', status: 'Active' },
             { id: 'USR008', name: 'FoodCorner', email: 'orders@foodcorner.com', role: 'Merchant', date: '2023-09-05', status: 'Pending' },
-            { id: 'USR009', name: 'Arun Kumar', email: 'arun@example.com', role: 'Customer', date: '2023-08-28', status: 'Inactive' },
-            { id: 'USR010', name: 'BookWorld', email: 'support@bookworld.com', role: 'Merchant', date: '2023-08-20', status: 'Active' }
+            { id: 'USR009', name: 'Arun Kumar', email: 'arun@example.com', role: 'Customer', date: '2023-08-28', status: 'Inactive' }
         ];
-
+        
         const userTable = document.getElementById('user-table');
         users.forEach(user => {
             const statusClass = user.status === 'Active' 
@@ -722,18 +1145,18 @@
                 <td class="py-3">
                     <span class="px-3 py-1 rounded-full text-xs font-medium ${statusClass}">${user.status}</span>
                 </td>
-                <td class="py-3">
-                    <button class="text-blue-600 hover:text-blue-800 mr-3" title="Edit">
+                <td class="py-3 action-buttons">
+                    <button class="text-blue-600 hover:text-blue-800 mr-3 edit-btn edit-user-btn" title="Edit User">
                         <i class="fas fa-edit"></i>
                     </button>
-                    <button class="text-red-600 hover:text-red-800 delete-btn" title="Delete">
+                    <button class="text-red-600 hover:text-red-800 delete-user-btn" title="Delete User">
                         <i class="fas fa-trash"></i>
                     </button>
                 </td>
             `;
             userTable.appendChild(row);
         });
-
+        
         // Generate sample transaction data
         const transactions = [
             { id: 'TXN1001', merchant: 'Sunita Traders', customer: 'Rahul Mehta', amount: '₹1,500', method: 'Face Pay', status: 'Success', date: '2023-10-20' },
@@ -745,7 +1168,7 @@
             { id: 'TXN1007', merchant: 'TechGadgets Inc', customer: 'Anjali Singh', amount: '₹5,600', method: 'Face Pay', status: 'Success', date: '2023-10-14' },
             { id: 'TXN1008', merchant: 'FoodCorner', customer: 'Vikram Joshi', amount: '₹920', method: 'UPI', status: 'Success', date: '2023-10-13' }
         ];
-
+        
         const transactionTable = document.getElementById('transaction-table');
         transactions.forEach(transaction => {
             const statusClass = transaction.status === 'Success' 
@@ -775,12 +1198,12 @@
             `;
             transactionTable.appendChild(row);
         });
-
+        
         // Initialize charts
         document.addEventListener('DOMContentLoaded', function() {
             // Transaction Chart
             const transactionCtx = document.getElementById('transactionChart').getContext('2d');
-            new Chart(transactionCtx, {
+            const transactionChart = new Chart(transactionCtx, {
                 type: 'line',
                 data: {
                     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
@@ -796,17 +1219,30 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
                     scales: {
-                        y: { beginAtZero: true, grid: { display: true } },
-                        x: { grid: { display: false } }
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                display: true
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
                     }
                 }
             });
             
             // User Growth Chart
             const userCtx = document.getElementById('userChart').getContext('2d');
-            new Chart(userCtx, {
+            const userChart = new Chart(userCtx, {
                 type: 'bar',
                 data: {
                     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
@@ -828,66 +1264,101 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { position: 'top' } },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        }
+                    },
                     scales: {
-                        y: { beginAtZero: true, grid: { display: true } },
-                        x: { grid: { display: false } }
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                display: true
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
                     }
                 }
             });
         });
-
+        
+        // Toggle switch functionality
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const toggle = this.nextElementSibling;
+                if (this.checked) {
+                    toggle.style.backgroundColor = '#10b981';
+                } else {
+                    toggle.style.backgroundColor = '#d1d5db';
+                }
+            });
+        });
+        
         // Range slider functionality
         const thresholdSlider = document.querySelector('input[type="range"]');
-        if (thresholdSlider) {
-            thresholdSlider.addEventListener('input', function() {
-                this.nextElementSibling.textContent = this.value;
-            });
-        }
-
-        // Filter dropdown functionality
+        thresholdSlider.addEventListener('input', function() {
+            this.nextElementSibling.textContent = this.value;
+        });
+        
+        // Responsive dropdown functionality
         const filterDropdownButton = document.getElementById('filterDropdownButton');
         const filterDropdown = document.getElementById('filterDropdown');
-        const dropdownOverlay = document.getElementById('dropdownOverlay');
 
-        if (filterDropdownButton && filterDropdown) {
-            filterDropdownButton.addEventListener('click', function(e) {
-                e.stopPropagation();
+        // Create overlay for mobile
+        const overlay = document.createElement('div');
+        overlay.className = 'dropdown-overlay';
+        document.body.appendChild(overlay);
+
+        // Toggle dropdown
+        filterDropdownButton.addEventListener('click', function(e) {
+            e.stopPropagation();
+            
+            if (window.innerWidth <= 768) {
                 filterDropdown.classList.toggle('hidden');
+                overlay.style.display = filterDropdown.classList.contains('hidden') ? 'none' : 'block';
+            } else {
+                filterDropdown.classList.toggle('hidden');
+            }
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!filterDropdown.contains(e.target) && !filterDropdownButton.contains(e.target)) {
+                filterDropdown.classList.add('hidden');
+                overlay.style.display = 'none';
+            }
+        });
+
+        // Close dropdown on overlay click
+        overlay.addEventListener('click', function() {
+            filterDropdown.classList.add('hidden');
+            overlay.style.display = 'none';
+        });
+
+        // Filter option selection
+        document.querySelectorAll('.filter-option').forEach(option => {
+            option.addEventListener('click', function() {
+                const filter = this.getAttribute('data-filter');
+                const buttonText = this.textContent.trim();
+                
+                filterDropdownButton.querySelector('span').textContent = buttonText;
+                filterUsers(filter);
+                
+                filterDropdown.classList.add('hidden');
+                overlay.style.display = 'none';
                 
                 if (window.innerWidth <= 768) {
-                    dropdownOverlay.style.display = filterDropdown.classList.contains('hidden') ? 'none' : 'block';
+                    setTimeout(() => {
+                        filterDropdown.classList.add('hidden');
+                        overlay.style.display = 'none';
+                    }, 300);
                 }
             });
-
-            // Close dropdown when clicking outside
-            document.addEventListener('click', function(e) {
-                if (!filterDropdown.contains(e.target) && !filterDropdownButton.contains(e.target)) {
-                    filterDropdown.classList.add('hidden');
-                    dropdownOverlay.style.display = 'none';
-                }
-            });
-
-            // Close dropdown on overlay click
-            dropdownOverlay.addEventListener('click', function() {
-                filterDropdown.classList.add('hidden');
-                dropdownOverlay.style.display = 'none';
-            });
-
-            // Filter option selection
-            document.querySelectorAll('.filter-option').forEach(option => {
-                option.addEventListener('click', function() {
-                    const filter = this.getAttribute('data-filter');
-                    const buttonText = this.textContent.trim().replace(/^.+?\)/, '').trim();
-                    
-                    filterDropdownButton.querySelector('span').textContent = buttonText;
-                    filterUsers(filter);
-                    
-                    filterDropdown.classList.add('hidden');
-                    dropdownOverlay.style.display = 'none';
-                });
-            });
-        }
+        });
 
         // Filter users function
         function filterUsers(filterType) {
@@ -895,8 +1366,11 @@
             
             rows.forEach(row => {
                 const roleCell = row.querySelector('td:nth-child(4) span');
-                if (roleCell) {
+                const statusCell = row.querySelector('td:nth-child(6) span');
+                
+                if (roleCell && statusCell) {
                     const role = roleCell.textContent.toLowerCase();
+                    const status = statusCell.textContent.toLowerCase();
                     
                     switch(filterType) {
                         case 'all':
@@ -918,44 +1392,319 @@
             });
         }
 
-        // Delete user functionality
-        function addDeleteFunctionality() {
-            const userTable = document.getElementById('user-table');
+        // ==================== DELETED USERS FUNCTIONALITY ====================
+        let deletedUsers = [];
+
+        // DOM Elements
+        const deletedUsersBtn = document.getElementById("deletedUsersBtn");
+        const deletedUsersModal = document.getElementById("deletedUsersModal");
+        const deletedUsersModalOverlay = document.getElementById("deletedUsersModalOverlay");
+        const closeDeletedModal = document.getElementById("closeDeletedModal");
+        const closeDeletedModalBtn = document.getElementById("closeDeletedModalBtn");
+        const deletedUserTable = document.getElementById("deleted-user-table");
+        const deletedUsersCount = document.getElementById("deletedUsersCount");
+
+        // Open modal
+        deletedUsersBtn.addEventListener("click", function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            deletedUsersModal.classList.remove("hidden");
+            deletedUsersModalOverlay.style.display = "block";
+            renderDeletedUsers();
+        });
+
+        // Close modal functions
+        function closeDeletedUsersModal() {
+            deletedUsersModal.classList.add("hidden");
+            deletedUsersModalOverlay.style.display = "none";
+        }
+
+        closeDeletedModal.addEventListener("click", closeDeletedUsersModal);
+        closeDeletedModalBtn.addEventListener("click", closeDeletedUsersModal);
+        deletedUsersModalOverlay.addEventListener("click", closeDeletedUsersModal);
+
+        // Render deleted users
+        function renderDeletedUsers() {
+            deletedUserTable.innerHTML = "";
+
+            if (deletedUsers.length === 0) {
+                deletedUserTable.innerHTML = `
+                    <tr>
+                        <td colspan="4" class="text-center py-8 text-gray-500">
+                            <i class="fas fa-inbox text-4xl mb-3 block text-gray-300"></i>
+                            No deleted users yet
+                        </td>
+                    </tr>`;
+                return;
+            }
+
+            deletedUsers.forEach(user => {
+                const row = document.createElement("tr");
+                row.className = "border-b hover:bg-gray-50";
+                row.innerHTML = `
+                    <td class="py-3 font-medium">${user.id}</td>
+                    <td class="py-3">${user.name}</td>
+                    <td class="py-3">${user.email}</td>
+                    <td class="py-3">
+                        <span class="px-3 py-1 rounded-full text-xs font-medium ${
+                            user.role.includes('Merchant') ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800'
+                        }">${user.role}</span>
+                    </td>
+                `;
+                deletedUserTable.appendChild(row);
+            });
+        }
+
+        // Update deleted users count
+        function updateDeletedUsersCount() {
+            deletedUsersCount.textContent = deletedUsers.length;
+        }
+
+        // ==================== EDIT USER FUNCTIONALITY ====================
+        const editUserModal = document.getElementById("editUserModal");
+        const editUserModalOverlay = document.getElementById("editUserModalOverlay");
+        const closeEditModal = document.getElementById("closeEditModal");
+        const cancelEditBtn = document.getElementById("cancelEditBtn");
+        const editUserForm = document.getElementById("editUserForm");
+
+        // Open edit modal
+        function openEditModal(userData) {
+            document.getElementById("editUserId").value = userData.id;
+            document.getElementById("editName").value = userData.name;
+            document.getElementById("editEmail").value = userData.email;
+            document.getElementById("editRole").value = userData.role;
+            document.getElementById("editStatus").value = userData.status;
             
-            userTable.addEventListener('click', function(e) {
-                if (e.target.closest('.fa-trash') || e.target.classList.contains('fa-trash')) {
-                    const deleteBtn = e.target.closest('button');
-                    const row = deleteBtn.closest('tr');
-                    const userName = row.querySelector('td:nth-child(2)').textContent;
-                    const userId = row.querySelector('td:nth-child(1)').textContent;
+            editUserModal.classList.remove("hidden");
+            editUserModalOverlay.style.display = "block";
+        }
+
+        // Close edit modal
+        function closeEditModalFunc() {
+            editUserModal.classList.add("hidden");
+            editUserModalOverlay.style.display = "none";
+        }
+
+        closeEditModal.addEventListener("click", closeEditModalFunc);
+        cancelEditBtn.addEventListener("click", closeEditModalFunc);
+        editUserModalOverlay.addEventListener("click", closeEditModalFunc);
+
+        // Handle edit form submission
+        editUserForm.addEventListener("submit", function(e) {
+            e.preventDefault();
+            
+            const userId = document.getElementById("editUserId").value;
+            const updatedName = document.getElementById("editName").value;
+            const updatedEmail = document.getElementById("editEmail").value;
+            const updatedRole = document.getElementById("editRole").value;
+            const updatedStatus = document.getElementById("editStatus").value;
+            
+            // Find and update the row
+            const rows = document.querySelectorAll('#user-table tr');
+            rows.forEach(row => {
+                if (row.children[0].textContent === userId) {
+                    row.children[1].textContent = updatedName;
+                    row.children[2].textContent = updatedEmail;
                     
-                    if (confirm(`Are you sure you want to delete user "${userName}" (${userId})?`)) {
+                    // Update role badge
+                    const roleSpan = row.children[3].querySelector('span');
+                    roleSpan.textContent = updatedRole;
+                    roleSpan.className = `px-3 py-1 rounded-full text-xs font-medium ${
+                        updatedRole === 'Merchant' ? 'bg-blue-100 text-blue-800' : 
+                        updatedRole === 'Customer' ? 'bg-purple-100 text-purple-800' : 
+                        'bg-red-100 text-red-800'
+                    }`;
+                    
+                    // Update status badge
+                    const statusSpan = row.children[5].querySelector('span');
+                    statusSpan.textContent = updatedStatus;
+                    statusSpan.className = `px-3 py-1 rounded-full text-xs font-medium ${
+                        updatedStatus === 'Active' ? 'bg-green-100 text-green-800' : 
+                        updatedStatus === 'Inactive' ? 'bg-gray-100 text-gray-800' : 
+                        'bg-yellow-100 text-yellow-800'
+                    }`;
+                }
+            });
+            
+            showNotification(`User "${updatedName}" updated successfully`, 'success');
+            closeEditModalFunc();
+        });
+
+        // ==================== EDIT BUTTON FUNCTIONALITY ====================
+        function addEditFunctionality() {
+            const userTable = document.getElementById("user-table");
+
+            userTable.addEventListener("click", function(e) {
+                const editBtn = e.target.closest(".edit-user-btn, .fa-edit");
+                if (editBtn) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    const row = editBtn.closest("tr");
+                    const userData = {
+                        id: row.children[0].textContent,
+                        name: row.children[1].textContent,
+                        email: row.children[2].textContent,
+                        role: row.children[3].textContent.trim(),
+                        status: row.children[5].textContent.trim()
+                    };
+
+                    openEditModal(userData);
+                }
+            });
+        }
+
+        // ==================== DELETE USER FUNCTIONALITY ====================
+        function addDeleteFunctionality() {
+            const userTable = document.getElementById("user-table");
+
+            userTable.addEventListener("click", function(e) {
+                const deleteBtn = e.target.closest(".delete-user-btn, .fa-trash");
+                if (deleteBtn) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    const row = deleteBtn.closest("tr");
+                    const userData = {
+                        id: row.children[0].textContent,
+                        name: row.children[1].textContent,
+                        email: row.children[2].textContent,
+                        role: row.children[3].textContent.trim()
+                    };
+
+                    if (confirm(`Are you sure you want to delete user "${userData.name}"?`)) {
                         row.style.transition = 'all 0.3s ease';
                         row.style.opacity = '0.5';
                         row.style.backgroundColor = '#fee2e2';
                         
+                        deletedUsers.push(userData);
+                        updateDeletedUsersCount();
+                        
                         setTimeout(() => {
                             row.remove();
-                            showNotification(`User "${userName}" has been deleted successfully.`, 'success');
-                        }, 500);
+                            showNotification(`User "${userData.name}" deleted successfully`, 'success');
+                        }, 300);
                     }
                 }
             });
         }
 
-        // Show notification function
+        // ==================== NOTIFICATION FUNCTIONALITY ====================
+        const notificationBellBtn = document.getElementById("notificationBellBtn");
+        const notificationPanel = document.getElementById("notificationPanel");
+        const notificationModalOverlay = document.getElementById("notificationModalOverlay");
+        const closeNotificationPanel = document.getElementById("closeNotificationPanel");
+        const notificationList = document.getElementById("notificationList");
+        const notificationBadge = document.getElementById("notificationBadge");
+        const markAllReadBtn = document.getElementById("markAllReadBtn");
+
+        // Sample notifications
+        let notifications = [
+            { id: 1, message: "New user registration: Rahul Mehta", time: "5 min ago", read: false },
+            { id: 2, message: "Transaction failed: ₹3,200", time: "15 min ago", read: false },
+            { id: 3, message: "Merchant pending approval: Fashion Boutique", time: "1 hour ago", read: false }
+        ];
+
+        // Update notification badge
+        function updateNotificationBadge() {
+            const unreadCount = notifications.filter(n => !n.read).length;
+            notificationBadge.textContent = unreadCount;
+            if (unreadCount === 0) {
+                notificationBadge.classList.add("hidden");
+            } else {
+                notificationBadge.classList.remove("hidden");
+            }
+        }
+
+        // Render notifications
+        function renderNotifications() {
+            notificationList.innerHTML = "";
+            
+            if (notifications.length === 0) {
+                notificationList.innerHTML = `
+                    <div class="text-center py-8 text-gray-500">
+                        <i class="fas fa-bell-slash text-4xl mb-3 block text-gray-300"></i>
+                        No notifications
+                    </div>
+                `;
+                return;
+            }
+
+            notifications.slice(0, 5).forEach(notification => {
+                const div = document.createElement("div");
+                div.className = `notification-item p-3 rounded-lg ${!notification.read ? 'bg-blue-50' : ''}`;
+                div.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <div class="flex-1">
+                            <p class="text-sm font-medium text-gray-800">${notification.message}</p>
+                            <p class="text-xs text-gray-500 mt-1">${notification.time}</p>
+                        </div>
+                        ${!notification.read ? '<span class="w-2 h-2 bg-blue-600 rounded-full"></span>' : ''}
+                    </div>
+                `;
+                notificationList.appendChild(div);
+            });
+        }
+
+        // Open notification panel
+        notificationBellBtn.addEventListener("click", function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            notificationPanel.classList.remove("hidden");
+            notificationModalOverlay.style.display = "block";
+            renderNotifications();
+        });
+
+        // Close notification panel
+        function closeNotificationPanelFunc() {
+            notificationPanel.classList.add("hidden");
+            notificationModalOverlay.style.display = "none";
+        }
+
+        closeNotificationPanel.addEventListener("click", closeNotificationPanelFunc);
+        notificationModalOverlay.addEventListener("click", closeNotificationPanelFunc);
+        
+        // Mark all as read
+        markAllReadBtn.addEventListener("click", function() {
+            notifications.forEach(n => n.read = true);
+            updateNotificationBadge();
+            renderNotifications();
+            showNotification("All notifications marked as read", "success");
+        });
+
+        // View all notifications
+        document.getElementById("viewAllNotificationsBtn").addEventListener("click", function() {
+            closeNotificationPanelFunc();
+            showNotification("Opening all notifications...", "info");
+        });
+
+        // ==================== SHOW NOTIFICATION FUNCTION ====================
         function showNotification(message, type = 'success') {
             const existingNotification = document.querySelector('.custom-notification');
-            if (existingNotification) existingNotification.remove();
+            if (existingNotification) {
+                existingNotification.remove();
+            }
+            
+            const colors = {
+                success: 'bg-green-500',
+                error: 'bg-red-500',
+                info: 'bg-blue-500',
+                warning: 'bg-yellow-500'
+            };
+            
+            const icons = {
+                success: 'fa-check-circle',
+                error: 'fa-exclamation-circle',
+                info: 'fa-info-circle',
+                warning: 'fa-exclamation-triangle'
+            };
             
             const notification = document.createElement('div');
-            notification.className = `custom-notification fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-lg text-white ${
-                type === 'success' ? 'bg-green-500' : 'bg-red-500'
-            }`;
+            notification.className = `custom-notification fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-lg text-white ${colors[type] || 'bg-green-500'}`;
             
             notification.innerHTML = `
                 <div class="flex items-center">
-                    <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'} mr-3"></i>
+                    <i class="fas ${icons[type] || 'fa-check-circle'} mr-3"></i>
                     <span>${message}</span>
                     <button class="ml-4 text-white hover:text-gray-200" onclick="this.parentElement.parentElement.remove()">
                         <i class="fas fa-times"></i>
@@ -966,155 +1715,199 @@
             document.body.appendChild(notification);
             
             setTimeout(() => {
-                if (notification.parentElement) notification.remove();
+                if (notification.parentElement) {
+                    notification.remove();
+                }
             }, 5000);
         }
 
-        // Initialize delete functionality
-        addDeleteFunctionality();
+        // ==================== LOGOUT FUNCTIONALITY ====================
+        const headerLogoutBtn = document.getElementById("headerLogoutBtn");
+        
+        headerLogoutBtn.addEventListener("click", function(e) {
+            e.preventDefault();
+            if (confirm("Are you sure you want to logout?")) {
+                showNotification("Logging out...", "info");
+                setTimeout(() => {
+                    window.location.href = "/";
+                }, 1000);
+            }
+        });
 
-        // User search functionality
+        // ==================== SEARCH FUNCTIONALITY ====================
         const searchInput = document.getElementById('userSearchInput');
-        if (searchInput) {
-            searchInput.addEventListener('input', function() {
-                const searchValue = this.value.toLowerCase();
-                const rows = document.querySelectorAll('#user-table tr');
-                
-                rows.forEach(row => {
-                    const name = row.children[1]?.textContent.toLowerCase() || '';
-                    const email = row.children[2]?.textContent.toLowerCase() || '';
-                    const role = row.children[3]?.textContent.toLowerCase() || '';
-                    
-                    row.style.display = name.includes(searchValue) || email.includes(searchValue) || role.includes(searchValue) ? '' : 'none';
-                });
-            });
-        }
 
-        // Transaction status dropdown
+        searchInput.addEventListener('input', function () {
+            const searchValue = this.value.toLowerCase();
+            const rows = document.querySelectorAll('#user-table tr');
+
+            rows.forEach(row => {
+                const name = row.children[1].textContent.toLowerCase();
+                const email = row.children[2].textContent.toLowerCase();
+                const role = row.children[3].textContent.toLowerCase();
+
+                if (
+                    name.includes(searchValue) ||
+                    email.includes(searchValue) ||
+                    role.includes(searchValue)
+                ) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+
+        // ==================== TRANSACTION STATUS DROPDOWN ====================
         const statusBtn = document.getElementById('statusDropdownBtn');
         const statusDropdown = document.getElementById('statusDropdown');
         const statusText = document.getElementById('statusDropdownText');
 
-        if (statusBtn && statusDropdown) {
-            statusBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                statusDropdown.classList.toggle('hidden');
-            });
+        statusBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            statusDropdown.classList.toggle('hidden');
+        });
 
-            document.addEventListener('click', () => {
+        document.addEventListener('click', () => {
+            statusDropdown.classList.add('hidden');
+        });
+
+        document.querySelectorAll('.status-option').forEach(option => {
+            option.addEventListener('click', () => {
+                const status = option.dataset.status;
+                statusText.textContent = option.textContent;
+                filterTransactions(status);
                 statusDropdown.classList.add('hidden');
             });
-
-            document.querySelectorAll('.status-option').forEach(option => {
-                option.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    const status = this.dataset.status;
-                    statusText.textContent = this.textContent;
-                    filterTransactions(status);
-                    statusDropdown.classList.add('hidden');
-                });
-            });
-        }
+        });
 
         function filterTransactions(status) {
             const rows = document.querySelectorAll('#transaction-table tr');
-            
+
             rows.forEach(row => {
                 const statusCell = row.querySelector('td:nth-child(6) span');
                 if (!statusCell) return;
-                
+
                 const rowStatus = statusCell.textContent.toLowerCase();
-                row.style.display = status === 'all' || rowStatus === status ? '' : 'none';
+
+                if (status === 'all' || rowStatus === status) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
             });
         }
 
-        // Export functionality
+        // ==================== EXPORT FUNCTIONALITY ====================
         const exportBtn = document.getElementById('exportBtn');
         const exportMenu = document.getElementById('exportMenu');
 
-        if (exportBtn && exportMenu) {
-            exportBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                if (!exportBtn.disabled) {
-                    exportMenu.classList.toggle('hidden');
-                }
-            });
+        exportBtn.addEventListener('click', () => {
+            if (exportBtn.disabled) return;
+            exportMenu.classList.toggle('hidden');
+        });
 
-            document.addEventListener('click', (e) => {
-                if (!exportBtn.contains(e.target)) {
-                    exportMenu.classList.add('hidden');
-                }
-            });
-
-            // CSV Export
-            document.getElementById('exportCSV')?.addEventListener('click', () => {
-                const rows = document.querySelectorAll('#transaction-table tr');
-                if (rows.length === 0) {
-                    showNotification('No data available to export', 'error');
-                    return;
-                }
-
-                let csv = 'Transaction ID,Merchant,Customer,Amount,Method,Status,Date\n';
-                
-                rows.forEach(row => {
-                    const cols = row.querySelectorAll('td');
-                    const data = Array.from(cols).map(td => `"${td.innerText.replace(/"/g, '""')}"`);
-                    csv += data.join(',') + '\n';
-                });
-
-                const blob = new Blob([csv], { type: 'text/csv' });
-                const link = document.createElement('a');
-                link.href = URL.createObjectURL(blob);
-                link.download = 'transactions.csv';
-                link.click();
-                
-                showNotification('CSV downloaded successfully ✅', 'success');
+        document.addEventListener('click', (e) => {
+            if (!exportBtn.contains(e.target)) {
                 exportMenu.classList.add('hidden');
-            });
+            }
+        });
 
-            // PDF Export
-            document.getElementById('exportPDF')?.addEventListener('click', () => {
-                const rows = document.querySelectorAll('#transaction-table tr');
-                if (rows.length === 0) {
-                    showNotification('No data available to export', 'error');
-                    return;
-                }
-
-                let html = `
-                    <h2 style="text-align:center;">Transaction Report</h2>
-                    <table border="1" cellspacing="0" cellpadding="6" width="100%">
-                    <tr>
-                        <th>ID</th><th>Merchant</th><th>Customer</th>
-                        <th>Amount</th><th>Method</th><th>Status</th><th>Date</th>
-                    </tr>
-                `;
-
-                rows.forEach(row => {
-                    html += '<tr>';
-                    row.querySelectorAll('td').forEach(td => {
-                        html += `<td>${td.innerText}</td>`;
-                    });
-                    html += '</tr>';
-                });
-
-                html += '</table>';
-
-                const win = window.open('', '', 'width=900,height=700');
-                win.document.write(html);
-                win.document.close();
-                win.print();
-                
-                showNotification('PDF downloaded successfully ✅', 'success');
-                exportMenu.classList.add('hidden');
-            });
+        const hasData = true;
+        if (!hasData) {
+            exportBtn.disabled = true;
         }
 
-        // Handle window resize for dropdown
-        window.addEventListener('resize', function() {
-            if (window.innerWidth > 768) {
-                dropdownOverlay.style.display = 'none';
+        const exportCSVBtn = document.getElementById('exportCSV');
+        const exportPDFBtn = document.getElementById('exportPDF');
+
+        exportCSVBtn.addEventListener('click', () => {
+            const rows = document.querySelectorAll('#transaction-table tr');
+            if (rows.length === 0) {
+                showNotification('No data available to export', 'error');
+                return;
             }
+
+            let csv = 'Transaction ID,Merchant,Customer,Amount,Method,Status,Date\n';
+
+            rows.forEach(row => {
+                const cols = row.querySelectorAll('td');
+                const data = Array.from(cols).map(td =>
+                    `"${td.innerText.replace(/"/g, '""')}"`
+                );
+                csv += data.join(',') + '\n';
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'transactions.csv';
+            link.click();
+
+            showNotification('CSV downloaded successfully ✅', 'success');
+            exportMenu.classList.add('hidden');
+        });
+
+        exportPDFBtn.addEventListener('click', () => {
+            const rows = document.querySelectorAll('#transaction-table tr');
+            if (rows.length === 0) {
+                showNotification('No data available to export', 'error');
+                return;
+            }
+
+            let html = `
+                <h2 style="text-align:center;">Transaction Report</h2>
+                <table border="1" cellspacing="0" cellpadding="6" width="100%">
+                <tr>
+                    <th>ID</th><th>Merchant</th><th>Customer</th>
+                    <th>Amount</th><th>Method</th><th>Status</th><th>Date</th>
+                </tr>
+            `;
+
+            rows.forEach(row => {
+                html += '<tr>';
+                row.querySelectorAll('td').forEach(td => {
+                    html += `<td>${td.innerText}</td>`;
+                });
+                html += '</tr>';
+            });
+
+            html += '</table>';
+
+            const win = window.open('', '', 'width=900,height=700');
+            win.document.write(html);
+            win.document.close();
+            win.print();
+
+            showNotification('PDF downloaded successfully ✅', 'success');
+            exportMenu.classList.add('hidden');
+        });
+
+        // ==================== INITIALIZE ====================
+        document.addEventListener('DOMContentLoaded', function() {
+            addDeleteFunctionality();
+            addEditFunctionality();
+            updateDeletedUsersCount();
+            updateNotificationBadge();
+            renderNotifications();
+        });
+
+    </script>
+
+    <!-- Footer with current date -->
+    <footer class="fixed bottom-0 left-64 right-0 bg-white border-t p-4 text-center text-gray-600 text-sm">
+        <span id="footer-date"></span>
+    </footer>
+    
+    <script>
+        // Set footer date
+        document.getElementById('footer-date').textContent = new Date().toLocaleDateString('en-US', { 
+            weekday: 'long', 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
         });
     </script>
 </body>
+
 </html>
