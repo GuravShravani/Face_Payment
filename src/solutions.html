@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Pay - Solutions</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+        body {
+            background: #0f172a;
+            color: white;
+        }
+        nav {
+            background: #1e293b;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #334155;
+        }
+        .logo { font-size: 1.8rem; font-weight: 700; }
+        .nav-links { display: flex; gap: 2rem; }
+        .nav-links a { color: #94a3b8; text-decoration: none; transition: 0.3s; }
+        .nav-links a:hover { color: white; }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+        h1 { font-size: 3rem; margin-bottom: 1rem; }
+        .solution-showcase {
+            display: flex;
+            gap: 3rem;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+        }
+        .solution-card {
+            background: #1e293b;
+            padding: 2rem;
+            border-radius: 16px;
+            flex: 1 1 300px;
+            border-left: 4px solid #3b82f6;
+        }
+        .stats {
+            display: flex;
+            gap: 2rem;
+            margin: 3rem 0;
+            background: #1e293b;
+            padding: 2rem;
+            border-radius: 16px;
+            justify-content: space-around;
+        }
+        .stat-item { text-align: center; }
+        .stat-number { font-size: 2.5rem; font-weight: 700; color: #3b82f6; }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="../index.html" class="logo">FACE PAY</a>
+        <div class="nav-links">
+            <a href="#">Solutions</a>
+
+        </div>
+    </nav>
+    
+    <div class="container">
+        <h1>Solutions for Every Business</h1>
+        <p style="color: #94a3b8; font-size: 1.2rem;">From small retailers to global enterprises</p>
+        
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number">45%</div>
+                <div>Faster Checkout</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">99.9%</div>
+                <div>Fraud Reduction</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">2.5x</div>
+                <div>Customer Retention</div>
+            </div>
+        </div>
+        
+        <div class="solution-showcase">
+            <div class="solution-card">
+                <h2 style="margin-bottom: 1rem;">🛍️ Retail</h2>
+                <p>Seamless checkout with FacePay terminals. 15+ major retail chains implemented.</p>
+                <p style="margin-top: 1rem; color: #3b82f6;">→ Reduce queue time by 70%</p>
+            </div>
+            <div class="solution-card">
+                <h2 style="margin-bottom: 1rem;">🏨 Hospitality</h2>
+                <p>Hotel check-in and payments with a smile. Integrated with 200+ properties.</p>
+                <p style="margin-top: 1rem; color: #3b82f6;">→ 60% faster check-in</p>
+            </div>
+            <div class="solution-card">
+                <h2 style="margin-bottom: 1rem;">🚇 Transportation</h2>
+                <p>Facial ticketing systems for metro, buses, and airports. 5M+ daily transactions.</p>
+                <p style="margin-top: 1rem; color: #3b82f6;">→ 0.2s recognition time</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

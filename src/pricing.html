@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        nav {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 600;
+            font-size: 18px;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        nav a:hover {
+            background: #4a6fa5;
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        nav a.active {
+            background: #2d4d86;
+            color: white;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .pricing-section {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #2d4d86;
+            text-align: center;
+            margin-bottom: 50px;
+            font-size: 2.5em;
+        }
+        
+        .pricing-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+        
+        .card {
+            background: linear-gradient(145deg, #ffffff, #f0f0f0);
+            border-radius: 15px;
+            padding: 40px 30px;
+            text-align: center;
+            transition: transform 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card:hover {
+            transform: translateY(-10px);
+            border-color: #4a6fa5;
+        }
+        
+        .card.featured {
+            border-color: #2d4d86;
+            box-shadow: 0 10px 25px rgba(45, 77, 134, 0.2);
+        }
+        
+        .card h3 {
+            color: #2d4d86;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        
+        .price {
+            font-size: 3em;
+            color: #333;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+        
+        .price span {
+            font-size: 0.5em;
+            color: #666;
+        }
+        
+        .features {
+            list-style: none;
+            margin: 30px 0;
+            text-align: left;
+        }
+        
+        .features li {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .features li:before {
+            content: "✓";
+            color: #4CAF50;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .btn {
+            background: #4a6fa5;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+            text-decoration: none;
+        }
+        
+        .btn:hover {
+            background: #2d4d86;
+            transform: scale(1.05);
+        }
+        
+        .contact-form {
+            background: #f8f9fa;
+            padding: 40px;
+            border-radius: 15px;
+            margin-top: 50px;
+        }
+        
+        .contact-form h2 {
+            color: #2d4d86;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #4a6fa5;
+            outline: none;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .badge {
+            position: absolute;
+            top: 20px;
+            right: -30px;
+            background: #FF6B6B;
+            color: white;
+            padding: 8px 40px;
+            transform: rotate(45deg);
+            font-size: 14px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <a href="newwww.html">HOME</a>
+            <a href="pricing.html" class="active">PRICING</a>
+        </nav>
+        
+        <div class="pricing-section">
+            <h1>Choose Your Perfect Plan</h1>
+            
+            <div class="pricing-cards">
+                <div class="card">
+                    <h3>Basic Plan</h3>
+                    <div class="price">₹2,999<span>/month</span></div>
+                    <ul class="features">
+                        <li>Basic GST Filing</li>
+                        <li>1 GST Return per month</li>
+                        <li>Email Support</li>
+                        <li>Up to 50 invoices/month</li>
+                        <li>Basic Reports</li>
+                    </ul>
+                    <button class="btn">Select Plan</button>
+                </div>
+                
+                <div class="card featured">
+                    <div class="badge">POPULAR</div>
+                    <h3>Professional Plan</h3>
+                    <div class="price">₹5,999<span>/month</span></div>
+                    <ul class="features">
+                        <li>All GST Returns (GSTR-1, 3B, 9)</li>
+                        <li>3 GST Returns per month</li>
+                        <li>Priority Support</li>
+                        <li>Unlimited Invoices</li>
+                        <li>Advanced Analytics</li>
+                        <li>Dedicated Account Manager</li>
+                    </ul>
+                    <button class="btn">Select Plan</button>
+                </div>
+                
+                <div class="card">
+                    <h3>Enterprise Plan</h3>
+                    <div class="price">₹9,999<span>/month</span></div>
+                    <ul class="features">
+                        <li>Complete GST Compliance</li>
+                        <li>Unlimited GST Returns</li>
+                        <li>24/7 Phone Support</li>
+                        <li>Custom Invoice Management</li>
+                        <li>Business Intelligence Reports</li>
+                        <li>API Integration</li>
+                        <li>Quarterly Business Review</li>
+                    </ul>
+                    <button class="btn">Contact Sales</button>
+                </div>
+            </div>
+            
+            <div class="contact-form">
+                <h2>Custom Quote Request</h2>
+                <form id="quoteForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="name">Full Name *</label>
+                            <input type="text" id="name" name="name" required placeholder="Enter your full name">
+                        </div>
+                        <div class="form-group">
+                            <label for="company">Company Name *</label>
+                            <input type="text" id="company" name="company" required placeholder="Enter company name">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="email">Email Address *</label>
+                            <input type="email" id="email" name="email" required placeholder="Enter your email">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone Number *</label>
+                            <input type="tel" id="phone" name="phone" required placeholder="Enter your phone number">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="plan">Select Plan Interest</label>
+                            <select id="plan" name="plan">
+                                <option value="basic">Basic Plan</option>
+                                <option value="professional" selected>Professional Plan</option>
+                                <option value="enterprise">Enterprise Plan</option>
+                                <option value="custom">Custom Solution</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="employees">Number of Employees</label>
+                            <select id="employees" name="employees">
+                                <option value="1-10">1-10 Employees</option>
+                                <option value="11-50">11-50 Employees</option>
+                                <option value="51-200">51-200 Employees</option>
+                                <option value="200+">200+ Employees</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="requirements">Additional Requirements</label>
+                        <textarea id="requirements" name="requirements" rows="4" placeholder="Tell us about your specific needs..."></textarea>
+                    </div>
+                    
+                    <div class="form-group" style="text-align: center;">
+                        <button type="submit" class="btn" style="padding: 15px 60px;">Request Custom Quote</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('quoteForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                name: document.getElementById('name').value,
+                company: document.getElementById('company').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                plan: document.getElementById('plan').value,
+                employees: document.getElementById('employees').value,
+                requirements: document.getElementById('requirements').value
+            };
+            
+            // In a real application, you would send this data to a server
+            alert('Thank you! Your custom quote request has been submitted. We will contact you within 24 hours.');
+            
+            // Reset form
+            this.reset();
+        });
+        
+        // Add click event to plan selection buttons
+        document.querySelectorAll('.card .btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const planName = this.closest('.card').querySelector('h3').textContent;
+                alert(`You selected the ${planName}. You will be redirected to the checkout page.`);
+            });
+        });
+    </script>
+</body>
+</html>

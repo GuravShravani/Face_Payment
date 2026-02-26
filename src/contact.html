@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        nav {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 600;
+            font-size: 18px;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        nav a:hover {
+            background: #dc3545;
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        nav a.active {
+            background: #c82333;
+            color: white;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .contact-section {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #dc3545;
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2.8em;
+        }
+        
+        h2 {
+            color: #c82333;
+            margin: 40px 0 20px 0;
+            border-bottom: 3px solid #c82333;
+            padding-bottom: 10px;
+        }
+        
+        .contact-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            margin-top: 40px;
+        }
+        
+        .contact-info {
+            background: linear-gradient(135deg, #fff5f5, #ffe6e6);
+            padding: 40px;
+            border-radius: 20px;
+        }
+        
+        .contact-form {
+            padding: 20px 0;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 35px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid #ffcccc;
+        }
+        
+        .info-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .info-icon {
+            background: #dc3545;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+        
+        .info-content h3 {
+            color: #c82333;
+            margin-bottom: 10px;
+            font-size: 1.4em;
+        }
+        
+        .info-content p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 5px;
+        }
+        
+        .office-hours {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .office-hours h3 {
+            color: #c82333;
+            margin-bottom: 20px;
+        }
+        
+        .hours-table {
+            width: 100%;
+        }
+        
+        .hours-table td {
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .hours-table td:last-child {
+            text-align: right;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #ffe6e6;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #fff9f9;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #dc3545;
+            outline: none;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 18px 50px;
+            border-radius: 50px;
+            font-size: 1.2em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+            text-decoration: none;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .btn:hover {
+            background: #c82333;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(220, 53, 69, 0.3);
+        }
+        
+        .map-section {
+            margin-top: 50px;
+        }
+        
+        .map-container {
+            height: 400px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            color: #666;
+            border: 2px dashed #ffcccc;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            justify-content: center;
+        }
+        
+        .social-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #fff5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #dc3545;
+            font-size: 1.5em;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .social-icon:hover {
+            background: #dc3545;
+            color: white;
+            transform: translateY(-5px);
+            border-color: #dc3545;
+        }
+        
+        .emergency-contact {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 40px;
+            text-align: center;
+        }
+        
+        .emergency-contact h3 {
+            color: white;
+            margin-bottom: 15px;
+        }
+        
+        .emergency-number {
+            font-size: 2em;
+            font-weight: bold;
+            margin: 15px 0;
+            letter-spacing: 2px;
+        }
+        
+        .quick-links {
+            background: #f8f9fa;
+            padding: 40px;
+            border-radius: 15px;
+            margin-top: 50px;
+        }
+        
+        .quick-links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .quick-link-item {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .quick-link-item:hover {
+            border-color: #dc3545;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .quick-link-item h4 {
+            color: #c82333;
+            margin: 15px 0 10px 0;
+        }
+        
+        .link-icon {
+            font-size: 2.5em;
+            color: #dc3545;
+        }
+        
+        @media (max-width: 768px) {
+            .contact-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            nav {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            
+            nav a {
+                padding: 8px 15px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <a href="newwww.html">HOME</a>
+            <a href="contact.html" class="active">CONTACT</a>
+        </nav>
+        
+        <div class="contact-section">
+            <h1>Contact Us</h1>
+            <p style="text-align: center; color: #666; font-size: 1.2em; max-width: 800px; margin: 0 auto 40px;">
+                Have questions about GST compliance? Need assistance with registration or filing? We're here to help! Reach out to us through any of the channels below.
+            </p>
+            
+            <div class="contact-container">
+                <div class="contact-info">
+                    <div class="info-item">
+                        <div class="info-icon">📍</div>
+                        <div class="info-content">
+                            <h3>Visit Our Office</h3>
+                            <p><strong>Head Office:</strong></p>
+                            <p>GST Solutions Center, 12th Floor</p>
+                            <p>Business Tower, sneha Complex</p>
+                            <p>Pune - 411058, Maharashtra</p>
+                            <p style="margin-top: 15px;"><strong>Branch Office:</strong></p>
+                            <p>Connaught Place, 5th Floor</p>
+                            <p>Karad - 415110, Maharashtra</p>
+                        </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-icon">📞</div>
+                        <div class="info-content">
+                            <h3>Call Us</h3>
+                            <p><strong>General Inquiries:</strong></p>
+                            <p>+91 22 1234 5678</p>
+                            <p style="margin-top: 15px;"><strong>GST Support:</strong></p>
+                            <p>+91 22 9876 5432</p>
+                            <p style="margin-top: 15px;"><strong>Sales Department:</strong></p>
+                            <p>+91 22 4567 8901</p>
+                        </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-icon">✉️</div>
+                        <div class="info-content">
+                            <h3>Email Us</h3>
+                            <p><strong>General Support:</strong></p>
+                            <p>support@gstsolutions.com</p>
+                            <p style="margin-top: 15px;"><strong>GST Queries:</strong></p>
+                            <p>gsthelp@gstsolutions.com</p>
+                            <p style="margin-top: 15px;"><strong>Partnerships:</strong></p>
+                            <p>partners@gstsolutions.com</p>
+                        </div>
+                    </div>
+                    
+                    <div class="office-hours">
+                        <h3>Office Hours</h3>
+                        <table class="hours-table">
+                            <tr>
+                                <td>Monday - Friday</td>
+                                <td>9:00 AM - 7:00 PM</td>
+                            </tr>
+                            <tr>
+                                <td>Saturday</td>
+                                <td>10:00 AM - 5:00 PM</td>
+                            </tr>
+                            <tr>
+                                <td>Sunday</td>
+                                <td>Emergency Support Only</td>
+                            </tr>
+                            <tr>
+                                <td>Public Holidays</td>
+                                <td>Closed</td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <div class="social-links">
+                        <a href="#" class="social-icon">📘</a>
+                        <a href="#" class="social-icon">📷</a>
+                        <a href="#" class="social-icon">💼</a>
+                        <a href="#" class="social-icon">🐦</a>
+                        <a href="#" class="social-icon">📹</a>
+                    </div>
+                </div>
+                
+                <div class="contact-form">
+                    <h2>Send Us a Message</h2>
+                    <form id="contactForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="firstName">First Name *</label>
+                                <input type="text" id="firstName" name="firstName" required placeholder="Enter your first name">
+                            </div>
+                            <div class="form-group">
+                                <label for="lastName">Last Name *</label>
+                                <input type="text" id="lastName" name="lastName" required placeholder="Enter your last name">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="email">Email Address *</label>
+                                <input type="email" id="email" name="email" required placeholder="Enter your email address">
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone Number *</label>
+                                <input type="tel" id="phone" name="phone" required placeholder="Enter your phone number">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="company">Company Name</label>
+                            <input type="text" id="company" name="company" placeholder="Enter your company name (optional)">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="department">Department to Contact *</label>
+                            <select id="department" name="department" required>
+                                <option value="">Select department</option>
+                                <option value="gst-support">GST Support & Compliance</option>
+                                <option value="sales">Sales & Pricing</option>
+                                <option value="technical">Technical Support</option>
+                                <option value="billing">Billing & Accounts</option>
+                                <option value="partnership">Business Partnership</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="subject">Subject *</label>
+                            <input type="text" id="subject" name="subject" required placeholder="Enter message subject">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="message">Your Message *</label>
+                            <textarea id="message" name="message" rows="6" required placeholder="Please describe your query in detail..."></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="priority">Priority Level</label>
+                            <select id="priority" name="priority">
+                                <option value="normal">Normal</option>
+                                <option value="high">High Priority</option>
+                                <option value="urgent">Urgent - Need immediate attention</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" name="newsletter" checked>
+                                Subscribe to our newsletter for GST updates and tips
+                            </label>
+                        </div>
+                        
+                        <button type="submit" class="btn">Send Message</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="map-section">
+                <h2>Find Us on Map</h2>
+                <div class="map-container">
+                    📍 Interactive Map Location<br>
+                    (In a real implementation, this would show Google Maps)
+                </div>
+            </div>
+            
+            <div class="emergency-contact">
+                <h3>🚨 GST Filing Emergency Support</h3>
+                <p>Facing last-minute GST filing issues? We provide emergency support during critical filing periods.</p>
+                <div class="emergency-number">📞 1800-123-GST-HELP</div>
+                <p>Available 24/7 during GST filing deadlines</p>
+            </div>
+            
+            <div class="quick-links">
+                <h2>Quick Links</h2>
+                <div class="quick-links-grid">
+                    <a href="gst.html" class="quick-link-item">
+                        <div class="link-icon">📋</div>
+                        <h4>GST Calculator</h4>
+                        <p>Calculate your GST liability instantly</p>
+                    </a>
+                    
+                    <a href="pricing.html" class="quick-link-item">
+                        <div class="link-icon">💰</div>
+                        <h4>Get Pricing</h4>
+                        <p>View our service plans and pricing</p>
+                    </a>
+                    
+                    <a href="#" class="quick-link-item">
+                        <div class="link-icon">📄</div>
+                        <h4>Download Forms</h4>
+                        <p>Get GST forms and templates</p>
+                    </a>
+                    
+                    <a href="#" class="quick-link-item">
+                        <div class="link-icon">🎓</div>
+                        <h4>FAQ & Guides</h4>
+                        <p>Common questions and solutions</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                firstName: document.getElementById('firstName').value,
+                lastName: document.getElementById('lastName').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                company: document.getElementById('company').value,
+                department: document.getElementById('department').value,
+                subject: document.getElementById('subject').value,
+                message: document.getElementById('message').value,
+                priority: document.getElementById('priority').value,
+                newsletter: document.querySelector('input[name="newsletter"]').checked
+            };
+            
+            // In a real application, you would send this data to a server
+            alert(`Thank you, ${formData.firstName}! Your message has been sent successfully. We'll get back to you within 24 hours.`);
+            
+            // Reset form
+            this.reset();
+        });
+        
+        // Emergency contact animation
+        const emergencySection = document.querySelector('.emergency-contact');
+        setInterval(() => {
+            emergencySection.style.transform = 'scale(1.02)';
+            setTimeout(() => {
+                emergencySection.style.transform = 'scale(1)';
+            }, 500);
+        }, 3000);
+    </script>
+</body>
+</html>
