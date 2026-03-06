@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Payment Platform</title>
+    <title>Face Pay | Admin Dashboard</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome Icons -->
@@ -11,22 +11,55 @@
     <!-- Chart.js for Analytics -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
+        /* ===== FACE PAY THEME (PRESERVED FROM ORIGINAL) ===== */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+        :root {
+            --primary: #1a73e8;
+            --primary-dark: #0d47a1;
+            --secondary: #34a853;
+            --light-gray: #f8f9fa;
+            --medium-gray: #e8eaed;
+            --dark-gray: #5f6368;
+            --text: #202124;
+            --white: #ffffff;
+            --shadow: 0 4px 12px rgba(0,0,0,0.08);
+            --gradient: linear-gradient(135deg, #1a73e8 0%, #34a853 100%);
+        }
+        [data-theme="dark"] {
+            --primary: #1a73e8;
+            --primary-dark: #0d47a1;
+            --secondary: #34a853;
+            --light-gray: #2d2d2d;
+            --medium-gray: #3c4043;
+            --dark-gray: #bdc1c6;
+            --text: #e8eaed;
+            --white: #202124;
+            --shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        body { background-color: #f5f7fa; color: var(--text); line-height: 1.6; overflow-x: hidden; transition: background-color 0.3s; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        
+        /* Custom styles */
         .sidebar-link.active {
-            background-color: #3b82f6;
+            background-color: var(--primary);
             color: white;
         }
         .sidebar-link:hover:not(.active) {
-            background-color: #f3f4f6;
+            background-color: var(--light-gray);
+            color: var(--text);
         }
         .stat-card {
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background: var(--white);
+            border-left: 4px solid var(--primary);
         }
         .stat-card:hover {
             transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.12);
         }
         .powerbi-container {
             height: 600px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--gradient);
             border-radius: 0.75rem;
             display: flex;
             align-items: center;
@@ -35,311 +68,362 @@
             flex-direction: column;
         }
         .table-row:hover {
-            background-color: #f9fafb;
+            background-color: var(--light-gray);
         }
         /* Add these styles to your existing style section */
-@media (max-width: 768px) {
-    #filterDropdown {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 90%;
-        max-width: 300px;
-        z-index: 50;
-    }
-    .dropdown-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: 40;
-        display: none;
-    }
-}
+        @media (max-width: 768px) {
+            #filterDropdown {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 90%;
+                max-width: 300px;
+                z-index: 50;
+            }
+            .dropdown-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 40;
+                display: none;
+            }
+        }
 
-/* Delete button animation */
-.delete-btn {
-    transition: all 0.3s ease;
-}
+        /* Delete button animation */
+        .delete-btn {
+            transition: all 0.3s ease;
+        }
 
-.delete-btn:hover {
-    transform: scale(1.1);
-}
+        .delete-btn:hover {
+            transform: scale(1.1);
+        }
 
-/* Edit button animation */
-.edit-btn {
-    transition: all 0.3s ease;
-}
+        /* Edit button animation */
+        .edit-btn {
+            transition: all 0.3s ease;
+        }
 
-.edit-btn:hover {
-    transform: scale(1.1);
-}
+        .edit-btn:hover {
+            transform: scale(1.1);
+        }
 
-/* Logout button animation */
-.logout-btn-header {
-    transition: all 0.3s ease;
-}
+        /* Logout button animation */
+        .logout-btn-header {
+            transition: all 0.3s ease;
+        }
 
-.logout-btn-header:hover {
-    transform: scale(1.1);
-}
+        .logout-btn-header:hover {
+            transform: scale(1.1);
+        }
 
-/* Status filter styles */
-.status-filter-btn.active {
-    background-color: #3b82f6;
-    color: white;
-    border-color: #3b82f6;
-}
+        /* Status filter styles */
+        .status-filter-btn.active {
+            background-color: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
 
-/* Mobile responsive styles for status filter */
-@media (max-width: 768px) {
-    #statusFilterMobile {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 90%;
-        max-width: 300px;
-        z-index: 50;
-    }
-    .status-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: 40;
-        display: none;
-    }
-    .mobile-status-btn {
-        width: 100%;
-        justify-content: center;
-        margin-bottom: 8px;
-    }
-}
-/* Deleted Users Modal Styles */
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 100;
-    display: none;
-}
-.deleted-users-modal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: white;
-    border-radius: 0.75rem;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    z-index: 101;
-    width: 90%;
-    max-width: 800px;
-    max-height: 80vh;
-    overflow-y: auto;
-}
-@media (max-width: 640px) {
-    .deleted-users-modal {
-        width: 95%;
-        max-height: 85vh;
-    }
-}
+        /* Mobile responsive styles for status filter */
+        @media (max-width: 768px) {
+            #statusFilterMobile {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 90%;
+                max-width: 300px;
+                z-index: 50;
+            }
+            .status-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 40;
+                display: none;
+            }
+            .mobile-status-btn {
+                width: 100%;
+                justify-content: center;
+                margin-bottom: 8px;
+            }
+        }
+        /* Deleted Users Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            display: none;
+        }
+        .deleted-users-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--white);
+            border-radius: 0.75rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            z-index: 101;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        @media (max-width: 640px) {
+            .deleted-users-modal {
+                width: 95%;
+                max-height: 85vh;
+            }
+        }
 
-/* Notification Panel Styles */
-.notification-panel {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: white;
-    border-radius: 0.75rem;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    z-index: 101;
-    width: 90%;
-    max-width: 400px;
-    max-height: 80vh;
-    overflow-y: auto;
-}
+        /* Notification Panel Styles */
+        .notification-panel {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--white);
+            border-radius: 0.75rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            z-index: 101;
+            width: 90%;
+            max-width: 400px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
 
-.notification-item {
-    transition: all 0.3s ease;
-}
+        .notification-item {
+            transition: all 0.3s ease;
+        }
 
-.notification-item:hover {
-    background-color: #f9fafb;
-}
+        .notification-item:hover {
+            background-color: var(--light-gray);
+        }
 
-.notification-badge {
-    animation: pulse 2s infinite;
-}
+        .notification-badge {
+            animation: pulse 2s infinite;
+        }
 
-@keyframes pulse {
-    0%, 100% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.1);
-    }
-}
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
 
-/* Mobile action buttons */
-@media (max-width: 640px) {
-    .action-buttons {
-        display: flex;
-        gap: 0.5rem;
-        justify-content: flex-start;
-    }
-    
-    .action-btn {
-        padding: 0.5rem;
-        border-radius: 0.5rem;
-    }
-}
+        /* Mobile action buttons */
+        @media (max-width: 640px) {
+            .action-buttons {
+                display: flex;
+                gap: 0.5rem;
+                justify-content: flex-start;
+            }
+            
+            .action-btn {
+                padding: 0.5rem;
+                border-radius: 0.5rem;
+            }
+        }
 
-/* Responsive header */
-@media (max-width: 768px) {
-    .header-right {
-        gap: 0.5rem;
-    }
-    
-    .notification-btn {
-        position: relative;
-    }
-    
-    .logout-btn-header span {
-        display: none;
-    }
-    
-    .logout-btn-header {
-        padding: 0.5rem;
-    }
-}
+        /* Responsive header */
+        @media (max-width: 768px) {
+            .header-right {
+                gap: 0.5rem;
+            }
+            
+            .notification-btn {
+                position: relative;
+            }
+            
+            .logout-btn-header span {
+                display: none;
+            }
+            
+            .logout-btn-header {
+                padding: 0.5rem;
+            }
+        }
 
-/* Edit modal styles */
-.edit-modal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: white;
-    border-radius: 0.75rem;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    z-index: 101;
-    width: 90%;
-    max-width: 500px;
-    max-height: 90vh;
-    overflow-y: auto;
-}
+        /* Edit modal styles */
+        .edit-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--white);
+            border-radius: 0.75rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            z-index: 101;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
 
-.edit-form-field {
-    transition: all 0.3s ease;
-}
+        .edit-form-field {
+            transition: all 0.3s ease;
+        }
 
-.edit-form-field:focus {
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
+        .edit-form-field:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(26,115,232,0.1);
+        }
 
-/* Header Logout Button Styles */
-.header-logout-btn {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
-    color: #4b5563;
-    transition: all 0.3s ease;
-}
+        /* Header Logout Button Styles */
+        .header-logout-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            color: var(--dark-gray);
+            transition: all 0.3s ease;
+        }
 
-.header-logout-btn:hover {
-    background-color: #fee2e2;
-    color: #dc2626;
-}
+        .header-logout-btn:hover {
+            background-color: #fee2e2;
+            color: #dc2626;
+        }
 
-@media (max-width: 768px) {
-    .header-logout-btn span {
-        display: none;
-    }
-    
-    .header-logout-btn {
-        padding: 0.5rem;
-    }
-}
+        @media (max-width: 768px) {
+            .header-logout-btn span {
+                display: none;
+            }
+            
+            .header-logout-btn {
+                padding: 0.5rem;
+            }
+        }
 
-/* ============== RESPONSIVE PAGINATION STYLES ============== */
-@media (max-width: 640px) {
-    .pagination-container {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
-    }
-    
-    .pagination-info {
-        width: 100%;
-        text-align: left;
-    }
-    
-    .pagination-controls {
-        width: 100%;
-        justify-content: center;
-        flex-wrap: wrap;
-    }
-    
-    .pagination-controls button {
-        padding: 0.5rem 0.75rem;
-        font-size: 0.875rem;
-    }
-    
-    .pagination-controls .page-number {
-        display: none;
-    }
-    
-    .pagination-controls .page-number-mobile {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0.5rem 0.75rem;
-        border: 1px solid #e5e7eb;
-        border-radius: 0.5rem;
-        background-color: white;
-        color: #374151;
-    }
-    
-    .pagination-controls .active-page {
-        background-color: #3b82f6;
-        color: white;
-        border-color: #3b82f6;
-    }
-}
+        /* ============== RESPONSIVE PAGINATION STYLES ============== */
+        @media (max-width: 640px) {
+            .pagination-container {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .pagination-info {
+                width: 100%;
+                text-align: left;
+            }
+            
+            .pagination-controls {
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            
+            .pagination-controls button {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.875rem;
+            }
+            
+            .pagination-controls .page-number {
+                display: none;
+            }
+            
+            .pagination-controls .page-number-mobile {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                padding: 0.5rem 0.75rem;
+                border: 1px solid var(--medium-gray);
+                border-radius: 0.5rem;
+                background-color: var(--white);
+                color: var(--text);
+            }
+            
+            .pagination-controls .active-page {
+                background-color: var(--primary);
+                color: white;
+                border-color: var(--primary);
+            }
+        }
 
-@media (min-width: 641px) {
-    .pagination-controls .page-number-mobile {
-        display: none;
-    }
-}
+        @media (min-width: 641px) {
+            .pagination-controls .page-number-mobile {
+                display: none;
+            }
+        }
 
-/* Hide middle page numbers on very small screens */
-@media (max-width: 480px) {
-    .pagination-controls .hide-on-mobile {
-        display: none;
-    }
-    
-    .pagination-controls button:not(.prev-next):not(.active-page) {
-        display: none;
-    }
-    
-    .pagination-controls .prev-next {
-        display: inline-flex;
-    }
-}
+        /* Hide middle page numbers on very small screens */
+        @media (max-width: 480px) {
+            .pagination-controls .hide-on-mobile {
+                display: none;
+            }
+            
+            .pagination-controls button:not(.prev-next):not(.active-page) {
+                display: none;
+            }
+            
+            .pagination-controls .prev-next {
+                display: inline-flex;
+            }
+        }
+        
+        /* Button styles */
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            border-radius: 0.5rem;
+            padding: 0.5rem 1rem;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(26,115,232,0.3);
+        }
+        .btn-secondary {
+            background-color: var(--light-gray);
+            color: var(--text);
+            border: 1px solid var(--medium-gray);
+            border-radius: 0.5rem;
+            padding: 0.5rem 1rem;
+            transition: all 0.3s ease;
+        }
+        .btn-secondary:hover {
+            background-color: var(--medium-gray);
+        }
+        
+        /* Table styles */
+        .table th {
+            color: var(--dark-gray);
+            font-weight: 600;
+        }
+        .table td {
+            color: var(--text);
+        }
+        
+        /* Status badges */
+        .status-paid { background: #d1fae5; color: #065f46; }
+        .status-pending { background: #fef3c7; color: #92400e; }
+        .status-failed { background: #fee2e2; color: #991b1b; }
+        .status-active { background: #d1fae5; color: #065f46; }
+        .status-inactive { background: #e5e7eb; color: #374151; }
+        .status-pending { background: #fef3c7; color: #92400e; }
+        
+        /* Role badges */
+        .role-merchant { background: #dbeafe; color: #1e40af; }
+        .role-customer { background: #f3e8ff; color: #6b21a8; }
+        .role-admin { background: #fee2e2; color: #991b1b; }
+        
+        /* Method badges */
+        .method-facepay { background: #f3e8ff; color: #6b21a8; }
+        .method-upi { background: #dbeafe; color: #1e40af; }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -464,13 +548,13 @@
     <!-- Main Container -->
     <div class="flex h-screen">
         <!-- Sidebar -->
-        <div class="w-64 bg-white shadow-md flex flex-col">
+        <div class="w-64 bg-white shadow-md flex flex-col border-r border-gray-200">
             <!-- Logo -->
-            <div class="p-6 border-b">
-                <h1 class="text-2xl font-bold text-blue-600">
-                    <a href="../index.html" class="fas fa-lock mr-2" aria-label="Admin Panel Home"></a>Admin Panel
+            <div class="p-6 border-b border-gray-200">
+                <h1 class="text-2xl font-bold" style="color: var(--primary);">
+                    <i class="fas fa-face-smile mr-2" style="color: var(--primary);"></i>Face Pay
                 </h1>
-                <p class="text-gray-500 text-sm mt-1">Payment Platform</p>
+                <p class="text-gray-500 text-sm mt-1">Admin Panel</p>
             </div>
             
             <!-- Navigation -->
@@ -509,15 +593,15 @@
                 </ul>
             </nav>
             
-            <!-- Admin Profile - Logout Button Removed -->
-            <div class="p-4 border-t">
+            <!-- Admin Profile -->
+            <div class="p-4 border-t border-gray-200">
                 <div class="flex items-center">
                     <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
-                        <i class="fas fa-user-shield text-blue-600"></i>
+                        <i class="fas fa-user-shield" style="color: var(--primary);"></i>
                     </div>
                     <div class="ml-3">
                         <p class="font-medium">Administrator</p>
-                        <p class="text-gray-500 text-sm">admin@paymentplatform.com</p>
+                        <p class="text-gray-500 text-sm">admin@facepay.com</p>
                     </div>
                 </div>
             </div>
@@ -526,8 +610,8 @@
         <!-- Main Content -->
         <div class="flex-1 overflow-auto">
             <!-- Header -->
-            <header class="bg-white shadow-sm p-4 flex justify-between items-center">
-                <h2 class="text-xl font-semibold text-gray-800" id="page-title">Dashboard Overview</h2>
+            <header class="bg-white shadow-sm p-4 flex justify-between items-center border-b border-gray-200">
+                <h2 class="text-xl font-semibold" style="color: var(--primary);" id="page-title">Dashboard Overview</h2>
                 <div class="flex items-center space-x-4 header-right">
                     <!-- Responsive Notification Button -->
                     <div class="relative notification-btn">
@@ -951,7 +1035,7 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <!-- Platform Settings -->
                             <div>
-                                <h4 class="font-semibold mb-4 text-blue-600">Platform Settings</h4>
+                                <h4 class="font-semibold mb-4" style="color: var(--primary);">Platform Settings</h4>
                                 
                                 <div class="space-y-6">
                                     <div class="flex items-center justify-between">
@@ -991,7 +1075,7 @@
                             
                             <!-- Security Settings -->
                             <div>
-                                <h4 class="font-semibold mb-4 text-blue-600">Security Settings</h4>
+                                <h4 class="font-semibold mb-4" style="color: var(--primary);">Security Settings</h4>
                                 
                                 <div class="space-y-6">
                                     <div>
@@ -1010,7 +1094,7 @@
                                     
                                     <div>
                                         <label class="block font-medium mb-2">Admin Notification Email</label>
-                                        <input type="email" value="admin@paymentplatform.com" class="w-full border rounded-lg px-4 py-2" aria-label="Admin notification email">
+                                        <input type="email" value="admin@facepay.com" class="w-full border rounded-lg px-4 py-2" aria-label="Admin notification email">
                                     </div>
                                 </div>
                             </div>
@@ -1018,9 +1102,9 @@
                         
                         <!-- Save Settings Button -->
                         <div class="mt-8 pt-6 border-t flex justify-end">
-                            <button class="text-red-600 hover:text-red-800 delete-btn" title="Delete">
-                            <i class="fas fa-trash"></i>
-                        </button>
+                            <button class="btn-primary delete-btn">
+                                <i class="fas fa-save mr-2"></i>Save Settings
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -1122,16 +1206,16 @@
         const userTable = document.getElementById('user-table');
         users.forEach(user => {
             const statusClass = user.status === 'Active' 
-                ? 'bg-green-100 text-green-800'
+                ? 'status-active'
                 : user.status === 'Inactive'
-                ? 'bg-gray-100 text-gray-800'
-                : 'bg-yellow-100 text-yellow-800';
+                ? 'status-inactive'
+                : 'status-pending';
             
             const roleClass = user.role === 'Merchant' 
-                ? 'bg-blue-100 text-blue-800'
+                ? 'role-merchant'
                 : user.role === 'Customer'
-                ? 'bg-purple-100 text-purple-800'
-                : 'bg-red-100 text-red-800';
+                ? 'role-customer'
+                : 'role-admin';
             
             const row = document.createElement('tr');
             row.className = 'table-row border-b';
@@ -1173,14 +1257,14 @@
         const transactionTable = document.getElementById('transaction-table');
         transactions.forEach(transaction => {
             const statusClass = transaction.status === 'Success' 
-                ? 'bg-green-100 text-green-800'
+                ? 'status-paid'
                 : transaction.status === 'Failed'
-                ? 'bg-red-100 text-red-800'
-                : 'bg-yellow-100 text-yellow-800';
+                ? 'status-failed'
+                : 'status-pending';
             
             const methodClass = transaction.method === 'Face Pay' 
-                ? 'bg-purple-100 text-purple-800'
-                : 'bg-blue-100 text-blue-800';
+                ? 'method-facepay'
+                : 'method-upi';
             
             const row = document.createElement('tr');
             row.className = 'table-row border-b';
@@ -1211,8 +1295,8 @@
                     datasets: [{
                         label: 'Transaction Volume',
                         data: [1200, 1900, 1500, 2200, 1800, 2500, 3000, 2800, 3200, 4000],
-                        borderColor: '#3b82f6',
-                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        borderColor: '#1a73e8',
+                        backgroundColor: 'rgba(26,115,232,0.1)',
                         fill: true,
                         tension: 0.4
                     }]
@@ -1251,13 +1335,13 @@
                         {
                             label: 'Customers',
                             data: [400, 500, 450, 600, 550, 700, 750, 800, 850, 900],
-                            backgroundColor: '#8b5cf6',
+                            backgroundColor: '#1a73e8',
                             borderRadius: 6
                         },
                         {
                             label: 'Merchants',
                             data: [20, 25, 30, 35, 40, 45, 50, 55, 60, 65],
-                            backgroundColor: '#10b981',
+                            backgroundColor: '#34a853',
                             borderRadius: 6
                         }
                     ]
@@ -1292,7 +1376,7 @@
             checkbox.addEventListener('change', function() {
                 const toggle = this.nextElementSibling;
                 if (this.checked) {
-                    toggle.style.backgroundColor = '#10b981';
+                    toggle.style.backgroundColor = '#34a853';
                 } else {
                     toggle.style.backgroundColor = '#d1d5db';
                 }
@@ -1448,7 +1532,7 @@
                     <td class="py-3">${user.email}</td>
                     <td class="py-3">
                         <span class="px-3 py-1 rounded-full text-xs font-medium ${
-                            user.role.includes('Merchant') ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800'
+                            user.role.includes('Merchant') ? 'role-merchant' : 'role-customer'
                         }">${user.role}</span>
                     </td>
                 `;
@@ -1511,18 +1595,18 @@
                     const roleSpan = row.children[3].querySelector('span');
                     roleSpan.textContent = updatedRole;
                     roleSpan.className = `px-3 py-1 rounded-full text-xs font-medium ${
-                        updatedRole === 'Merchant' ? 'bg-blue-100 text-blue-800' : 
-                        updatedRole === 'Customer' ? 'bg-purple-100 text-purple-800' : 
-                        'bg-red-100 text-red-800'
+                        updatedRole === 'Merchant' ? 'role-merchant' : 
+                        updatedRole === 'Customer' ? 'role-customer' : 
+                        'role-admin'
                     }`;
                     
                     // Update status badge
                     const statusSpan = row.children[5].querySelector('span');
                     statusSpan.textContent = updatedStatus;
                     statusSpan.className = `px-3 py-1 rounded-full text-xs font-medium ${
-                        updatedStatus === 'Active' ? 'bg-green-100 text-green-800' : 
-                        updatedStatus === 'Inactive' ? 'bg-gray-100 text-gray-800' : 
-                        'bg-yellow-100 text-yellow-800'
+                        updatedStatus === 'Active' ? 'status-active' : 
+                        updatedStatus === 'Inactive' ? 'status-inactive' : 
+                        'status-pending'
                     }`;
                 }
             });

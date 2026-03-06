@@ -1,0 +1,1926 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Pay Financial Suite | Complete Enterprise Solution</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        
+        :root {
+            --primary: #1a73e8;
+            --primary-dark: #0d47a1;
+            --secondary: #34a853;
+            --light-gray: #f8f9fa;
+            --medium-gray: #e8eaed;
+            --dark-gray: #5f6368;
+            --text: #202124;
+            --white: #ffffff;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --gradient: linear-gradient(135deg, #1a73e8 0%, #34a853 100%);
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header & Navigation */
+        header {
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            animation: slideDown 0.5s ease;
+        }
+        
+        @keyframes slideDown {
+            from { transform: translateY(-100%); }
+            to { transform: translateY(0); }
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            transition: transform 0.3s;
+        }
+        
+        .logo:hover {
+            transform: scale(1.05);
+        }
+        
+        .logo-icon {
+            background: var(--gradient);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(26, 115, 232, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(26, 115, 232, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(26, 115, 232, 0); }
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: var(--dark-gray);
+            font-weight: 500;
+            transition: all 0.3s;
+            position: relative;
+            padding: 5px 0;
+        }
+        
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s;
+        }
+        
+        nav a:hover {
+            color: var(--primary);
+        }
+        
+        nav a:hover::after {
+            width: 100%;
+        }
+        
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(26, 115, 232, 0.3);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background-color: rgba(26, 115, 232, 0.05);
+            transform: translateY(-2px);
+        }
+        
+        .btn-success {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #2d9649;
+            transform: translateY(-2px);
+        }
+        
+        .btn-warning {
+            background-color: #f9ab00;
+            color: white;
+        }
+        
+        .btn-warning:hover {
+            background-color: #f57c00;
+            transform: translateY(-2px);
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding: 40px 0 20px;
+            text-align: center;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            position: relative;
+        }
+        
+        .hero h1 {
+            font-size: 42px;
+            margin-bottom: 10px;
+            color: var(--text);
+        }
+        
+        .hero p {
+            font-size: 18px;
+            max-width: 800px;
+            margin: 0 auto 20px;
+            color: var(--dark-gray);
+        }
+        
+        /* Module Navigation */
+        .module-tabs {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            background: white;
+            padding: 10px;
+            border-radius: 50px;
+            box-shadow: var(--shadow);
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .module-tab {
+            padding: 12px 30px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            color: var(--dark-gray);
+            background: transparent;
+        }
+        
+        .module-tab:hover {
+            color: var(--primary);
+            background: var(--light-gray);
+        }
+        
+        .module-tab.active {
+            background: var(--gradient);
+            color: white;
+            box-shadow: 0 4px 12px rgba(26, 115, 232, 0.3);
+        }
+        
+        .module-tab i {
+            margin-right: 8px;
+        }
+        
+        /* Dashboard Section */
+        .dashboard-section {
+            padding: 20px 0 40px;
+        }
+        
+        .dashboard-container {
+            background-color: var(--white);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+        }
+        
+        /* Controls Bar */
+        .controls-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--medium-gray);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .format-selector {
+            display: flex;
+            gap: 10px;
+            background: var(--light-gray);
+            padding: 5px;
+            border-radius: 8px;
+        }
+        
+        .format-btn {
+            padding: 8px 16px;
+            border: none;
+            background: transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .format-btn:hover {
+            background: rgba(26, 115, 232, 0.1);
+        }
+        
+        .format-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .gst-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--light-gray);
+            padding: 5px 15px;
+            border-radius: 8px;
+        }
+        
+        .gst-toggle input[type="checkbox"] {
+            width: 40px;
+            height: 20px;
+            appearance: none;
+            background: #ccc;
+            border-radius: 10px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .gst-toggle input[type="checkbox"]:checked {
+            background: var(--secondary);
+        }
+        
+        .gst-toggle input[type="checkbox"]::before {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: all 0.3s;
+        }
+        
+        .gst-toggle input[type="checkbox"]:checked::before {
+            left: 22px;
+        }
+        
+        .export-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .export-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+        
+        .export-btn.pdf { background: #dc2626; color: white; }
+        .export-btn.word { background: #2563eb; color: white; }
+        .export-btn.excel { background: #16a34a; color: white; }
+        .export-btn.print { background: #6b7280; color: white; }
+        
+        .export-btn:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
+        
+        /* Balance Sheet Table */
+        .bs-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+        
+        .bs-table th {
+            background: var(--gradient);
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .bs-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+        
+        .bs-table .section-header {
+            background: var(--light-gray);
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+        
+        .bs-table .sub-section {
+            padding-left: 30px;
+        }
+        
+        .bs-table .amount {
+            text-align: right;
+            font-family: 'Courier New', monospace;
+            font-weight: 500;
+        }
+        
+        .bs-table .total-row {
+            background: #e8f0fe;
+            font-weight: 600;
+        }
+        
+        .bs-table .grand-total {
+            background: var(--gradient);
+            color: white;
+            font-weight: 700;
+        }
+        
+        .editable {
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+        
+        .editable:hover {
+            background: rgba(26, 115, 232, 0.1);
+        }
+        
+        .editable:hover::after {
+            content: '✎';
+            position: absolute;
+            right: 5px;
+            color: var(--primary);
+        }
+        
+        .negative {
+            color: #dc2626;
+        }
+        
+        /* Budget Cards */
+        .budget-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .budget-card {
+            background: var(--light-gray);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .budget-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+        
+        .budget-card.editing {
+            background: white;
+            border: 2px solid var(--primary);
+        }
+        
+        .budget-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .budget-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .budget-title input {
+            font-size: 18px;
+            font-weight: 600;
+            padding: 5px;
+            border: 1px solid var(--primary);
+            border-radius: 4px;
+            width: 150px;
+        }
+        
+        .budget-progress {
+            height: 8px;
+            background: rgba(0,0,0,0.1);
+            border-radius: 4px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 1s ease;
+        }
+        
+        .budget-stats {
+            display: flex;
+            justify-content: space-between;
+            color: var(--dark-gray);
+            font-size: 14px;
+        }
+        
+        .budget-stats input {
+            width: 100px;
+            padding: 5px;
+            border: 1px solid var(--primary);
+            border-radius: 4px;
+            text-align: right;
+        }
+        
+        .budget-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            justify-content: flex-end;
+        }
+        
+        .budget-actions button {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .budget-actions .save-btn { background: var(--secondary); color: white; }
+        .budget-actions .edit-btn { background: var(--primary); color: white; }
+        .budget-actions .cancel-btn { background: #6b7280; color: white; }
+        
+        /* Spreadsheet */
+        .spreadsheet-container {
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+        
+        .spreadsheet {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+        
+        .spreadsheet th {
+            background: var(--primary);
+            color: white;
+            padding: 12px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .spreadsheet td {
+            border: 1px solid var(--medium-gray);
+            padding: 0;
+        }
+        
+        .spreadsheet input {
+            width: 100%;
+            padding: 8px;
+            border: 2px solid transparent;
+            border-radius: 0;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .spreadsheet input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: #e8f0fe;
+        }
+        
+        .delete-btn {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            width: 20px;
+            height: 20px;
+            background: #dc2626;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        
+        /* Metrics */
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .metric-card {
+            background: var(--light-gray);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .metric-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+        
+        .metric-label {
+            color: var(--dark-gray);
+            font-size: 14px;
+        }
+        
+        /* Floating Chat */
+        .chat-message-icon {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 65px;
+            height: 65px;
+            background: var(--gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(26, 115, 232, 0.5);
+            z-index: 1000;
+            transition: all 0.3s;
+            border: 3px solid white;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .chat-message-icon:hover {
+            transform: scale(1.15);
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .chat-message-icon .badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ea4335;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid white;
+        }
+        
+        .chatbot-container {
+            position: fixed;
+            bottom: 110px;
+            right: 30px;
+            width: 380px;
+            height: 550px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 1000;
+        }
+        
+        .chatbot-container.active {
+            display: flex;
+        }
+        
+        .chatbot-header {
+            background: var(--gradient);
+            color: white;
+            padding: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .close-chat {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            margin-bottom: 10px;
+        }
+        
+        .user-message {
+            background: var(--gradient);
+            color: white;
+            margin-left: auto;
+        }
+        
+        .bot-message {
+            background: var(--light-gray);
+            color: var(--text);
+        }
+        
+        .chat-input-container {
+            padding: 15px;
+            border-top: 1px solid var(--medium-gray);
+            display: flex;
+            gap: 10px;
+        }
+        
+        .chat-input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 2px solid var(--light-gray);
+            border-radius: 25px;
+            outline: none;
+        }
+        
+        .chat-input:focus {
+            border-color: var(--primary);
+        }
+        
+        .send-message {
+            width: 45px;
+            height: 45px;
+            background: var(--gradient);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--text);
+            color: var(--white);
+            padding: 60px 0 30px;
+            margin-top: 60px;
+        }
+        
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-column h3 {
+            color: #e8eaed;
+            margin-bottom: 20px;
+        }
+        
+        .footer-column a {
+            color: #bdc1c6;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 10px;
+        }
+        
+        .footer-column a:hover {
+            color: white;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid #3c4043;
+            color: #9aa0a6;
+        }
+        
+        @media (max-width: 992px) {
+            .controls-bar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Chat -->
+    <div class="chat-message-icon" id="chatMessageIcon">
+        <i class="fas fa-comment-dots"></i>
+        <span class="badge" id="messageBadge">5</span>
+    </div>
+    
+    <div class="chatbot-container" id="chatbotContainer">
+        <div class="chatbot-header">
+            <h3><i class="fas fa-robot"></i> Face Pay Assistant</h3>
+            <button class="close-chat" id="closeChat"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="message bot-message">👋 Welcome to Face Pay! How can I help you today?</div>
+        </div>
+        <div class="chat-input-container">
+            <input type="text" class="chat-input" id="chatInput" placeholder="Type your message...">
+            <button class="send-message" id="sendMessage"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+    
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <div class="logo-icon"><i class="fas fa-face-smile"></i></div>
+                <span>Face Pay</span>
+            </div>
+            
+            
+            
+            <div class="user-actions">
+                <a href="../index.html" class="btn btn-primary">Home</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="container">
+            <h1>Financial Suite</h1>
+            <p>Complete tools for Balance Sheet, Budget Planning, and Financial Spreadsheets</p>
+            
+            <div class="module-tabs">
+                <div class="module-tab active" data-module="balance-sheet"><i class="fas fa-balance-scale"></i> Balance Sheet</div>
+                <div class="module-tab" data-module="budget"><i class="fas fa-chart-pie"></i> Budget Planner</div>
+                <div class="module-tab" data-module="spreadsheet"><i class="fas fa-table"></i> Spreadsheet</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <section class="dashboard-section">
+        <div class="container">
+            <div class="dashboard-container" id="moduleContent">
+                <!-- Dynamic content will be loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-container">
+                <div class="footer-column">
+                    <h3>Face Pay</h3>
+                    <p style="color: #bdc1c6;">Complete financial suite for modern businesses.</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Products</h3>
+                    <a href="#">Balance Sheet</a>
+                    <a href="#">Budget Planner</a>
+                    <a href="#">Spreadsheet</a>
+                    <a href="#">Analytics</a>
+                </div>
+                <div class="footer-column">
+                    <h3>Resources</h3>
+                    <a href="#">Documentation</a>
+                    <a href="#">API Reference</a>
+                    <a href="#">Help Center</a>
+                    <a href="#">Blog</a>
+                </div>
+                <div class="footer-column">
+                    <h3>Company</h3>
+                    <a href="#">About Us</a>
+                    <a href="#">Careers</a>
+                    <a href="#">Contact</a>
+                    <a href="#">Partners</a>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2026 Face Pay. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ============================================
+        // COMPLETE DATA STRUCTURES
+        // ============================================
+        
+        // Balance Sheet Data - Fully Editable
+        let bsData = {
+            assets: {
+                current: [
+                    { id: 'c1', name: 'Cash and Cash Equivalents', amount: 12500000, gst: 0 },
+                    { id: 'c2', name: 'Accounts Receivable', amount: 8750000, gst: 18 },
+                    { id: 'c3', name: 'Inventory', amount: 15200000, gst: 12 },
+                    { id: 'c4', name: 'Prepaid Expenses', amount: 850000, gst: 5 },
+                    { id: 'c5', name: 'Short-term Investments', amount: 4500000, gst: 0 }
+                ],
+                fixed: [
+                    { id: 'f1', name: 'Property, Plant & Equipment', amount: 28500000, gst: 18 },
+                    { id: 'f2', name: 'Less: Accumulated Depreciation', amount: -5250000, gst: 0 },
+                    { id: 'f3', name: 'Intangible Assets', amount: 4500000, gst: 0 },
+                    { id: 'f4', name: 'Long-term Investments', amount: 8750000, gst: 0 }
+                ],
+                other: [
+                    { id: 'o1', name: 'Deferred Tax Assets', amount: 1650000, gst: 0 },
+                    { id: 'o2', name: 'Goodwill', amount: 3500000, gst: 0 }
+                ]
+            },
+            liabilities: {
+                current: [
+                    { id: 'lc1', name: 'Accounts Payable', amount: 6800000, gst: 18 },
+                    { id: 'lc2', name: 'Short-term Loans', amount: 4250000, gst: 0 },
+                    { id: 'lc3', name: 'Accrued Expenses', amount: 1850000, gst: 5 },
+                    { id: 'lc4', name: 'Income Tax Payable', amount: 1450000, gst: 0 },
+                    { id: 'lc5', name: 'Current Portion of LTD', amount: 2250000, gst: 0 }
+                ],
+                longTerm: [
+                    { id: 'll1', name: 'Long-term Debt', amount: 15200000, gst: 0 },
+                    { id: 'll2', name: 'Debentures', amount: 8500000, gst: 0 },
+                    { id: 'll3', name: 'Deferred Tax Liability', amount: 1950000, gst: 0 }
+                ]
+            },
+            equity: [
+                { id: 'e1', name: 'Share Capital', amount: 25000000, gst: 0 },
+                { id: 'e2', name: 'Retained Earnings', amount: 12400000, gst: 0 },
+                { id: 'e3', name: 'Reserves & Surplus', amount: 5600000, gst: 0 },
+                { id: 'e4', name: 'Treasury Stock', amount: -2250000, gst: 0 }
+            ]
+        };
+
+        // Budget Data
+        let budgetData = [
+            { id: 1, name: 'Marketing', allocated: 500000, spent: 325000, color: '#1a73e8' },
+            { id: 2, name: 'Operations', allocated: 750000, spent: 680000, color: '#34a853' },
+            { id: 3, name: 'Research & Development', allocated: 1200000, spent: 890000, color: '#f9ab00' },
+            { id: 4, name: 'Sales', allocated: 600000, spent: 420000, color: '#ea4335' },
+            { id: 5, name: 'Human Resources', allocated: 300000, spent: 285000, color: '#9334e8' },
+            { id: 6, name: 'Information Technology', allocated: 450000, spent: 380000, color: '#34a853' }
+        ];
+
+        // Spreadsheet Data
+        let spreadsheetData = [
+            ['Product A', '1200', '45', '54000', 'Q1 2024', 'Active'],
+            ['Product B', '850', '32', '27200', 'Q1 2024', 'Active'],
+            ['Product C', '2100', '28', '58800', 'Q1 2024', 'Inactive'],
+            ['Product D', '650', '56', '36400', 'Q2 2024', 'Active'],
+            ['Product E', '1800', '42', '75600', 'Q2 2024', 'Active'],
+            ['Product F', '950', '38', '36100', 'Q1 2024', 'Inactive'],
+            ['Product G', '1450', '29', '42050', 'Q3 2024', 'Active'],
+            ['', '', '', '', '', '']
+        ];
+
+        // State
+        let currentModule = 'balance-sheet';
+        let bsFormat = 'horizontal';
+        let gstEnabled = false;
+        let editingBudget = null;
+        let queryCount = 0;
+        const MAX_QUERIES = 5;
+
+        // ============================================
+        // UTILITY FUNCTIONS
+        // ============================================
+
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(amount);
+        }
+
+        function getAmountWithGST(item) {
+            if (!gstEnabled || !item.gst) return item.amount;
+            return item.amount + (item.amount * item.gst / 100);
+        }
+
+        // ============================================
+        // BALANCE SHEET RENDERING
+        // ============================================
+
+        function renderBalanceSheet() {
+            let html = `
+                <div class="controls-bar">
+                    <div class="format-selector">
+                        <button class="format-btn ${bsFormat === 'horizontal' ? 'active' : ''}" onclick="setBSFormat('horizontal')">Horizontal</button>
+                        <button class="format-btn ${bsFormat === 'vertical' ? 'active' : ''}" onclick="setBSFormat('vertical')">Vertical</button>
+                        <button class="format-btn ${bsFormat === 'classified' ? 'active' : ''}" onclick="setBSFormat('classified')">Classified</button>
+                    </div>
+                    
+                    <div class="gst-toggle">
+                        <span>GST Calculation</span>
+                        <input type="checkbox" ${gstEnabled ? 'checked' : ''} onchange="toggleGST()">
+                    </div>
+                    
+                    <div class="export-buttons">
+                        <button class="export-btn pdf" onclick="exportToPDF()"><i class="fas fa-file-pdf"></i> PDF</button>
+                        <button class="export-btn word" onclick="exportToWord()"><i class="fas fa-file-word"></i> Word</button>
+                        <button class="export-btn excel" onclick="exportToExcel()"><i class="fas fa-file-excel"></i> Excel</button>
+                        <button class="export-btn print" onclick="window.print()"><i class="fas fa-print"></i> Print</button>
+                    </div>
+                </div>
+            `;
+
+            if (bsFormat === 'horizontal') {
+                html += renderHorizontalBS();
+            } else if (bsFormat === 'vertical') {
+                html += renderVerticalBS();
+            } else {
+                html += renderClassifiedBS();
+            }
+
+            return html;
+        }
+
+        function renderHorizontalBS() {
+            let currentAssetsTotal = 0;
+            let fixedAssetsTotal = 0;
+            let otherAssetsTotal = 0;
+            let currentLiabTotal = 0;
+            let longTermTotal = 0;
+            let equityTotal = 0;
+
+            // Calculate totals
+            bsData.assets.current.forEach(item => currentAssetsTotal += getAmountWithGST(item));
+            bsData.assets.fixed.forEach(item => fixedAssetsTotal += getAmountWithGST(item));
+            bsData.assets.other.forEach(item => otherAssetsTotal += getAmountWithGST(item));
+            bsData.liabilities.current.forEach(item => currentLiabTotal += getAmountWithGST(item));
+            bsData.liabilities.longTerm.forEach(item => longTermTotal += getAmountWithGST(item));
+            bsData.equity.forEach(item => equityTotal += getAmountWithGST(item));
+
+            let totalAssets = currentAssetsTotal + fixedAssetsTotal + otherAssetsTotal;
+            let totalLiabilities = currentLiabTotal + longTermTotal + equityTotal;
+
+            return `
+                <div style="display: flex; gap: 30px; flex-wrap: wrap;">
+                    <!-- Assets Column -->
+                    <div style="flex: 1; min-width: 400px;">
+                        <table class="bs-table">
+                            <thead>
+                                <tr>
+                                    <th>ASSETS</th>
+                                    <th class="amount">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="section-header">
+                                    <td colspan="2">Current Assets</td>
+                                </tr>
+                                ${bsData.assets.current.map(item => `
+                                    <tr>
+                                        <td class="editable" onclick="editItem('assets.current', '${item.id}')">${item.name}</td>
+                                        <td class="amount editable" onclick="editItem('assets.current', '${item.id}', 'amount')">
+                                            ${formatCurrency(getAmountWithGST(item))}
+                                            ${gstEnabled && item.gst ? `<small style="color: var(--secondary);"> (GST: ${item.gst}%)</small>` : ''}
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                                <tr class="total-row">
+                                    <td>Total Current Assets</td>
+                                    <td class="amount">${formatCurrency(currentAssetsTotal)}</td>
+                                </tr>
+                                
+                                <tr class="section-header">
+                                    <td colspan="2">Fixed Assets</td>
+                                </tr>
+                                ${bsData.assets.fixed.map(item => `
+                                    <tr>
+                                        <td class="editable ${item.amount < 0 ? 'negative' : ''}" onclick="editItem('assets.fixed', '${item.id}')">${item.name}</td>
+                                        <td class="amount editable ${item.amount < 0 ? 'negative' : ''}" onclick="editItem('assets.fixed', '${item.id}', 'amount')">
+                                            ${item.amount < 0 ? '(' : ''}${formatCurrency(Math.abs(getAmountWithGST(item)))}${item.amount < 0 ? ')' : ''}
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                                
+                                <tr class="section-header">
+                                    <td colspan="2">Other Assets</td>
+                                </tr>
+                                ${bsData.assets.other.map(item => `
+                                    <tr>
+                                        <td class="editable" onclick="editItem('assets.other', '${item.id}')">${item.name}</td>
+                                        <td class="amount editable" onclick="editItem('assets.other', '${item.id}', 'amount')">
+                                            ${formatCurrency(getAmountWithGST(item))}
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                                <tr class="total-row">
+                                    <td>Total Non-Current Assets</td>
+                                    <td class="amount">${formatCurrency(fixedAssetsTotal + otherAssetsTotal)}</td>
+                                </tr>
+                                
+                                <tr class="grand-total">
+                                    <td><strong>TOTAL ASSETS</strong></td>
+                                    <td class="amount"><strong>${formatCurrency(totalAssets)}</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Liabilities Column -->
+                    <div style="flex: 1; min-width: 400px;">
+                        <table class="bs-table">
+                            <thead>
+                                <tr>
+                                    <th>LIABILITIES & EQUITY</th>
+                                    <th class="amount">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="section-header">
+                                    <td colspan="2">Current Liabilities</td>
+                                </tr>
+                                ${bsData.liabilities.current.map(item => `
+                                    <tr>
+                                        <td class="editable" onclick="editItem('liabilities.current', '${item.id}')">${item.name}</td>
+                                        <td class="amount editable" onclick="editItem('liabilities.current', '${item.id}', 'amount')">
+                                            ${formatCurrency(getAmountWithGST(item))}
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                                <tr class="total-row">
+                                    <td>Total Current Liabilities</td>
+                                    <td class="amount">${formatCurrency(currentLiabTotal)}</td>
+                                </tr>
+                                
+                                <tr class="section-header">
+                                    <td colspan="2">Long-Term Liabilities</td>
+                                </tr>
+                                ${bsData.liabilities.longTerm.map(item => `
+                                    <tr>
+                                        <td class="editable" onclick="editItem('liabilities.longTerm', '${item.id}')">${item.name}</td>
+                                        <td class="amount editable" onclick="editItem('liabilities.longTerm', '${item.id}', 'amount')">
+                                            ${formatCurrency(getAmountWithGST(item))}
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                                <tr class="total-row">
+                                    <td>Total Long-Term Liabilities</td>
+                                    <td class="amount">${formatCurrency(longTermTotal)}</td>
+                                </tr>
+                                
+                                <tr class="section-header">
+                                    <td colspan="2">Shareholders' Equity</td>
+                                </tr>
+                                ${bsData.equity.map(item => `
+                                    <tr>
+                                        <td class="editable ${item.amount < 0 ? 'negative' : ''}" onclick="editItem('equity', '${item.id}')">${item.name}</td>
+                                        <td class="amount editable ${item.amount < 0 ? 'negative' : ''}" onclick="editItem('equity', '${item.id}', 'amount')">
+                                            ${item.amount < 0 ? '(' : ''}${formatCurrency(Math.abs(getAmountWithGST(item)))}${item.amount < 0 ? ')' : ''}
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                                <tr class="total-row">
+                                    <td>Total Equity</td>
+                                    <td class="amount">${formatCurrency(equityTotal)}</td>
+                                </tr>
+                                
+                                <tr class="grand-total">
+                                    <td><strong>TOTAL LIABILITIES & EQUITY</strong></td>
+                                    <td class="amount"><strong>${formatCurrency(totalLiabilities)}</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderVerticalBS() {
+            let currentAssetsTotal = bsData.assets.current.reduce((sum, i) => sum + getAmountWithGST(i), 0);
+            let fixedAssetsTotal = bsData.assets.fixed.reduce((sum, i) => sum + getAmountWithGST(i), 0);
+            let otherAssetsTotal = bsData.assets.other.reduce((sum, i) => sum + getAmountWithGST(i), 0);
+            let currentLiabTotal = bsData.liabilities.current.reduce((sum, i) => sum + getAmountWithGST(i), 0);
+            let longTermTotal = bsData.liabilities.longTerm.reduce((sum, i) => sum + getAmountWithGST(i), 0);
+            let equityTotal = bsData.equity.reduce((sum, i) => sum + getAmountWithGST(i), 0);
+
+            return `
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <h2>FACE PAY FINANCIAL</h2>
+                    <p>Balance Sheet - Vertical Format</p>
+                </div>
+
+                <table class="bs-table">
+                    <thead>
+                        <tr>
+                            <th>Particulars</th>
+                            <th class="amount">Note</th>
+                            <th class="amount">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="section-header">
+                            <td colspan="3">I. EQUITY AND LIABILITIES</td>
+                        </tr>
+                        <tr class="section-header">
+                            <td colspan="3">(1) Shareholders' Funds</td>
+                        </tr>
+                        ${bsData.equity.map((item, index) => `
+                            <tr>
+                                <td class="sub-section">${item.name}</td>
+                                <td class="amount">${index + 1}</td>
+                                <td class="amount">${formatCurrency(getAmountWithGST(item))}</td>
+                            </tr>
+                        `).join('')}
+                        
+                        <tr class="section-header">
+                            <td colspan="3">(2) Non-Current Liabilities</td>
+                        </tr>
+                        ${bsData.liabilities.longTerm.map((item, index) => `
+                            <tr>
+                                <td class="sub-section">${item.name}</td>
+                                <td class="amount">${index + 4}</td>
+                                <td class="amount">${formatCurrency(getAmountWithGST(item))}</td>
+                            </tr>
+                        `).join('')}
+                        
+                        <tr class="section-header">
+                            <td colspan="3">(3) Current Liabilities</td>
+                        </tr>
+                        ${bsData.liabilities.current.map((item, index) => `
+                            <tr>
+                                <td class="sub-section">${item.name}</td>
+                                <td class="amount">${index + 7}</td>
+                                <td class="amount">${formatCurrency(getAmountWithGST(item))}</td>
+                            </tr>
+                        `).join('')}
+                        
+                        <tr class="total-row">
+                            <td colspan="2">Total Liabilities</td>
+                            <td class="amount">${formatCurrency(currentLiabTotal + longTermTotal)}</td>
+                        </tr>
+
+                        <tr class="section-header">
+                            <td colspan="3">II. ASSETS</td>
+                        </tr>
+                        <tr class="section-header">
+                            <td colspan="3">(1) Non-Current Assets</td>
+                        </tr>
+                        ${bsData.assets.fixed.map((item, index) => `
+                            <tr>
+                                <td class="sub-section">${item.name}</td>
+                                <td class="amount">${index + 10}</td>
+                                <td class="amount">${formatCurrency(getAmountWithGST(item))}</td>
+                            </tr>
+                        `).join('')}
+                        
+                        <tr class="section-header">
+                            <td colspan="3">(2) Current Assets</td>
+                        </tr>
+                        ${bsData.assets.current.map((item, index) => `
+                            <tr>
+                                <td class="sub-section">${item.name}</td>
+                                <td class="amount">${index + 14}</td>
+                                <td class="amount">${formatCurrency(getAmountWithGST(item))}</td>
+                            </tr>
+                        `).join('')}
+                        
+                        <tr class="total-row">
+                            <td colspan="2">Total Assets</td>
+                            <td class="amount">${formatCurrency(currentAssetsTotal + fixedAssetsTotal + otherAssetsTotal)}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            `;
+        }
+
+        function renderClassifiedBS() {
+            return `
+                <div style="margin-bottom: 30px;">
+                    <h3 style="background: var(--primary); color: white; padding: 10px; border-radius: 5px;">ASSETS</h3>
+                    
+                    <div style="margin: 20px 0;">
+                        <h4 style="color: var(--primary);">Current Assets</h4>
+                        <table class="bs-table">
+                            ${bsData.assets.current.map(item => `
+                                <tr>
+                                    <td class="editable" onclick="editItem('assets.current', '${item.id}')">${item.name}</td>
+                                    <td class="amount editable" onclick="editItem('assets.current', '${item.id}', 'amount')">
+                                        ${formatCurrency(getAmountWithGST(item))}
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </table>
+                    </div>
+
+                    <div style="margin: 20px 0;">
+                        <h4 style="color: var(--primary);">Property, Plant & Equipment</h4>
+                        <table class="bs-table">
+                            ${bsData.assets.fixed.map(item => `
+                                <tr>
+                                    <td class="editable" onclick="editItem('assets.fixed', '${item.id}')">${item.name}</td>
+                                    <td class="amount editable" onclick="editItem('assets.fixed', '${item.id}', 'amount')">
+                                        ${formatCurrency(getAmountWithGST(item))}
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </table>
+                    </div>
+
+                    <div style="margin: 20px 0;">
+                        <h4 style="color: var(--primary);">Other Assets</h4>
+                        <table class="bs-table">
+                            ${bsData.assets.other.map(item => `
+                                <tr>
+                                    <td class="editable" onclick="editItem('assets.other', '${item.id}')">${item.name}</td>
+                                    <td class="amount editable" onclick="editItem('assets.other', '${item.id}', 'amount')">
+                                        ${formatCurrency(getAmountWithGST(item))}
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </table>
+                    </div>
+
+                    <h3 style="background: var(--primary); color: white; padding: 10px; border-radius: 5px; margin-top: 30px;">LIABILITIES AND EQUITY</h3>
+
+                    <div style="margin: 20px 0;">
+                        <h4 style="color: var(--primary);">Current Liabilities</h4>
+                        <table class="bs-table">
+                            ${bsData.liabilities.current.map(item => `
+                                <tr>
+                                    <td class="editable" onclick="editItem('liabilities.current', '${item.id}')">${item.name}</td>
+                                    <td class="amount editable" onclick="editItem('liabilities.current', '${item.id}', 'amount')">
+                                        ${formatCurrency(getAmountWithGST(item))}
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </table>
+                    </div>
+
+                    <div style="margin: 20px 0;">
+                        <h4 style="color: var(--primary);">Long-Term Liabilities</h4>
+                        <table class="bs-table">
+                            ${bsData.liabilities.longTerm.map(item => `
+                                <tr>
+                                    <td class="editable" onclick="editItem('liabilities.longTerm', '${item.id}')">${item.name}</td>
+                                    <td class="amount editable" onclick="editItem('liabilities.longTerm', '${item.id}', 'amount')">
+                                        ${formatCurrency(getAmountWithGST(item))}
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </table>
+                    </div>
+
+                    <div style="margin: 20px 0;">
+                        <h4 style="color: var(--primary);">Shareholders' Equity</h4>
+                        <table class="bs-table">
+                            ${bsData.equity.map(item => `
+                                <tr>
+                                    <td class="editable" onclick="editItem('equity', '${item.id}')">${item.name}</td>
+                                    <td class="amount editable" onclick="editItem('equity', '${item.id}', 'amount')">
+                                        ${formatCurrency(getAmountWithGST(item))}
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ============================================
+        // BUDGET PLANNER RENDERING
+        // ============================================
+
+        function renderBudgetPlanner() {
+            let totalBudget = budgetData.reduce((sum, d) => sum + d.allocated, 0);
+            let totalSpent = budgetData.reduce((sum, d) => sum + d.spent, 0);
+
+            return `
+                <div class="controls-bar">
+                    <h2>Budget Planner</h2>
+                    <div class="export-buttons">
+                        <button class="export-btn pdf" onclick="exportBudgetToPDF()"><i class="fas fa-file-pdf"></i> PDF</button>
+                        <button class="export-btn excel" onclick="exportBudgetToExcel()"><i class="fas fa-file-excel"></i> Excel</button>
+                        <button class="export-btn print" onclick="window.print()"><i class="fas fa-print"></i> Print</button>
+                    </div>
+                </div>
+
+                <div class="budget-grid">
+                    ${budgetData.map(dept => {
+                        const percentage = (dept.spent / dept.allocated) * 100;
+                        return `
+                            <div class="budget-card ${editingBudget === dept.id ? 'editing' : ''}" style="border-left: 4px solid ${dept.color};">
+                                ${editingBudget === dept.id ? `
+                                    <div class="budget-header">
+                                        <input type="text" value="${dept.name}" id="editName-${dept.id}" class="budget-title">
+                                    </div>
+                                    <div class="budget-stats">
+                                        <input type="number" value="${dept.allocated}" id="editAllocated-${dept.id}" step="1000">
+                                        <input type="number" value="${dept.spent}" id="editSpent-${dept.id}" step="1000">
+                                    </div>
+                                    <div class="budget-actions">
+                                        <button class="save-btn" onclick="saveBudgetEdit(${dept.id})">Save</button>
+                                        <button class="cancel-btn" onclick="cancelBudgetEdit()">Cancel</button>
+                                    </div>
+                                ` : `
+                                    <div class="budget-header">
+                                        <span class="budget-title">${dept.name}</span>
+                                        <span style="color: ${dept.color};">${percentage.toFixed(1)}%</span>
+                                    </div>
+                                    <div class="budget-progress">
+                                        <div class="progress-bar" style="width: ${percentage}%; background: ${dept.color};"></div>
+                                    </div>
+                                    <div class="budget-stats">
+                                        <span>Spent: ${formatCurrency(dept.spent)}</span>
+                                        <span>Budget: ${formatCurrency(dept.allocated)}</span>
+                                    </div>
+                                    <div class="budget-actions">
+                                        <button class="edit-btn" onclick="startBudgetEdit(${dept.id})"><i class="fas fa-edit"></i> Edit</button>
+                                    </div>
+                                `}
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+
+                <div class="metrics">
+                    <div class="metric-card">
+                        <div class="metric-value">${formatCurrency(totalBudget)}</div>
+                        <div class="metric-label">Total Budget</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">${formatCurrency(totalSpent)}</div>
+                        <div class="metric-label">Total Spent</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">${((totalSpent/totalBudget)*100).toFixed(1)}%</div>
+                        <div class="metric-label">Utilization</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ============================================
+        // SPREADSHEET RENDERING
+        // ============================================
+
+        function renderSpreadsheet() {
+            // Calculate statistics
+            let numbers = [];
+            for (let i = 0; i < spreadsheetData.length; i++) {
+                for (let j = 1; j < spreadsheetData[i].length; j++) {
+                    let num = parseFloat(spreadsheetData[i][j]);
+                    if (!isNaN(num)) numbers.push(num);
+                }
+            }
+            let sum = numbers.reduce((a, b) => a + b, 0);
+            let avg = numbers.length ? sum / numbers.length : 0;
+
+            return `
+                <div class="controls-bar">
+                    <h2>Financial Spreadsheet</h2>
+                    <div>
+                        <button class="btn btn-primary" onclick="addRow()"><i class="fas fa-plus"></i> Add Row</button>
+                        <button class="btn btn-outline" onclick="addColumn()"><i class="fas fa-columns"></i> Add Column</button>
+                    </div>
+                    <div class="export-buttons">
+                        <button class="export-btn excel" onclick="exportSpreadsheetToExcel()"><i class="fas fa-file-excel"></i> Excel</button>
+                        <button class="export-btn print" onclick="window.print()"><i class="fas fa-print"></i> Print</button>
+                    </div>
+                </div>
+
+                <div class="spreadsheet-container">
+                    <table class="spreadsheet">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Product <span class="delete-btn" onclick="deleteColumn(0)"><i class="fas fa-times"></i></span></th>
+                                <th>Quantity <span class="delete-btn" onclick="deleteColumn(1)"><i class="fas fa-times"></i></span></th>
+                                <th>Price <span class="delete-btn" onclick="deleteColumn(2)"><i class="fas fa-times"></i></span></th>
+                                <th>Revenue <span class="delete-btn" onclick="deleteColumn(3)"><i class="fas fa-times"></i></span></th>
+                                <th>Quarter <span class="delete-btn" onclick="deleteColumn(4)"><i class="fas fa-times"></i></span></th>
+                                <th>Status <span class="delete-btn" onclick="deleteColumn(5)"><i class="fas fa-times"></i></span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${spreadsheetData.map((row, rowIndex) => `
+                                <tr>
+                                    <td style="background: var(--light-gray); font-weight: 600; text-align: center;">
+                                        ${rowIndex + 1}
+                                        <span class="delete-btn" onclick="deleteRow(${rowIndex})"><i class="fas fa-times"></i></span>
+                                    </td>
+                                    ${row.map((cell, colIndex) => `
+                                        <td>
+                                            <input type="text" value="${cell || ''}" 
+                                                onchange="updateCell(${rowIndex}, ${colIndex}, this.value)"
+                                                placeholder="Enter value">
+                                        </td>
+                                    `).join('')}
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="metrics">
+                    <div class="metric-card">
+                        <div class="metric-value">${formatCurrency(sum)}</div>
+                        <div class="metric-label">Total Revenue</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">${formatCurrency(avg)}</div>
+                        <div class="metric-label">Average</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">${numbers.length}</div>
+                        <div class="metric-label">Data Points</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ============================================
+        // EDIT FUNCTIONS
+        // ============================================
+
+        window.editItem = function(path, id, field = 'name') {
+            let newValue = prompt(`Enter new ${field}:`);
+            if (newValue === null) return;
+
+            // Parse path
+            let parts = path.split('.');
+            let category = parts[0];
+            let subcategory = parts[1];
+
+            let item;
+            if (subcategory) {
+                item = bsData[category][subcategory].find(i => i.id === id);
+            } else {
+                item = bsData[category].find(i => i.id === id);
+            }
+
+            if (item) {
+                if (field === 'amount') {
+                    item.amount = parseFloat(newValue) || 0;
+                } else {
+                    item.name = newValue;
+                }
+                renderModule();
+            }
+        };
+
+        window.setBSFormat = function(format) {
+            bsFormat = format;
+            renderModule();
+        };
+
+        window.toggleGST = function() {
+            gstEnabled = !gstEnabled;
+            renderModule();
+        };
+
+        // Budget Edit Functions
+        window.startBudgetEdit = function(id) {
+            editingBudget = id;
+            renderModule();
+        };
+
+        window.saveBudgetEdit = function(id) {
+            let dept = budgetData.find(d => d.id === id);
+            if (dept) {
+                dept.name = document.getElementById(`editName-${id}`).value;
+                dept.allocated = parseFloat(document.getElementById(`editAllocated-${id}`).value) || 0;
+                dept.spent = parseFloat(document.getElementById(`editSpent-${id}`).value) || 0;
+            }
+            editingBudget = null;
+            renderModule();
+        };
+
+        window.cancelBudgetEdit = function() {
+            editingBudget = null;
+            renderModule();
+        };
+
+        // Spreadsheet Functions
+        window.updateCell = function(row, col, value) {
+            spreadsheetData[row][col] = value;
+            renderModule();
+        };
+
+        window.addRow = function() {
+            spreadsheetData.push(Array(spreadsheetData[0].length).fill(''));
+            renderModule();
+        };
+
+        window.addColumn = function() {
+            spreadsheetData.forEach(row => row.push(''));
+            renderModule();
+        };
+
+        window.deleteRow = function(index) {
+            spreadsheetData.splice(index, 1);
+            renderModule();
+        };
+
+        window.deleteColumn = function(index) {
+            spreadsheetData.forEach(row => row.splice(index, 1));
+            renderModule();
+        };
+
+        // ============================================
+        // EXPORT FUNCTIONS - FULLY WORKING
+        // ============================================
+
+        window.exportToPDF = function() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            doc.setFontSize(18);
+            doc.text('Face Pay - Balance Sheet', 14, 22);
+            doc.setFontSize(11);
+            doc.text(`Generated: ${new Date().toLocaleDateString()}`, 14, 32);
+            
+            // Create table data
+            let tableData = [];
+            
+            // Add assets
+            tableData.push(['ASSETS', '']);
+            bsData.assets.current.forEach(item => {
+                tableData.push([item.name, formatCurrency(getAmountWithGST(item))]);
+            });
+            
+            bsData.assets.fixed.forEach(item => {
+                tableData.push([item.name, formatCurrency(getAmountWithGST(item))]);
+            });
+            
+            bsData.assets.other.forEach(item => {
+                tableData.push([item.name, formatCurrency(getAmountWithGST(item))]);
+            });
+            
+            // Add liabilities
+            tableData.push(['', '']);
+            tableData.push(['LIABILITIES & EQUITY', '']);
+            bsData.liabilities.current.forEach(item => {
+                tableData.push([item.name, formatCurrency(getAmountWithGST(item))]);
+            });
+            
+            bsData.liabilities.longTerm.forEach(item => {
+                tableData.push([item.name, formatCurrency(getAmountWithGST(item))]);
+            });
+            
+            bsData.equity.forEach(item => {
+                tableData.push([item.name, formatCurrency(getAmountWithGST(item))]);
+            });
+
+            doc.autoTable({
+                head: [['Particulars', 'Amount']],
+                body: tableData,
+                startY: 40,
+                styles: { fontSize: 10 },
+                headStyles: { fillColor: [26, 115, 232] }
+            });
+            
+            doc.save('FacePay_BalanceSheet.pdf');
+        };
+
+        window.exportToWord = function() {
+            let content = `
+                <html>
+                <head>
+                    <style>
+                        table { border-collapse: collapse; width: 100%; }
+                        th { background: #1a73e8; color: white; padding: 10px; }
+                        td { border: 1px solid #ddd; padding: 8px; }
+                    </style>
+                </head>
+                <body>
+                    <h2>Face Pay - Balance Sheet</h2>
+                    <p>Generated: ${new Date().toLocaleDateString()}</p>
+                    <table>
+                        <tr><th>ASSETS</th><th>Amount</th></tr>
+                        ${bsData.assets.current.map(item => `<tr><td>${item.name}</td><td>${formatCurrency(getAmountWithGST(item))}</td></tr>`).join('')}
+                        ${bsData.assets.fixed.map(item => `<tr><td>${item.name}</td><td>${formatCurrency(getAmountWithGST(item))}</td></tr>`).join('')}
+                        ${bsData.assets.other.map(item => `<tr><td>${item.name}</td><td>${formatCurrency(getAmountWithGST(item))}</td></tr>`).join('')}
+                        <tr><th>LIABILITIES & EQUITY</th><th></th></tr>
+                        ${bsData.liabilities.current.map(item => `<tr><td>${item.name}</td><td>${formatCurrency(getAmountWithGST(item))}</td></tr>`).join('')}
+                        ${bsData.liabilities.longTerm.map(item => `<tr><td>${item.name}</td><td>${formatCurrency(getAmountWithGST(item))}</td></tr>`).join('')}
+                        ${bsData.equity.map(item => `<tr><td>${item.name}</td><td>${formatCurrency(getAmountWithGST(item))}</td></tr>`).join('')}
+                    </table>
+                </body>
+                </html>
+            `;
+            
+            const blob = new Blob([content], { type: 'application/msword' });
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'FacePay_BalanceSheet.doc';
+            link.click();
+        };
+
+        window.exportToExcel = function() {
+            let data = [
+                ['Face Pay - Balance Sheet'],
+                [`Generated: ${new Date().toLocaleDateString()}`],
+                [],
+                ['ASSETS', 'Amount']
+            ];
+            
+            bsData.assets.current.forEach(item => {
+                data.push([item.name, getAmountWithGST(item)]);
+            });
+            
+            bsData.assets.fixed.forEach(item => {
+                data.push([item.name, getAmountWithGST(item)]);
+            });
+            
+            bsData.assets.other.forEach(item => {
+                data.push([item.name, getAmountWithGST(item)]);
+            });
+            
+            data.push([]);
+            data.push(['LIABILITIES & EQUITY', '']);
+            
+            bsData.liabilities.current.forEach(item => {
+                data.push([item.name, getAmountWithGST(item)]);
+            });
+            
+            bsData.liabilities.longTerm.forEach(item => {
+                data.push([item.name, getAmountWithGST(item)]);
+            });
+            
+            bsData.equity.forEach(item => {
+                data.push([item.name, getAmountWithGST(item)]);
+            });
+
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.aoa_to_sheet(data);
+            XLSX.utils.book_append_sheet(wb, ws, 'Balance Sheet');
+            XLSX.writeFile(wb, 'FacePay_BalanceSheet.xlsx');
+        };
+
+        window.exportBudgetToPDF = function() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            doc.setFontSize(18);
+            doc.text('Face Pay - Budget Planner', 14, 22);
+            doc.setFontSize(11);
+            doc.text(`Generated: ${new Date().toLocaleDateString()}`, 14, 32);
+            
+            let tableData = budgetData.map(dept => [
+                dept.name,
+                formatCurrency(dept.allocated),
+                formatCurrency(dept.spent),
+                ((dept.spent/dept.allocated)*100).toFixed(1) + '%'
+            ]);
+
+            doc.autoTable({
+                head: [['Department', 'Budget', 'Spent', 'Utilization']],
+                body: tableData,
+                startY: 40,
+                styles: { fontSize: 10 },
+                headStyles: { fillColor: [26, 115, 232] }
+            });
+            
+            doc.save('FacePay_Budget.pdf');
+        };
+
+        window.exportBudgetToExcel = function() {
+            let data = [
+                ['Face Pay - Budget Planner'],
+                [`Generated: ${new Date().toLocaleDateString()}`],
+                [],
+                ['Department', 'Budget', 'Spent', 'Utilization %']
+            ];
+            
+            budgetData.forEach(dept => {
+                data.push([dept.name, dept.allocated, dept.spent, ((dept.spent/dept.allocated)*100).toFixed(1)]);
+            });
+
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.aoa_to_sheet(data);
+            XLSX.utils.book_append_sheet(wb, ws, 'Budget');
+            XLSX.writeFile(wb, 'FacePay_Budget.xlsx');
+        };
+
+        window.exportSpreadsheetToExcel = function() {
+            let data = [
+                ['Face Pay - Spreadsheet'],
+                [`Generated: ${new Date().toLocaleDateString()}`],
+                [],
+                ['Product', 'Quantity', 'Price', 'Revenue', 'Quarter', 'Status']
+            ];
+            
+            spreadsheetData.forEach(row => {
+                data.push(row);
+            });
+
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.aoa_to_sheet(data);
+            XLSX.utils.book_append_sheet(wb, ws, 'Data');
+            XLSX.writeFile(wb, 'FacePay_Spreadsheet.xlsx');
+        };
+
+        // ============================================
+        // MODULE RENDERING
+        // ============================================
+
+        function renderModule() {
+            const content = document.getElementById('moduleContent');
+            
+            switch(currentModule) {
+                case 'balance-sheet':
+                    content.innerHTML = renderBalanceSheet();
+                    break;
+                case 'budget':
+                    content.innerHTML = renderBudgetPlanner();
+                    break;
+                case 'spreadsheet':
+                    content.innerHTML = renderSpreadsheet();
+                    break;
+            }
+        }
+
+        // Module Navigation
+        document.querySelectorAll('.module-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.module-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                currentModule = this.dataset.module;
+                renderModule();
+            });
+        });
+
+        // ============================================
+        // CHATBOT FUNCTIONALITY
+        // ============================================
+
+        const chatbotContainer = document.getElementById('chatbotContainer');
+        const chatMessageIcon = document.getElementById('chatMessageIcon');
+        const closeChat = document.getElementById('closeChat');
+        const chatMessages = document.getElementById('chatMessages');
+        const chatInput = document.getElementById('chatInput');
+        const sendMessage = document.getElementById('sendMessage');
+        const messageBadge = document.getElementById('messageBadge');
+
+        const responses = {
+            'balance': 'The Balance Sheet module supports 3 formats: Horizontal (T-format), Vertical (Report format), and Classified. You can toggle GST on/off and edit any cell by clicking on it.',
+            'budget': 'The Budget Planner helps track department spending. Click on any budget card to edit values. Progress bars show utilization in real-time.',
+            'spreadsheet': 'The Spreadsheet works like Excel. Add/delete rows and columns, edit cells directly, and see automatic calculations at the bottom.',
+            'export': 'Use the export buttons to download as PDF, Word, Excel, or print. All exports maintain formatting and calculations.',
+            'default': 'I can help you with Balance Sheet, Budget Planner, Spreadsheet, and export features. What would you like to know?'
+        };
+
+        function addMessage(text, isUser = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', isUser ? 'user-message' : 'bot-message');
+            messageDiv.textContent = text;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function getBotResponse(input) {
+            input = input.toLowerCase();
+            if (input.includes('balance')) return responses.balance;
+            if (input.includes('budget')) return responses.budget;
+            if (input.includes('spreadsheet') || input.includes('sheet')) return responses.spreadsheet;
+            if (input.includes('export') || input.includes('pdf') || input.includes('excel')) return responses.export;
+            if (input.includes('hello') || input.includes('hi')) return 'Hello! How can I help you with Face Pay Financial Suite today?';
+            return responses.default;
+        }
+
+        function sendUserMessage() {
+            const message = chatInput.value.trim();
+            if (!message) return;
+
+            if (queryCount >= MAX_QUERIES) {
+                addMessage('You have reached the maximum number of questions. Please contact support for more help.', false);
+                return;
+            }
+
+            addMessage(message, true);
+            queryCount++;
+            messageBadge.textContent = MAX_QUERIES - queryCount;
+
+            setTimeout(() => {
+                const response = getBotResponse(message);
+                addMessage(response, false);
+            }, 500);
+
+            chatInput.value = '';
+        }
+
+        chatMessageIcon.addEventListener('click', () => {
+            chatbotContainer.classList.toggle('active');
+            if (chatbotContainer.classList.contains('active')) {
+                messageBadge.style.display = 'none';
+            } else {
+                messageBadge.style.display = 'flex';
+            }
+        });
+
+        closeChat.addEventListener('click', () => {
+            chatbotContainer.classList.remove('active');
+            messageBadge.style.display = 'flex';
+        });
+
+        sendMessage.addEventListener('click', sendUserMessage);
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendUserMessage();
+        });
+
+        // Initialize
+        renderModule();
+    </script>
+</body>
+</html>
