@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, itial-scale=1.0">
-    <title>FacePay Merchant - Barcode Scanner</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FacePay Merchant - Profile Completion</title>
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- QuaggaJS for Barcode Scanning -->
@@ -24,6 +24,9 @@
             --white: #ffffff;
             --shadow: 0 4px 12px rgba(0,0,0,0.08);
             --gradient: linear-gradient(135deg, #1a73e8 0%, #34a853 100%);
+            --error: #ea4335;
+            --success: #34a853;
+            --warning: #fbbc04;
         }
         [data-theme="dark"] {
             --primary: #1a73e8;
@@ -35,6 +38,9 @@
             --text: #e8eaed;
             --white: #202124;
             --shadow: 0 4px 12px rgba(0,0,0,0.3);
+            --error: #f28b82;
+            --success: #81c995;
+            --warning: #fdd663;
         }
         body { background-color: #f5f7fa; color: var(--text); line-height: 1.6; overflow-x: hidden; transition: background-color 0.3s; }
         .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
@@ -64,12 +70,44 @@
         .logo i { font-size: 28px; color: var(--primary); }
         .menu-toggle { display: none; background: none; border: none; font-size: 20px; color: var(--dark-gray); cursor: pointer; padding: 5px; }
         
-        .merchant-profile { padding: 20px; border-bottom: 1px solid var(--medium-gray); display: flex; align-items: center; gap: 15px; }
+        .merchant-profile { 
+            padding: 20px; border-bottom: 1px solid var(--medium-gray); 
+            display: flex; align-items: center; gap: 15px; cursor: pointer; 
+            transition: all 0.3s; position: relative;
+        }
+        .merchant-profile:hover { background: var(--light-gray); }
+        .profile-avatar { position: relative; }
         .profile-avatar i { font-size: 50px; color: var(--primary); }
-        .profile-info h3 { font-size: 16px; margin-bottom: 5px; }
-        .profile-info p { font-size: 14px; color: var(--dark-gray); margin-bottom: 8px; }
-        .status-indicator { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+        .profile-avatar .edit-overlay { 
+            position: absolute; bottom: 0; right: 0; background: var(--primary); 
+            width: 20px; height: 20px; border-radius: 50%; display: flex; 
+            align-items: center; justify-content: center; color: white; 
+            font-size: 12px; opacity: 0; transition: opacity 0.3s; 
+        }
+        .merchant-profile:hover .edit-overlay { opacity: 1; }
+        .profile-info { flex: 1; }
+        .profile-info h3 { 
+            font-size: 16px; margin-bottom: 2px; 
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .profile-info p { 
+            font-size: 12px; color: var(--dark-gray); margin-bottom: 5px;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .status-indicator { 
+            display: flex; align-items: center; gap: 8px; font-size: 12px;
+            flex-wrap: wrap;
+        }
         .status-dot { width: 8px; height: 8px; background: var(--secondary); border-radius: 50%; animation: pulse 2s infinite; }
+        .profile-completion-badge { 
+            background: var(--warning); color: #000; font-size: 11px; 
+            padding: 2px 6px; border-radius: 12px; margin-left: auto;
+            font-weight: 600;
+        }
+        .profile-completion-badge.completed {
+            background: var(--success);
+            color: white;
+        }
         @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
         
         .sidebar-nav { flex: 1; padding: 20px 0; overflow-y: auto; }
@@ -82,11 +120,25 @@
         .badge { margin-left: auto; background: var(--secondary); color: white; font-size: 12px; padding: 2px 8px; border-radius: 10px; }
         
         .sidebar-footer { padding: 20px; border-top: 1px solid var(--medium-gray); }
-        .upi-info { display: flex; align-items: center; gap: 10px; padding: 15px; background: var(--light-gray); border-radius: 8px; margin-bottom: 15px; }
-        .upi-info i { font-size: 24px; color: var(--primary); }
-        .upi-info p { font-size: 12px; color: var(--dark-gray); }
-        .upi-info strong { font-size: 14px; color: var(--text); }
-        .logout-btn { width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; transition: all 0.3s; }
+        .upi-info { 
+            display: flex; align-items: center; gap: 10px; padding: 12px; 
+            background: var(--light-gray); border-radius: 8px; margin-bottom: 15px;
+            cursor: pointer; transition: all 0.3s;
+        }
+        .upi-info:hover { background: var(--medium-gray); }
+        .upi-info i { font-size: 20px; color: var(--primary); }
+        .upi-info-content { overflow: hidden; }
+        .upi-info p { font-size: 11px; color: var(--dark-gray); margin-bottom: 2px; }
+        .upi-info strong { 
+            font-size: 13px; color: var(--text); display: block;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .logout-btn { 
+            width: 100%; display: flex; align-items: center; justify-content: center; 
+            gap: 10px; padding: 12px; background: var(--primary); color: white; 
+            border: none; border-radius: 6px; font-size: 14px; cursor: pointer; 
+            transition: all 0.3s; 
+        }
         .logout-btn:hover { background: var(--primary-dark); }
         
         /* ===== MAIN CONTENT ===== */
@@ -119,6 +171,328 @@
         .notification-badge { position: absolute; top: -5px; right: -5px; background: var(--secondary); color: white; font-size: 12px; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
         
         .content-area { padding: 30px; min-height: calc(100vh - 120px); }
+        
+        /* ===== PROFILE COMPLETION STYLES ===== */
+        .profile-container {
+            max-width: 900px; margin: 0 auto; background: var(--white); 
+            border-radius: 12px; box-shadow: var(--shadow); overflow: hidden;
+        }
+        
+        .profile-header {
+            background: var(--gradient); color: white; padding: 30px;
+            text-align: center; position: relative;
+        }
+        
+        .profile-header h2 { font-size: 28px; margin-bottom: 10px; }
+        .profile-header p { opacity: 0.9; font-size: 16px; }
+        
+        .completion-meter {
+            background: rgba(255,255,255,0.2); height: 8px; border-radius: 4px;
+            margin: 20px auto 0; max-width: 500px; overflow: hidden;
+        }
+        
+        .completion-fill {
+            height: 100%; background: white; width: 0%;
+            transition: width 0.5s ease; border-radius: 4px;
+        }
+        
+        .completion-percentage {
+            position: absolute; top: 20px; right: 30px;
+            background: rgba(255,255,255,0.2); padding: 8px 16px;
+            border-radius: 20px; font-weight: 600; font-size: 18px;
+        }
+        
+        .profile-sections {
+            padding: 30px;
+        }
+        
+        .profile-section {
+            margin-bottom: 30px; border: 1px solid var(--medium-gray);
+            border-radius: 8px; overflow: hidden;
+        }
+        
+        .section-header {
+            background: var(--light-gray); padding: 15px 20px;
+            display: flex; justify-content: space-between; align-items: center;
+            cursor: pointer; transition: all 0.3s;
+        }
+        
+        .section-header:hover { background: var(--medium-gray); }
+        
+        .section-header h3 {
+            font-size: 18px; font-weight: 600; display: flex;
+            align-items: center; gap: 10px;
+        }
+        
+        .section-header h3 i {
+            color: var(--primary); font-size: 20px;
+        }
+        
+        .section-status {
+            font-size: 12px; padding: 4px 12px;
+            border-radius: 20px; background: var(--warning); color: #000;
+        }
+        
+        .section-status.completed {
+            background: var(--success); color: white;
+        }
+        
+        .section-content {
+            padding: 20px; display: none;
+        }
+        
+        .section-content.active {
+            display: block; animation: slideDown 0.3s ease;
+        }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .form-row {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block; margin-bottom: 8px; font-weight: 500;
+            color: var(--text); font-size: 14px;
+        }
+        
+        .form-group label .required {
+            color: var(--error); margin-left: 4px;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%; padding: 12px 15px;
+            border: 2px solid var(--medium-gray); border-radius: 8px;
+            background: var(--white); color: var(--text); font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none; border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(26,115,232,0.1);
+        }
+        
+        .form-group input.valid {
+            border-color: var(--success);
+        }
+        
+        .form-group input.invalid {
+            border-color: var(--error);
+        }
+        
+        .form-group input[readonly] {
+            background: var(--light-gray);
+            cursor: not-allowed;
+        }
+        
+        .validation-message {
+            font-size: 12px; margin-top: 5px; min-height: 18px;
+            display: flex; align-items: center; gap: 4px;
+        }
+        
+        .validation-message.error {
+            color: var(--error);
+        }
+        
+        .validation-message.success {
+            color: var(--success);
+        }
+        
+        .input-hint {
+            font-size: 12px; color: var(--dark-gray); margin-top: 4px;
+        }
+        
+        .age-display {
+            background: var(--light-gray);
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .age-display i {
+            font-size: 24px;
+            color: var(--primary);
+        }
+        
+        .age-display .age-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .age-display .age-label {
+            font-size: 14px;
+            color: var(--dark-gray);
+        }
+        
+        .bank-details-grid {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;
+        }
+        
+        .full-width {
+            grid-column: span 2;
+        }
+        
+        .save-indicator {
+            display: inline-flex; align-items: center; gap: 8px;
+            font-size: 14px; padding: 8px 16px; border-radius: 20px;
+            background: var(--light-gray); transition: all 0.3s;
+            margin-bottom: 20px;
+        }
+        
+        .save-indicator.saving {
+            color: var(--warning);
+        }
+        
+        .save-indicator.saved {
+            color: var(--success);
+        }
+        
+        .save-indicator i {
+            font-size: 16px;
+        }
+        
+        .profile-actions {
+            display: flex; justify-content: flex-end; gap: 15px;
+            margin-top: 30px; padding-top: 20px;
+            border-top: 1px solid var(--medium-gray);
+        }
+        
+        .btn-primary, .btn-secondary {
+            padding: 12px 24px; border-radius: 8px; border: none;
+            font-size: 15px; font-weight: 500; cursor: pointer;
+            transition: all 0.3s; display: inline-flex; align-items: center; gap: 8px;
+        }
+        
+        .btn-primary {
+            background: var(--primary); color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-dark); transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: var(--light-gray); color: var(--text);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--medium-gray);
+        }
+        
+        .btn-primary:disabled,
+        .btn-secondary:disabled {
+            opacity: 0.5; cursor: not-allowed; transform: none;
+        }
+        
+        .gst-verification {
+            display: flex; gap: 10px; align-items: flex-start;
+        }
+        
+        .gst-verification input {
+            flex: 1;
+        }
+        
+        .verify-btn {
+            padding: 12px 20px; background: var(--light-gray);
+            border: 2px solid var(--medium-gray); border-radius: 8px;
+            color: var(--text); cursor: pointer; transition: all 0.3s;
+            white-space: nowrap;
+        }
+        
+        .verify-btn:hover {
+            background: var(--primary); color: white; border-color: var(--primary);
+        }
+        
+        .verify-btn.verified {
+            background: var(--success); color: white; border-color: var(--success);
+        }
+        
+        .bank-logo {
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px; background: var(--light-gray);
+            border-radius: 8px; margin-bottom: 15px;
+        }
+        
+        .bank-logo i {
+            font-size: 24px; color: var(--primary);
+        }
+        
+        .toast-notification {
+            position: fixed; bottom: 20px; right: 20px;
+            background: var(--white); border-left: 4px solid var(--primary);
+            padding: 16px 20px; border-radius: 8px; box-shadow: var(--shadow);
+            display: flex; align-items: center; gap: 12px; z-index: 1000;
+            animation: slideIn 0.3s ease;
+        }
+        
+        .toast-notification.success { border-left-color: var(--success); }
+        .toast-notification.error { border-left-color: var(--error); }
+        .toast-notification.warning { border-left-color: var(--warning); }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        /* ===== GST FIELD STYLES ===== */
+        .gst-field-container {
+            transition: all 0.3s ease;
+        }
+        
+        .gst-field-container.disabled {
+            opacity: 0.6;
+        }
+        
+        .gst-field-container select:disabled {
+            background: var(--light-gray);
+            cursor: not-allowed;
+        }
+        
+        .gst-helper-text {
+            font-size: 12px;
+            color: var(--dark-gray);
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .gst-helper-text i {
+            font-size: 14px;
+            color: var(--warning);
+        }
+        
+        .gst-warning-badge {
+            background: var(--warning);
+            color: #000;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .gst-warning-badge i {
+            font-size: 16px;
+        }
         
         /* ===== CARDS & TABLES ===== */
         .welcome-message { 
@@ -156,21 +530,6 @@
         .table-header h3 { font-size: 18px; font-weight: 600; }
         .table-actions { display: flex; gap: 10px; }
         
-        .btn-primary, .btn-secondary, .btn-icon { 
-            padding: 8px 16px; border-radius: 6px; border: none; 
-            font-size: 14px; font-weight: 500; cursor: pointer; 
-            transition: all 0.3s; display: inline-flex; align-items: center; gap: 8px; 
-        }
-        .btn-primary { background: var(--primary); color: white; }
-        .btn-primary:hover { background: var(--primary-dark); }
-        .btn-secondary { background: var(--light-gray); color: var(--text); }
-        .btn-secondary:hover { background: var(--medium-gray); }
-        .btn-icon { 
-            width: 36px; height: 36px; padding: 0; justify-content: center; 
-            background: var(--light-gray); color: var(--text); 
-        }
-        .btn-icon:hover { background: var(--primary); color: white; }
-        
         .table { width: 100%; border-collapse: collapse; }
         .table th { 
             background: var(--light-gray); padding: 15px; text-align: left; 
@@ -186,19 +545,11 @@
         .status.pending { background: #fef3c7; color: #92400e; }
         .status.failed { background: #fee2e2; color: #991b1b; }
         
-        /* ===== FORMS ===== */
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; margin-bottom: 8px; font-weight: 500; color: var(--text); }
-        .form-group input, .form-group select, .form-group textarea { 
-            width: 100%; padding: 12px 15px; 
-            border: 1px solid var(--medium-gray); border-radius: 6px; 
-            background: var(--light-gray); color: var(--text); font-size: 14px; 
-            transition: all 0.3s; 
-        }
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { 
-            outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(26,115,232,0.1); 
-        }
-        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .stock-indicator { padding: 4px 10px; border-radius: 12px; font-size: 12px; }
+        .stock-indicator.low { background: #fee2e2; color: #991b1b; }
+        .stock-indicator.medium { background: #fef3c7; color: #92400e; }
+        .stock-indicator.high { background: #d1fae5; color: #065f46; }
+        .category-tag { padding: 4px 10px; border-radius: 12px; font-size: 12px; background: #e8f0fe; color: var(--primary); }
         
         /* ===== MODALS ===== */
         .modal { 
@@ -273,23 +624,6 @@
         }
         .barcode-result span { font-family: monospace; font-size: 18px; font-weight: bold; letter-spacing: 2px; }
         
-        .stock-indicator { padding: 4px 10px; border-radius: 12px; font-size: 12px; }
-        .stock-indicator.low { background: #fee2e2; color: #991b1b; }
-        .stock-indicator.medium { background: #fef3c7; color: #92400e; }
-        .stock-indicator.high { background: #d1fae5; color: #065f46; }
-        .category-tag { padding: 4px 10px; border-radius: 12px; font-size: 12px; background: #e8f0fe; color: var(--primary); }
-        
-        .notification-toast { 
-            position: fixed; top: 20px; right: 20px; padding: 15px 20px; 
-            background: var(--primary); color: white; border-radius: 6px; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2); display: flex; align-items: center; 
-            gap: 10px; z-index: 3000; animation: slideInRight 0.3s ease; 
-        }
-        @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        .notification-toast.success { background: var(--secondary); }
-        .notification-toast.error { background: #ea4335; }
-        .notification-toast.warning { background: #fbbc04; }
-        
         @media (max-width: 1200px) { 
             .sidebar { transform: translateX(-100%); } 
             .sidebar.active { transform: translateX(0); } 
@@ -305,7 +639,13 @@
             .welcome-message { flex-direction: column; text-align: center; padding: 30px 20px; } 
             .welcome-illustration i { font-size: 80px; margin-top: 20px; } 
             .form-row { grid-template-columns: 1fr; } 
-            .stats-grid { grid-template-columns: 1fr; } 
+            .stats-grid { grid-template-columns: 1fr; }
+            .bank-details-grid { grid-template-columns: 1fr; }
+            .full-width { grid-column: span 1; }
+            .profile-header { padding: 20px; }
+            .completion-percentage { position: static; margin-top: 15px; }
+            .profile-actions { flex-direction: column; }
+            .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
         }
     </style>
 </head>
@@ -322,14 +662,36 @@
     <script>
         // ===== DASHBOARD STATE =====
         let dashboardState = {
-            merchant: { name: "Facepay| The Future Of Payments", email: "business@facepaysolution.com", upiId: "facepaysolutions@upi", phone: "+91 9876543210", address: "123 Business Street, Pune City, India Country" },
+            merchant: {
+                name: "Facepay",
+                email: "business@facepaysolution.com",
+                dateOfBirth: "",
+                age: 0,
+                phone: "",
+                altPhone: "",
+                address: "",
+                city: "",
+                pincode: "",
+                upiId: "",
+                bankName: "",
+                accountNo: "",
+                ifscCode: "",
+                accountType: "savings",
+                gstNo: "",
+                gstRegisteredName: "",
+                businessType: "proprietorship",
+                isGstRegistered: true, // Set to true for testing, change to false to test disabled state
+                gstVerified: false,
+                profileCompleted: false,
+                profileCompletionPercentage: 0
+            },
             stats: { totalRevenue: 125000, pendingInvoices: 5, totalProducts: 24, recentTransactions: 8 },
             products: [
-                { id: 1, name: "Laptop Pro", price: 89999, stock: 12, category: "electronics", barcode: "8901234567890", addedDate: "2024-01-15" },
-                { id: 2, name: "Wireless Mouse", price: 1999, stock: 45, category: "electronics", barcode: "123456789012", addedDate: "2024-01-20" },
-                { id: 3, name: "Office Chair", price: 12999, stock: 8, category: "furniture", barcode: "978020137962", addedDate: "2024-02-01" },
-                { id: 4, name: "Webcam HD", price: 3499, stock: 23, category: "electronics", barcode: "4006381333931", addedDate: "2024-02-10" },
-                { id: 5, name: "Keyboard Mechanical", price: 5999, stock: 15, category: "electronics", barcode: "5901234567897", addedDate: "2024-02-15" }
+                { id: 1, name: "Laptop Pro", price: 89999, stock: 12, category: "electronics", barcode: "8901234567890", gstRate: 18, addedDate: "2024-01-15" },
+                { id: 2, name: "Wireless Mouse", price: 1999, stock: 45, category: "electronics", barcode: "123456789012", gstRate: 18, addedDate: "2024-01-20" },
+                { id: 3, name: "Office Chair", price: 12999, stock: 8, category: "furniture", barcode: "978020137962", gstRate: 12, addedDate: "2024-02-01" },
+                { id: 4, name: "Webcam HD", price: 3499, stock: 23, category: "electronics", barcode: "4006381333931", gstRate: 18, addedDate: "2024-02-10" },
+                { id: 5, name: "Keyboard Mechanical", price: 5999, stock: 15, category: "electronics", barcode: "5901234567897", gstRate: 18, addedDate: "2024-02-15" }
             ],
             notifications: [],
             currentInvoice: { template: "minimal", companyName: "", companyAddress: "", clientName: "", clientEmail: "", invoiceDate: new Date().toISOString().split('T')[0], dueDate: "", invoiceNumber: "", items: [], notes: "", subtotal: 0, tax: 0, total: 0 }
@@ -347,12 +709,49 @@
         let currentPage = 'dashboard';
         let currentTheme = 'light';
         let codeReader = null;
+        let autoSaveTimeout = null;
+
+        // ===== VALIDATION RULES =====
+        const validationRules = {
+            phone: {
+                pattern: /^[6-9]\d{9}$/,
+                message: 'Enter a valid 10-digit Indian mobile number'
+            },
+            email: {
+                pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                message: 'Enter a valid email address'
+            },
+            upiId: {
+                pattern: /^[a-zA-Z0-9.\-_]{2,49}@[a-zA-Z]{3,}$/,
+                message: 'Enter a valid UPI ID (e.g., name@bank)'
+            },
+            ifscCode: {
+                pattern: /^[A-Z]{4}0[A-Z0-9]{6}$/,
+                message: 'Enter a valid 11-character IFSC code'
+            },
+            accountNo: {
+                pattern: /^\d{9,18}$/,
+                message: 'Account number should be 9-18 digits'
+            },
+            gstNo: {
+                pattern: /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/,
+                message: 'Enter a valid 15-character GST number'
+            },
+            pincode: {
+                pattern: /^\d{6}$/,
+                message: 'Enter a valid 6-digit pincode'
+            }
+        };
+
+        // GST Slabs as per government regulations
+        const gstSlabs = [0, 5, 12, 18, 28];
 
         // ===== INITIALIZATION =====
         document.addEventListener('DOMContentLoaded', function() {
             setTimeout(() => {
                 document.getElementById('loading').style.display = 'none';
                 initializeDashboard();
+                loadSavedMerchantData();
                 try {
                     codeReader = new ZXing.BrowserMultiFormatReader();
                     console.log('ZXing initialized successfully');
@@ -362,6 +761,774 @@
             }, 1000);
         });
 
+        // ===== LOAD SAVED MERCHANT DATA =====
+        function loadSavedMerchantData() {
+            const savedData = localStorage.getItem('facepay_merchant_profile');
+            if (savedData) {
+                try {
+                    const parsed = JSON.parse(savedData);
+                    dashboardState.merchant = { ...dashboardState.merchant, ...parsed };
+                    
+                    // Recalculate age if DOB exists
+                    if (dashboardState.merchant.dateOfBirth) {
+                        dashboardState.merchant.age = calculateAge(dashboardState.merchant.dateOfBirth);
+                    }
+                    
+                    updateMerchantDisplay();
+                    calculateProfileCompletion();
+                } catch (e) {
+                    console.error('Error loading saved data:', e);
+                }
+            }
+        }
+
+        // ===== CALCULATE AGE FROM DATE OF BIRTH =====
+        function calculateAge(dob) {
+            if (!dob) return 0;
+            
+            const birthDate = new Date(dob);
+            const today = new Date();
+            
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            
+            return age;
+        }
+
+        // ===== CALCULATE PROFILE COMPLETION =====
+        function calculateProfileCompletion() {
+            const fields = [
+                { name: 'dateOfBirth', weight: 10 },
+                { name: 'phone', weight: 10 },
+                { name: 'address', weight: 8 },
+                { name: 'city', weight: 5 },
+                { name: 'pincode', weight: 5 },
+                { name: 'upiId', weight: 15 },
+                { name: 'bankName', weight: 8 },
+                { name: 'accountNo', weight: 8 },
+                { name: 'ifscCode', weight: 8 },
+                { name: 'gstNo', weight: 13, condition: () => dashboardState.merchant.isGstRegistered }
+            ];
+
+            let totalWeight = fields.reduce((sum, field) => sum + field.weight, 0);
+            let completedWeight = 0;
+
+            fields.forEach(field => {
+                if (field.condition && !field.condition()) {
+                    totalWeight -= field.weight;
+                    return;
+                }
+                
+                const value = dashboardState.merchant[field.name];
+                if (value && value.toString().trim() !== '') {
+                    completedWeight += field.weight;
+                }
+            });
+
+            dashboardState.merchant.profileCompletionPercentage = totalWeight > 0 ? Math.round((completedWeight / totalWeight) * 100) : 0;
+            dashboardState.merchant.profileCompleted = dashboardState.merchant.profileCompletionPercentage === 100;
+            
+            updateProfileCompletionUI();
+            return dashboardState.merchant.profileCompletionPercentage;
+        }
+
+        // ===== UPDATE PROFILE COMPLETION UI =====
+        function updateProfileCompletionUI() {
+            const percentage = dashboardState.merchant.profileCompletionPercentage;
+            
+            // Update sidebar badge
+            const badge = document.querySelector('.profile-completion-badge');
+            if (badge) {
+                badge.textContent = percentage + '%';
+                if (percentage === 100) {
+                    badge.classList.add('completed');
+                } else {
+                    badge.classList.remove('completed');
+                }
+            }
+            
+            // Update completion meter in profile page if it exists
+            const completionFill = document.querySelector('.completion-fill');
+            const completionText = document.querySelector('.completion-percentage');
+            
+            if (completionFill) {
+                completionFill.style.width = percentage + '%';
+            }
+            
+            if (completionText) {
+                completionText.textContent = percentage + '% Complete';
+            }
+            
+            // Update UPI ID in sidebar
+            const upiElement = document.getElementById('sidebarUpiId');
+            if (upiElement) {
+                upiElement.textContent = dashboardState.merchant.upiId || 'Not set';
+            }
+            
+            updateSectionStatuses();
+        }
+
+        // ===== UPDATE SECTION STATUSES =====
+        function updateSectionStatuses() {
+            const sections = {
+                'basic': ['dateOfBirth', 'phone', 'address', 'city', 'pincode'],
+                'payment': ['upiId'],
+                'bank': ['bankName', 'accountNo', 'ifscCode'],
+                'gst': ['gstNo']
+            };
+
+            Object.entries(sections).forEach(([sectionId, fields]) => {
+                const statusElement = document.querySelector(`#section-${sectionId} .section-status`);
+                if (!statusElement) return;
+
+                const allFilled = fields.every(field => {
+                    if (field === 'gstNo' && !dashboardState.merchant.isGstRegistered) return true;
+                    const value = dashboardState.merchant[field];
+                    return value && value.toString().trim() !== '';
+                });
+
+                if (allFilled) {
+                    statusElement.textContent = 'Completed';
+                    statusElement.classList.add('completed');
+                } else {
+                    statusElement.textContent = 'Pending';
+                    statusElement.classList.remove('completed');
+                }
+            });
+        }
+
+        // ===== AUTO-SAVE FUNCTION =====
+        function autoSaveProfile() {
+            clearTimeout(autoSaveTimeout);
+            autoSaveTimeout = setTimeout(() => {
+                saveMerchantProfile(true);
+            }, 1000);
+        }
+
+        // ===== SAVE MERCHANT PROFILE =====
+        function saveMerchantProfile(isAutoSave = false) {
+            try {
+                localStorage.setItem('facepay_merchant_profile', JSON.stringify(dashboardState.merchant));
+                
+                if (!isAutoSave) {
+                    showToast('Profile saved successfully!', 'success');
+                } else {
+                    showSaveIndicator('saved');
+                }
+                
+                updateMerchantDisplay();
+                calculateProfileCompletion();
+                
+            } catch (e) {
+                console.error('Error saving profile:', e);
+                if (!isAutoSave) {
+                    showToast('Error saving profile', 'error');
+                }
+            }
+        }
+
+        // ===== SHOW SAVE INDICATOR =====
+        function showSaveIndicator(status) {
+            const indicator = document.querySelector('.save-indicator');
+            if (!indicator) return;
+            
+            if (status === 'saving') {
+                indicator.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+                indicator.className = 'save-indicator saving';
+            } else if (status === 'saved') {
+                indicator.innerHTML = '<i class="fas fa-check-circle"></i> All changes saved';
+                indicator.className = 'save-indicator saved';
+                
+                setTimeout(() => {
+                    indicator.innerHTML = '<i class="fas fa-clock"></i> Auto-save enabled';
+                    indicator.className = 'save-indicator';
+                }, 2000);
+            }
+        }
+
+        // ===== VALIDATE FIELD =====
+        function validateField(fieldName, value) {
+            const rule = validationRules[fieldName];
+            if (!rule) return { valid: true, message: '' };
+            
+            const isValid = rule.pattern.test(value);
+            return {
+                valid: isValid,
+                message: isValid ? '' : rule.message
+            };
+        }
+
+        // ===== FORMAT FIELD VALUE =====
+        function formatFieldValue(fieldName, value) {
+            switch(fieldName) {
+                case 'phone':
+                    return value.replace(/\D/g, '').slice(0, 10);
+                case 'accountNo':
+                    return value.replace(/\D/g, '').slice(0, 18);
+                case 'ifscCode':
+                    return value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 11);
+                case 'gstNo':
+                    return value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 15);
+                case 'pincode':
+                    return value.replace(/\D/g, '').slice(0, 6);
+                default:
+                    return value;
+            }
+        }
+
+        // ===== VERIFY GST NUMBER =====
+        async function verifyGSTNumber(gstNo) {
+            showToast('Verifying GST number...', 'info');
+            
+            // Simulate API call
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            
+            // Demo verification - in production, call actual GST API
+            const isValid = validationRules.gstNo.pattern.test(gstNo);
+            
+            if (isValid) {
+                showToast('GST number verified successfully!', 'success');
+                const verifyBtn = document.querySelector('.verify-btn');
+                if (verifyBtn) {
+                    verifyBtn.classList.add('verified');
+                    verifyBtn.innerHTML = '<i class="fas fa-check-circle"></i> Verified';
+                }
+                dashboardState.merchant.gstVerified = true;
+            } else {
+                showToast('Invalid GST number', 'error');
+                dashboardState.merchant.gstVerified = false;
+            }
+            
+            return isValid;
+        }
+
+        // ===== SHOW TOAST NOTIFICATION =====
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast-notification ${type}`;
+            
+            let icon = 'info-circle';
+            if (type === 'success') icon = 'check-circle';
+            if (type === 'error') icon = 'exclamation-circle';
+            if (type === 'warning') icon = 'exclamation-triangle';
+            
+            toast.innerHTML = `<i class="fas fa-${icon}"></i><span>${message}</span>`;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        // ===== UPDATE MERCHANT DISPLAY =====
+        function updateMerchantDisplay() {
+            const merchantName = document.getElementById('merchantName');
+            const merchantEmail = document.getElementById('merchantEmail');
+            const upiId = document.getElementById('sidebarUpiId');
+            
+            if (merchantName) {
+                merchantName.textContent = dashboardState.merchant.name;
+            }
+            
+            if (merchantEmail) {
+                merchantEmail.textContent = dashboardState.merchant.email;
+            }
+            
+            if (upiId) {
+                upiId.textContent = dashboardState.merchant.upiId || 'Not set';
+            }
+        }
+
+        // ===== RENDER PROFILE PAGE =====
+        function renderProfilePage() {
+            const contentArea = document.getElementById('contentArea');
+            const percentage = dashboardState.merchant.profileCompletionPercentage;
+            const age = dashboardState.merchant.age || 0;
+            
+            contentArea.innerHTML = `
+                <div class="profile-container">
+                    <div class="profile-header">
+                        <h2><i class="fas fa-user-circle"></i> Complete Your Profile</h2>
+                        <p>Fill in your business and personal details</p>
+                        <div class="completion-meter">
+                            <div class="completion-fill" style="width: ${percentage}%"></div>
+                        </div>
+                        <div class="completion-percentage">${percentage}% Complete</div>
+                    </div>
+                    
+                    <div class="profile-sections">
+                        <div class="save-indicator">
+                            <i class="fas fa-clock"></i> Auto-save enabled
+                        </div>
+                        
+                        <!-- Basic Information Section -->
+                        <div class="profile-section" id="section-basic">
+                            <div class="section-header" onclick="toggleSection('basic')">
+                                <h3><i class="fas fa-user"></i> Personal Information</h3>
+                                <span class="section-status ${(dashboardState.merchant.dateOfBirth && dashboardState.merchant.phone && dashboardState.merchant.address) ? 'completed' : ''}">
+                                    ${(dashboardState.merchant.dateOfBirth && dashboardState.merchant.phone && dashboardState.merchant.address) ? 'Completed' : 'Pending'}
+                                </span>
+                            </div>
+                            <div class="section-content active" id="content-basic">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Business Name <span class="required">*</span></label>
+                                        <input type="text" id="businessName" value="${dashboardState.merchant.name}" readonly disabled>
+                                        <div class="input-hint">Registered business name</div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Email <span class="required">*</span></label>
+                                        <input type="email" id="businessEmail" value="${dashboardState.merchant.email}" readonly disabled>
+                                        <div class="input-hint">Primary business email</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Date of Birth <span class="required">*</span></label>
+                                        <input type="date" id="dateOfBirth" 
+                                               value="${dashboardState.merchant.dateOfBirth || ''}" 
+                                               max="${new Date().toISOString().split('T')[0]}"
+                                               onchange="handleDateOfBirthChange(this.value)">
+                                        <div class="validation-message" id="dateOfBirth-validation"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Age</label>
+                                        <div class="age-display">
+                                            <i class="fas fa-calendar-alt"></i>
+                                            <div>
+                                                <span class="age-value" id="ageDisplay">${age}</span>
+                                                <span class="age-label">years</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Phone Number <span class="required">*</span></label>
+                                        <input type="tel" id="phone" class="${dashboardState.merchant.phone ? 'valid' : ''}" 
+                                               value="${dashboardState.merchant.phone || ''}" 
+                                               placeholder="9876543210"
+                                               oninput="handleFieldInput('phone', this.value)"
+                                               onblur="validateAndSaveField('phone', this.value)">
+                                        <div class="validation-message" id="phone-validation"></div>
+                                        <div class="input-hint">10-digit mobile number</div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Alternate Phone</label>
+                                        <input type="tel" id="altPhone" value="${dashboardState.merchant.altPhone || ''}" 
+                                               placeholder="Optional"
+                                               oninput="handleFieldInput('altPhone', this.value)"
+                                               onblur="validateAndSaveField('altPhone', this.value)">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Business Address <span class="required">*</span></label>
+                                    <textarea id="address" rows="3" 
+                                              placeholder="Street, City, State, Pincode"
+                                              oninput="handleFieldInput('address', this.value)"
+                                              onblur="validateAndSaveField('address', this.value)">${dashboardState.merchant.address || ''}</textarea>
+                                    <div class="validation-message" id="address-validation"></div>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>City</label>
+                                        <input type="text" id="city" value="${dashboardState.merchant.city || ''}" 
+                                               placeholder="Mumbai"
+                                               oninput="handleFieldInput('city', this.value)"
+                                               onblur="validateAndSaveField('city', this.value)">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Pincode</label>
+                                        <input type="text" id="pincode" value="${dashboardState.merchant.pincode || ''}" 
+                                               placeholder="400001"
+                                               oninput="handleFieldInput('pincode', this.value)"
+                                               onblur="validateAndSaveField('pincode', this.value)">
+                                        <div class="validation-message" id="pincode-validation"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Payment Information Section -->
+                        <div class="profile-section" id="section-payment">
+                            <div class="section-header" onclick="toggleSection('payment')">
+                                <h3><i class="fas fa-credit-card"></i> Payment Details</h3>
+                                <span class="section-status ${dashboardState.merchant.upiId ? 'completed' : ''}">
+                                    ${dashboardState.merchant.upiId ? 'Completed' : 'Pending'}
+                                </span>
+                            </div>
+                            <div class="section-content" id="content-payment">
+                                <div class="form-group">
+                                    <label>UPI ID <span class="required">*</span></label>
+                                    <input type="text" id="upiId" class="${dashboardState.merchant.upiId ? 'valid' : ''}" 
+                                           value="${dashboardState.merchant.upiId || ''}" 
+                                           placeholder="business@okhdfcbank"
+                                           oninput="handleFieldInput('upiId', this.value)"
+                                           onblur="validateAndSaveField('upiId', this.value)">
+                                    <div class="validation-message" id="upiId-validation"></div>
+                                    <div class="input-hint">Your UPI ID for receiving payments</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Bank Details Section -->
+                        <div class="profile-section" id="section-bank">
+                            <div class="section-header" onclick="toggleSection('bank')">
+                                <h3><i class="fas fa-university"></i> Bank Account Details</h3>
+                                <span class="section-status ${(dashboardState.merchant.bankName && dashboardState.merchant.accountNo && dashboardState.merchant.ifscCode) ? 'completed' : ''}">
+                                    ${(dashboardState.merchant.bankName && dashboardState.merchant.accountNo && dashboardState.merchant.ifscCode) ? 'Completed' : 'Pending'}
+                                </span>
+                            </div>
+                            <div class="section-content" id="content-bank">
+                                <div class="bank-logo">
+                                    <i class="fas fa-university"></i>
+                                    <span>Add your bank details for settlements</span>
+                                </div>
+                                
+                                <div class="bank-details-grid">
+                                    <div class="form-group full-width">
+                                        <label>Bank Name <span class="required">*</span></label>
+                                        <input type="text" id="bankName" value="${dashboardState.merchant.bankName || ''}" 
+                                               placeholder="e.g., HDFC Bank"
+                                               oninput="handleFieldInput('bankName', this.value)"
+                                               onblur="validateAndSaveField('bankName', this.value)">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label>Account Number <span class="required">*</span></label>
+                                        <input type="text" id="accountNo" class="${dashboardState.merchant.accountNo ? 'valid' : ''}" 
+                                               value="${dashboardState.merchant.accountNo || ''}" 
+                                               placeholder="Enter account number"
+                                               oninput="handleFieldInput('accountNo', this.value)"
+                                               onblur="validateAndSaveField('accountNo', this.value)">
+                                        <div class="validation-message" id="accountNo-validation"></div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label>Confirm Account Number <span class="required">*</span></label>
+                                        <input type="text" id="confirmAccountNo" 
+                                               placeholder="Re-enter account number"
+                                               oninput="validateConfirmAccount(this.value)">
+                                        <div class="validation-message" id="confirmAccount-validation"></div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label>IFSC Code <span class="required">*</span></label>
+                                        <input type="text" id="ifscCode" class="${dashboardState.merchant.ifscCode ? 'valid' : ''}" 
+                                               value="${dashboardState.merchant.ifscCode || ''}" 
+                                               placeholder="HDFC0001234"
+                                               oninput="handleFieldInput('ifscCode', this.value)"
+                                               onblur="validateAndSaveField('ifscCode', this.value)">
+                                        <div class="validation-message" id="ifscCode-validation"></div>
+                                        <div class="input-hint">11-character IFSC code</div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label>Account Type</label>
+                                        <select id="accountType" onchange="handleFieldInput('accountType', this.value)">
+                                            <option value="savings" ${dashboardState.merchant.accountType === 'savings' ? 'selected' : ''}>Savings Account</option>
+                                            <option value="current" ${dashboardState.merchant.accountType === 'current' ? 'selected' : ''}>Current Account</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- GST Information Section -->
+                        <div class="profile-section" id="section-gst">
+                            <div class="section-header" onclick="toggleSection('gst')">
+                                <h3><i class="fas fa-file-invoice"></i> GST Information</h3>
+                                <span class="section-status ${(dashboardState.merchant.gstNo || !dashboardState.merchant.isGstRegistered) ? 'completed' : ''}">
+                                    ${(dashboardState.merchant.gstNo || !dashboardState.merchant.isGstRegistered) ? 'Completed' : 'Pending'}
+                                </span>
+                            </div>
+                            <div class="section-content" id="content-gst">
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" id="isGstRegistered" 
+                                               ${dashboardState.merchant.isGstRegistered ? 'checked' : ''}
+                                               onchange="toggleGstField(this.checked)">
+                                        I am registered under GST
+                                    </label>
+                                </div>
+                                
+                                <div id="gstFieldContainer" style="${dashboardState.merchant.isGstRegistered ? 'display: block;' : 'display: none;'}">
+                                    <div class="gst-verification">
+                                        <div style="flex: 1;">
+                                            <label>GST Number <span class="required">*</span></label>
+                                            <input type="text" id="gstNo" class="${dashboardState.merchant.gstNo ? 'valid' : ''}" 
+                                                   value="${dashboardState.merchant.gstNo || ''}" 
+                                                   placeholder="27AAPFU0939F1ZV"
+                                                   oninput="handleFieldInput('gstNo', this.value)"
+                                                   onblur="validateAndSaveField('gstNo', this.value)">
+                                            <div class="validation-message" id="gstNo-validation"></div>
+                                        </div>
+                                        <button class="verify-btn ${dashboardState.merchant.gstVerified ? 'verified' : ''}" onclick="verifyGST()" type="button">
+                                            ${dashboardState.merchant.gstVerified ? '<i class="fas fa-check-circle"></i> Verified' : '<i class="fas fa-shield-alt"></i> Verify'}
+                                        </button>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label>GST Registered Name</label>
+                                        <input type="text" id="gstRegisteredName" value="${dashboardState.merchant.gstRegisteredName || ''}" 
+                                               placeholder="Legal business name as per GST"
+                                               oninput="handleFieldInput('gstRegisteredName', this.value)"
+                                               onblur="validateAndSaveField('gstRegisteredName', this.value)">
+                                    </div>
+                                    
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label>Business Type</label>
+                                            <select id="businessType" onchange="handleFieldInput('businessType', this.value)">
+                                                <option value="proprietorship" ${dashboardState.merchant.businessType === 'proprietorship' ? 'selected' : ''}>Proprietorship</option>
+                                                <option value="partnership" ${dashboardState.merchant.businessType === 'partnership' ? 'selected' : ''}>Partnership</option>
+                                                <option value="pvtLtd" ${dashboardState.merchant.businessType === 'pvtLtd' ? 'selected' : ''}>Private Limited</option>
+                                                <option value="llp" ${dashboardState.merchant.businessType === 'llp' ? 'selected' : ''}>LLP</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="profile-actions">
+                            <button class="btn-secondary" onclick="resetProfileForm()">
+                                <i class="fas fa-undo"></i> Reset
+                            </button>
+                            <button class="btn-primary" onclick="saveMerchantProfile()" ${dashboardState.merchant.profileCompleted ? '' : 'disabled'}>
+                                <i class="fas fa-save"></i> Save Profile
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Initialize validation messages
+            setupFieldValidation();
+        }
+
+        // ===== HANDLE DATE OF BIRTH CHANGE =====
+        function handleDateOfBirthChange(value) {
+            const dateOfBirth = value;
+            const validationMsg = document.getElementById('dateOfBirth-validation');
+            
+            if (dateOfBirth) {
+                const age = calculateAge(dateOfBirth);
+                
+                // Validate age (should be at least 18)
+                if (age < 18) {
+                    validationMsg.innerHTML = '<i class="fas fa-exclamation-circle"></i> You must be at least 18 years old';
+                    validationMsg.className = 'validation-message error';
+                    document.getElementById('ageDisplay').textContent = age;
+                    document.getElementById('ageDisplay').parentElement.style.color = 'var(--error)';
+                } else if (age > 100) {
+                    validationMsg.innerHTML = '<i class="fas fa-exclamation-circle"></i> Please enter a valid date of birth';
+                    validationMsg.className = 'validation-message error';
+                } else {
+                    validationMsg.innerHTML = '<i class="fas fa-check-circle"></i> Valid date of birth';
+                    validationMsg.className = 'validation-message success';
+                    document.getElementById('ageDisplay').parentElement.style.color = '';
+                }
+                
+                document.getElementById('ageDisplay').textContent = age;
+                
+                // Save to state
+                dashboardState.merchant.dateOfBirth = dateOfBirth;
+                dashboardState.merchant.age = age;
+                
+                autoSaveProfile();
+                calculateProfileCompletion();
+            } else {
+                validationMsg.innerHTML = '';
+                document.getElementById('ageDisplay').textContent = '0';
+            }
+        }
+
+        // ===== TOGGLE SECTION =====
+        function toggleSection(sectionId) {
+            const content = document.getElementById(`content-${sectionId}`);
+            const allContents = document.querySelectorAll('.section-content');
+            
+            allContents.forEach(c => {
+                if (c.id !== `content-${sectionId}`) {
+                    c.classList.remove('active');
+                }
+            });
+            
+            content.classList.toggle('active');
+        }
+
+        // ===== TOGGLE GST FIELD =====
+        function toggleGstField(isChecked) {
+            const container = document.getElementById('gstFieldContainer');
+            dashboardState.merchant.isGstRegistered = isChecked;
+            
+            if (isChecked) {
+                container.style.display = 'block';
+            } else {
+                container.style.display = 'none';
+                dashboardState.merchant.gstNo = '';
+                dashboardState.merchant.gstVerified = false;
+                const gstInput = document.getElementById('gstNo');
+                if (gstInput) gstInput.value = '';
+            }
+            
+            autoSaveProfile();
+            updateSectionStatuses();
+            calculateProfileCompletion();
+        }
+
+        // ===== HANDLE FIELD INPUT =====
+        function handleFieldInput(fieldName, value) {
+            const formattedValue = formatFieldValue(fieldName, value);
+            const input = document.getElementById(fieldName);
+            
+            if (input && formattedValue !== value) {
+                input.value = formattedValue;
+            }
+            
+            // Real-time validation
+            if (validationRules[fieldName]) {
+                const validation = validateField(fieldName, formattedValue);
+                const validationElement = document.getElementById(`${fieldName}-validation`);
+                
+                if (validationElement) {
+                    if (formattedValue.length > 0) {
+                        validationElement.innerHTML = validation.valid ? 
+                            `<i class="fas fa-check-circle"></i> Valid` : 
+                            `<i class="fas fa-exclamation-circle"></i> ${validation.message}`;
+                        validationElement.className = `validation-message ${validation.valid ? 'success' : 'error'}`;
+                    } else {
+                        validationElement.innerHTML = '';
+                    }
+                }
+                
+                input.classList.toggle('valid', validation.valid && formattedValue.length > 0);
+                input.classList.toggle('invalid', !validation.valid && formattedValue.length > 0);
+            }
+            
+            // Auto-save
+            autoSaveProfile();
+        }
+
+        // ===== VALIDATE AND SAVE FIELD =====
+        function validateAndSaveField(fieldName, value) {
+            const formattedValue = formatFieldValue(fieldName, value);
+            
+            if (validationRules[fieldName]) {
+                const validation = validateField(fieldName, formattedValue);
+                
+                if (!validation.valid && formattedValue.length > 0) {
+                    showToast(validation.message, 'error');
+                    return;
+                }
+            }
+            
+            dashboardState.merchant[fieldName] = formattedValue;
+            autoSaveProfile();
+            calculateProfileCompletion();
+        }
+
+        // ===== VALIDATE CONFIRM ACCOUNT =====
+        function validateConfirmAccount(value) {
+            const accountNo = document.getElementById('accountNo').value;
+            const validationMsg = document.getElementById('confirmAccount-validation');
+            const input = document.getElementById('confirmAccountNo');
+            
+            if (value === accountNo && value.length > 0) {
+                validationMsg.innerHTML = '<i class="fas fa-check-circle"></i> Account numbers match';
+                validationMsg.className = 'validation-message success';
+                input.classList.add('valid');
+                input.classList.remove('invalid');
+            } else if (value.length > 0) {
+                validationMsg.innerHTML = '<i class="fas fa-exclamation-circle"></i> Account numbers do not match';
+                validationMsg.className = 'validation-message error';
+                input.classList.add('invalid');
+                input.classList.remove('valid');
+            } else {
+                validationMsg.innerHTML = '';
+                input.classList.remove('valid', 'invalid');
+            }
+        }
+
+        // ===== VERIFY GST =====
+        async function verifyGST() {
+            const gstNo = document.getElementById('gstNo').value;
+            if (!gstNo) {
+                showToast('Please enter GST number', 'error');
+                return;
+            }
+            
+            const isValid = await verifyGSTNumber(gstNo);
+            if (isValid) {
+                dashboardState.merchant.gstNo = gstNo;
+                dashboardState.merchant.gstVerified = true;
+                autoSaveProfile();
+                calculateProfileCompletion();
+            }
+        }
+
+        // ===== RESET PROFILE FORM =====
+        function resetProfileForm() {
+            if (confirm('Reset all unsaved changes?')) {
+                loadSavedMerchantData();
+                renderProfilePage();
+                showToast('Profile reset to last saved state', 'info');
+            }
+        }
+
+        // ===== SETUP FIELD VALIDATION =====
+        function setupFieldValidation() {
+            // Add any additional validation setup here
+        }
+
+        // ===== PAGE NAVIGATION =====
+        function navigateToPage(page) {
+            currentPage = page;
+            document.querySelectorAll('.nav-item').forEach(item => { 
+                item.classList.remove('active'); 
+                if (item.getAttribute('data-page') === page) item.classList.add('active'); 
+            });
+            
+            const pageTitle = page.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+            document.getElementById('pageTitle').textContent = pageTitle;
+            document.getElementById('currentPage').textContent = pageTitle;
+            
+            switch(page) {
+                case 'dashboard': 
+                    loadDashboardContent(); 
+                    break;
+                case 'profile':
+                    renderProfilePage();
+                    break;
+                case 'products': 
+                    loadProductsPage(); 
+                    break;
+                case 'add-product': 
+                    resetAddProductForm();
+                    openModal('addProductModal'); 
+                    break;
+                case 'transactions': 
+                    loadTransactionsPage(); 
+                    break;
+                case 'invoices': 
+                    window.location.href = '../src/newwww.html'; 
+                    break;
+                case 'balance-sheet': 
+                    window.location.href = '../src/balance_sheet.html'; 
+                    break;
+            }
+        }
+
+        // ===== INITIALIZE DASHBOARD =====
         function initializeDashboard() {
             const appContainer = document.getElementById('app');
             appContainer.innerHTML = `
@@ -371,26 +1538,40 @@
                             <div class="logo"><i class="fas fa-face-smile"></i><h2>Face<span style="color:var(--primary)">Pay</span></h2></div>
                             <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
                         </div>
-                        <div class="merchant-profile">
-                            <div class="profile-avatar"><i class="fas fa-user-circle"></i></div>
+                        <div class="merchant-profile" onclick="navigateToPage('profile')">
+                            <div class="profile-avatar">
+                                <i class="fas fa-user-circle"></i>
+                                <div class="edit-overlay"><i class="fas fa-pen"></i></div>
+                            </div>
                             <div class="profile-info">
                                 <h3 id="merchantName">${dashboardState.merchant.name}</h3>
                                 <p id="merchantEmail">${dashboardState.merchant.email}</p>
-                                <div class="status-indicator"><span class="status-dot"></span><span>Online</span></div>
+                                <div class="status-indicator">
+                                    <span class="status-dot"></span>
+                                    <span>Online</span>
+                                    <span class="profile-completion-badge ${dashboardState.merchant.profileCompletionPercentage === 100 ? 'completed' : ''}">${dashboardState.merchant.profileCompletionPercentage}%</span>
+                                </div>
                             </div>
                         </div>
                         <nav class="sidebar-nav">
                             <ul>
                                 <li class="nav-item ${currentPage === 'dashboard' ? 'active' : ''}" data-page="dashboard"><a href="#"><i class="fas fa-home"></i><span>Dashboard</span></a></li>
+                                <li class="nav-item ${currentPage === 'profile' ? 'active' : ''}" data-page="profile"><a href="#"><i class="fas fa-user"></i><span>My Profile</span></a></li>
                                 <li class="nav-item ${currentPage === 'products' ? 'active' : ''}" data-page="products"><a href="#"><i class="fas fa-box-open"></i><span>Products</span><span class="badge" id="productCount">${dashboardState.products.length}</span></a></li>
                                 <li class="nav-item ${currentPage === 'add-product' ? 'active' : ''}" data-page="add-product"><a href="#"><i class="fas fa-plus-circle"></i><span>Add Product</span></a></li>
                                 <li class="nav-item ${currentPage === 'transactions' ? 'active' : ''}" data-page="transactions"><a href="#"><i class="fas fa-history"></i><span>Transactions</span></a></li>
                                 <li class="nav-item" data-page="invoices"><a href="../src/newwww.html"><i class="fas fa-file-invoice"></i><span>Invoices</span></a></li>
-                                <li class="nav-item" data-page="balance-sheet"><a href="balance_sheet.html"><i class="fas fa-balance-scale"></i><span>Balance Sheet</span></a></li>
+                                <li class="nav-item" data-page="balance-sheet"><a href="../src/balance_sheet.html"><i class="fas fa-balance-scale"></i><span>Balance Sheet</span></a></li>
                             </ul>
                         </nav>
                         <div class="sidebar-footer">
-                            <div class="upi-info"><i class="fas fa-qrcode"></i><div><p>UPI ID</p><strong id="upiId">${dashboardState.merchant.upiId}</strong></div></div>
+                            <div class="upi-info" onclick="navigateToPage('profile')">
+                                <i class="fas fa-qrcode"></i>
+                                <div class="upi-info-content">
+                                    <p>UPI ID</p>
+                                    <strong id="sidebarUpiId">${dashboardState.merchant.upiId || 'Not set'}</strong>
+                                </div>
+                            </div>
                             <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i><span>Logout</span></button>
                         </div>
                     </aside>
@@ -399,7 +1580,15 @@
                             <div class="header-left"><h1 id="pageTitle">Dashboard</h1><div class="breadcrumb"><span>Home</span><i class="fas fa-chevron-right"></i><span id="currentPage">Dashboard</span></div></div>
                             <div class="header-right">
                                 <div class="search-box"><i class="fas fa-search"></i><input type="text" placeholder="Search products..." id="globalSearch"></div>
-                                <div class="header-actions"><button class="header-btn theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></button></div>
+                                <div class="header-actions">
+                                    <button class="header-btn" onclick="navigateToPage('profile')" title="Profile">
+                                        <i class="fas fa-user"></i>
+                                        ${dashboardState.merchant.profileCompletionPercentage < 100 ? '<span class="notification-badge">!</span>' : ''}
+                                    </button>
+                                    <button class="header-btn theme-toggle" id="themeToggle">
+                                        <i class="fas fa-moon"></i>
+                                    </button>
+                                </div>
                             </div>
                         </header>
                         <div class="content-area" id="contentArea"></div>
@@ -426,11 +1615,26 @@
                                         <option value="other">Other</option>
                                     </select>
                                 </div>
+                                <!-- GST Rate Field - Now with conditional logic -->
+                                <div class="form-group" id="gstFieldGroup">
+                                    <label for="gstRate">GST Rate (%)</label>
+                                    <div class="gst-field-container ${!dashboardState.merchant.isGstRegistered ? 'disabled' : ''}" id="gstFieldContainer">
+                                        <select id="gstRate" ${!dashboardState.merchant.isGstRegistered ? 'disabled' : ''}>
+                                            ${gstSlabs.map(slab => `<option value="${slab}">${slab}%</option>`).join('')}
+                                        </select>
+                                        ${!dashboardState.merchant.isGstRegistered ? 
+                                            '<div class="gst-helper-text"><i class="fas fa-info-circle"></i> GST is not applicable because your business is not GST registered.</div>' : 
+                                            '<div class="gst-helper-text"><i class="fas fa-info-circle"></i> Please select the correct GST rate applicable to your product according to government regulations.</div>'
+                                        }
+                                    </div>
+                                </div>
+                                <!-- Check for products with existing GST when merchant not registered -->
+                                ${getGSTWarningHTML()}
                                 <div class="form-group">
-                                    <label for="productBarcode">Barcode</label>
+                                    <label for="productBarcode">Barcode (optional)</label>
                                     <div style="display: flex; gap: 10px;">
                                         <input type="text" id="productBarcode" placeholder="Enter barcode">
-                                        <button type="button" class="btn btn-secondary" onclick="openBarcodeScanner('addProductModal')"><i class="fas fa-barcode"></i> Scan</button>
+                                        <button type="button" class="btn-secondary" onclick="openBarcodeScanner('addProductModal')"><i class="fas fa-barcode"></i> Scan</button>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
@@ -513,6 +1717,24 @@
             setupBarcodeImageUploadEvents();
             updateBadgeCounts();
             resetAddProductForm();
+            calculateProfileCompletion();
+        }
+
+        // ===== GET GST WARNING HTML =====
+        function getGSTWarningHTML() {
+            if (!dashboardState.merchant.isGstRegistered) {
+                // Check if any existing product has GST > 0
+                const productsWithGST = dashboardState.products.filter(p => p.gstRate && p.gstRate > 0);
+                if (productsWithGST.length > 0) {
+                    return `
+                        <div class="gst-warning-badge">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            Warning: ${productsWithGST.length} product(s) have GST rates > 0%. GST will not be applied because your business is not GST registered.
+                        </div>
+                    `;
+                }
+            }
+            return '';
         }
 
         // ===== RESET ADD PRODUCT FORM =====
@@ -520,6 +1742,17 @@
             const form = document.getElementById('addProductForm');
             if (form) {
                 form.reset();
+                
+                // Set default GST rate based on merchant registration
+                const gstSelect = document.getElementById('gstRate');
+                if (gstSelect) {
+                    if (!dashboardState.merchant.isGstRegistered) {
+                        gstSelect.value = '0'; // Force 0 for non-registered
+                    } else {
+                        gstSelect.value = '18'; // Default to 18% for registered
+                    }
+                }
+                
                 const submitBtn = document.getElementById('addProductSubmitBtn');
                 if (submitBtn) submitBtn.innerHTML = 'Add Product';
                 const title = document.getElementById('addProductModalTitle');
@@ -652,41 +1885,7 @@
             });
         }
 
-       // ===== PAGE NAVIGATION =====
-function navigateToPage(page) {
-    currentPage = page;
-    document.querySelectorAll('.nav-item').forEach(item => { 
-        item.classList.remove('active'); 
-        if (item.getAttribute('data-page') === page) item.classList.add('active'); 
-    });
-    
-    const pageTitle = page.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-    document.getElementById('pageTitle').textContent = pageTitle;
-    document.getElementById('currentPage').textContent = pageTitle;
-    
-    switch(page) {
-        case 'dashboard': 
-            loadDashboardContent(); 
-            break;
-        case 'products': 
-            loadProductsPage(); 
-            break;
-        case 'add-product': 
-            resetAddProductForm();
-            openModal('addProductModal'); 
-            break;
-        case 'transactions': 
-            loadTransactionsPage(); 
-            break;
-        case 'invoices': 
-            window.location.href = '../src/newwww.html'; 
-            break;
-        case 'balance-sheet': 
-            window.location.href = '../src/balance_sheet.html'; 
-            break;
-    }
-}
-
+        // ===== DASHBOARD CONTENT LOADERS =====
         function loadDashboardContent() {
             const contentArea = document.getElementById('contentArea');
             contentArea.innerHTML = `
@@ -697,12 +1896,12 @@ function navigateToPage(page) {
                 <div class="stats-grid">
                     <div class="stat-card"><div class="stat-header"><span class="stat-title">Total Revenue</span><i class="fas fa-rupee-sign"></i></div><div class="stat-value">₹${dashboardState.stats.totalRevenue.toLocaleString()}</div><div class="stat-change positive"><i class="fas fa-arrow-up"></i><span>12% from last month</span></div></div>
                     <div class="stat-card"><div class="stat-header"><span class="stat-title">Active Products</span><i class="fas fa-boxes"></i></div><div class="stat-value">${dashboardState.stats.totalProducts}</div><div class="stat-change positive"><i class="fas fa-plus"></i><span>Added ${dashboardState.products.length} this month</span></div></div>
-                    <div class="stat-card"><div class="stat-header"><span class="stat-title">Total Products</span><i class="fas fa-boxes"></i></div><div class="stat-value">${dashboardState.stats.totalProducts}</div><div class="stat-change positive"><i class="fas fa-plus"></i><span>Added ${dashboardState.products.length} this month</span></div></div>
+                    <div class="stat-card"><div class="stat-header"><span class="stat-title">Profile Completion</span><i class="fas fa-user-check"></i></div><div class="stat-value">${dashboardState.merchant.profileCompletionPercentage}%</div><div class="stat-change ${dashboardState.merchant.profileCompleted ? 'positive' : 'pending'}"><i class="fas ${dashboardState.merchant.profileCompleted ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i><span>${dashboardState.merchant.profileCompleted ? 'Completed' : 'Incomplete'}</span></div></div>
                     <div class="stat-card"><div class="stat-header"><span class="stat-title">Recent Transactions</span><i class="fas fa-exchange-alt"></i></div><div class="stat-value">${dashboardState.stats.recentTransactions}</div><div class="stat-change positive"><i class="fas fa-check-circle"></i><span>All successful</span></div></div>
                 </div>
                 <div class="table-container">
                     <div class="table-header"><h3>Product Management</h3><p style="color: var(--dark-gray);">Manage your inventory, prices, and product details</p><div class="table-actions"><button class="btn-primary" onclick="openModal('addProductModal')"><i class="fas fa-plus"></i> Add Product</button><button class="btn-secondary" onclick="openBarcodeScanner()"><i class="fas fa-barcode"></i> Scan Barcode</button></div></div>
-                    <table class="table"><thead><tr><th>Product Name</th><th>Category</th><th>Barcode</th><th>Price</th><th>Stock</th><th>Status</th><th>Actions</th></tr></thead><tbody id="dashboardProducts">${dashboardState.products.slice(0,5).map(product => `<tr><td><strong>${product.name}</strong></td><td><span class="category-tag">${product.category}</span></td><td>${product.barcode || '-'}</td><td>₹${product.price.toLocaleString()}</td><td><span class="stock-indicator ${product.stock > 10 ? 'high' : product.stock > 5 ? 'medium' : 'low'}">${product.stock}</span></td><td><span class="status ${product.stock > 0 ? 'paid' : 'failed'}">${product.stock > 0 ? 'In Stock' : 'Out of Stock'}</span></td><td><button class="btn-icon" onclick="editProduct(${product.id})" title="Edit"><i class="fas fa-edit"></i></button><button class="btn-icon" onclick="deleteProduct(${product.id})" title="Delete"><i class="fas fa-trash"></i></button></td></tr>`).join('')}</tbody></table>
+                    <table class="table"><thead><tr><th>Product Name</th><th>Category</th><th>Barcode</th><th>Price</th><th>Stock</th><th>GST Rate</th><th>Status</th><th>Actions</th></tr></thead><tbody id="dashboardProducts">${dashboardState.products.slice(0,5).map(product => `<tr><td><strong>${product.name}</strong></td><td><span class="category-tag">${product.category}</span></td><td>${product.barcode || '-'}</td><td>₹${product.price.toLocaleString()}</td><td><span class="stock-indicator ${product.stock > 10 ? 'high' : product.stock > 5 ? 'medium' : 'low'}">${product.stock}</span></td><td>${product.gstRate || 0}%</td><td><span class="status ${product.stock > 0 ? 'paid' : 'failed'}">${product.stock > 0 ? 'In Stock' : 'Out of Stock'}</span></td><td><button class="btn-icon" onclick="editProduct(${product.id})" title="Edit"><i class="fas fa-edit"></i></button><button class="btn-icon" onclick="deleteProduct(${product.id})" title="Delete"><i class="fas fa-trash"></i></button></td></tr>`).join('')}</tbody></table>
                 </div>`;
             setupSearch();
         }
@@ -712,7 +1911,7 @@ function navigateToPage(page) {
             contentArea.innerHTML = `
                 <div class="table-container">
                     <div class="table-header"><h3>Product Management</h3><p style="color: var(--dark-gray);">Manage your inventory, prices, and product details</p><div class="table-actions"><button class="btn-primary" onclick="openModal('addProductModal')"><i class="fas fa-plus"></i> Add Product</button><button class="btn-secondary" onclick="openBarcodeScanner()"><i class="fas fa-barcode"></i> Scan Barcode</button></div></div>
-                    <table class="table"><thead><tr><th>Product Name</th><th>Category</th><th>Barcode</th><th>Price</th><th>Stock</th><th>Status</th><th>Actions</th></tr></thead><tbody id="productsTable">${dashboardState.products.map(product => `<tr><td><strong>${product.name}</strong></td><td><span class="category-tag">${product.category}</span></td><td>${product.barcode || '-'}</td><td>₹${product.price.toLocaleString()}</td><td><span class="stock-indicator ${product.stock > 10 ? 'high' : product.stock > 5 ? 'medium' : 'low'}">${product.stock}</span></td><td><span class="status ${product.stock > 0 ? 'paid' : 'failed'}">${product.stock > 0 ? 'In Stock' : 'Out of Stock'}</span></td><td><button class="btn-icon" onclick="editProduct(${product.id})" title="Edit"><i class="fas fa-edit"></i></button><button class="btn-icon" onclick="deleteProduct(${product.id})" title="Delete"><i class="fas fa-trash"></i></button></td></tr>`).join('')}</tbody></table>
+                    <table class="table"><thead><tr><th>Product Name</th><th>Category</th><th>Barcode</th><th>Price</th><th>Stock</th><th>GST Rate</th><th>Status</th><th>Actions</th></tr></thead><tbody id="productsTable">${dashboardState.products.map(product => `<tr><td><strong>${product.name}</strong></td><td><span class="category-tag">${product.category}</span></td><td>${product.barcode || '-'}</td><td>₹${product.price.toLocaleString()}</td><td><span class="stock-indicator ${product.stock > 10 ? 'high' : product.stock > 5 ? 'medium' : 'low'}">${product.stock}</span></td><td>${product.gstRate || 0}%</td><td><span class="status ${product.stock > 0 ? 'paid' : 'failed'}">${product.stock > 0 ? 'In Stock' : 'Out of Stock'}</span></td><td><button class="btn-icon" onclick="editProduct(${product.id})" title="Edit"><i class="fas fa-edit"></i></button><button class="btn-icon" onclick="deleteProduct(${product.id})" title="Delete"><i class="fas fa-trash"></i></button></td></tr>`).join('')}</tbody></table>
                 </div>`;
             setupSearch();
         }
@@ -769,7 +1968,7 @@ function navigateToPage(page) {
                     frequency: 10
                 }, function(err) {
                     if (err) { 
-                        showNotification('Scanner failed. Please try again.', 'error'); 
+                        showToast('Scanner failed. Please try again.', 'error'); 
                         startFallbackCamera(); 
                         return; 
                     }
@@ -787,7 +1986,7 @@ function navigateToPage(page) {
                     });
                 });
             } catch (error) { 
-                showNotification('Failed to access camera.', 'error'); 
+                showToast('Failed to access camera.', 'error'); 
                 startFallbackCamera(); 
             }
         }
@@ -806,7 +2005,7 @@ function navigateToPage(page) {
                     video.style.objectFit = 'cover';
                     videoContainer.appendChild(video);
                     setTimeout(() => { if (barcodeScanner.isScanning) simulateBarcodeDetection(); }, 2000);
-                }).catch(() => { showNotification('Camera access denied.', 'error'); });
+                }).catch(() => { showToast('Camera access denied.', 'error'); });
         }
 
         function pauseBarcodeScanner() { 
@@ -844,7 +2043,7 @@ function navigateToPage(page) {
         
         function switchCamera() { 
             barcodeScanner.currentCamera = barcodeScanner.currentCamera === 'environment' ? 'user' : 'environment'; 
-            showNotification(`Switched to ${barcodeScanner.currentCamera === 'environment' ? 'rear' : 'front'} camera`, 'info'); 
+            showToast(`Switched to ${barcodeScanner.currentCamera === 'environment' ? 'rear' : 'front'} camera`, 'info'); 
             stopBarcodeScanner(); 
             setTimeout(() => { startRealBarcodeScanner(); }, 500); 
         }
@@ -874,10 +2073,10 @@ function navigateToPage(page) {
                 document.getElementById('matchedProductName').textContent = existingProduct.name;
                 document.getElementById('matchedProductPrice').textContent = existingProduct.price.toLocaleString();
                 document.getElementById('matchedProductStock').textContent = existingProduct.stock;
-                showNotification(`✅ Found: ${existingProduct.name}`, 'success');
+                showToast(`✅ Found: ${existingProduct.name}`, 'success');
             } else {
                 document.getElementById('productMatchInfo').style.display = 'none';
-                showNotification(`📦 New product detected: ${barcode}`, 'warning');
+                showToast(`📦 New product detected: ${barcode}`, 'warning');
             }
             playScanSound();
         }
@@ -941,8 +2140,16 @@ function navigateToPage(page) {
             const category = document.getElementById('productCategory').value;
             const barcode = document.getElementById('productBarcode').value;
             
+            // GST Rate handling based on merchant GST registration
+            let gstRate;
+            if (!dashboardState.merchant.isGstRegistered) {
+                gstRate = 0; // Force 0 for non-registered merchants
+            } else {
+                gstRate = parseInt(document.getElementById('gstRate').value) || 0;
+            }
+            
             if (!name || !price || !stock) { 
-                showNotification('Please fill all required fields', 'error'); 
+                showToast('Please fill all required fields', 'error'); 
                 return; 
             }
             
@@ -953,12 +2160,13 @@ function navigateToPage(page) {
                 stock: stock, 
                 category: category, 
                 barcode: barcode || null, 
+                gstRate: gstRate,
                 addedDate: new Date().toISOString().split('T')[0] 
             };
             
             dashboardState.products.push(newProduct); 
             closeModal('addProductModal'); 
-            showNotification(`Product "${name}" added successfully!`, 'success');
+            showToast(`Product "${name}" added successfully!`, 'success');
             
             document.getElementById('addProductForm').reset(); 
             resetAddProductForm();
@@ -967,6 +2175,15 @@ function navigateToPage(page) {
             if (currentPage === 'dashboard' || currentPage === 'products') {
                 navigateToPage(currentPage);
             }
+            
+            // Log the payload to console for verification (in production, this would be sent to backend)
+            console.log('Product Payload:', {
+                name: name,
+                price: price,
+                gstRate: gstRate,
+                category: category,
+                barcode: barcode || undefined
+            });
         }
 
         function editProduct(productId) {
@@ -978,6 +2195,18 @@ function navigateToPage(page) {
             document.getElementById('productStock').value = product.stock; 
             document.getElementById('productCategory').value = product.category; 
             document.getElementById('productBarcode').value = product.barcode || '';
+            
+            // Set GST rate based on merchant registration
+            const gstSelect = document.getElementById('gstRate');
+            if (gstSelect) {
+                if (!dashboardState.merchant.isGstRegistered) {
+                    gstSelect.value = '0'; // Force 0 for non-registered
+                    gstSelect.disabled = true;
+                } else {
+                    gstSelect.value = product.gstRate || '18';
+                    gstSelect.disabled = false;
+                }
+            }
             
             const form = document.getElementById('addProductForm');
             const submitBtn = document.getElementById('addProductSubmitBtn');
@@ -998,28 +2227,45 @@ function navigateToPage(page) {
             const productIndex = dashboardState.products.findIndex(p => p.id === productId); 
             if (productIndex === -1) return;
             
+            // GST Rate handling based on merchant GST registration
+            let gstRate;
+            if (!dashboardState.merchant.isGstRegistered) {
+                gstRate = 0; // Force 0 for non-registered merchants
+            } else {
+                gstRate = parseInt(document.getElementById('gstRate').value) || 0;
+            }
+            
             dashboardState.products[productIndex] = { 
                 ...dashboardState.products[productIndex], 
                 name: document.getElementById('productName').value, 
                 price: parseFloat(document.getElementById('productPrice').value), 
                 stock: parseInt(document.getElementById('productStock').value), 
                 category: document.getElementById('productCategory').value, 
-                barcode: document.getElementById('productBarcode').value || null 
+                barcode: document.getElementById('productBarcode').value || null,
+                gstRate: gstRate
             };
             
             closeModal('addProductModal'); 
-            showNotification('Product updated successfully!', 'success');
+            showToast('Product updated successfully!', 'success');
             resetAddProductForm();
             
             if (currentPage === 'dashboard' || currentPage === 'products') {
                 navigateToPage(currentPage);
             }
+            
+            // Log the payload to console for verification
+            console.log('Update Product Payload:', {
+                id: productId,
+                name: document.getElementById('productName').value,
+                price: parseFloat(document.getElementById('productPrice').value),
+                gstRate: gstRate
+            });
         }
 
         function deleteProduct(productId) { 
             if (!confirm('Are you sure you want to delete this product?')) return; 
             dashboardState.products = dashboardState.products.filter(p => p.id !== productId); 
-            showNotification('Product deleted successfully!', 'success'); 
+            showToast('Product deleted successfully!', 'success'); 
             updateBadgeCounts(); 
             if (currentPage === 'products') loadProductsPage(); 
             else if (currentPage === 'dashboard') loadDashboardContent();
@@ -1043,17 +2289,9 @@ function navigateToPage(page) {
             if (modalId === 'barcodeScannerModal') stopBarcodeScanner(); 
         }
         
-        function showNotification(message, type = 'info') { 
-            const toast = document.createElement('div'); 
-            toast.className = `notification-toast ${type}`; 
-            toast.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i><span>${message}</span>`; 
-            document.body.appendChild(toast); 
-            setTimeout(() => { toast.remove(); }, 3000); 
-        }
-        
         function copyToClipboard(elementId) { 
             const text = document.getElementById(elementId).textContent; 
-            navigator.clipboard.writeText(text).then(() => showNotification('Barcode copied to clipboard!', 'success')); 
+            navigator.clipboard.writeText(text).then(() => showToast('Barcode copied to clipboard!', 'success')); 
         }
         
         function updateBadgeCounts() { 
@@ -1102,7 +2340,7 @@ function navigateToPage(page) {
                     if (manualBarcode && manualBarcode.length >= 8) {
                         handleDetectedBarcode(manualBarcode, 'manual'); 
                     } else { 
-                        showNotification('Please enter a valid barcode (min 8 digits)', 'error'); 
+                        showToast('Please enter a valid barcode (min 8 digits)', 'error'); 
                     } 
                 } 
             });
@@ -1126,7 +2364,7 @@ function navigateToPage(page) {
             
             document.getElementById('logoutBtn')?.addEventListener('click', function(e) { 
                 e.preventDefault(); 
-                if (confirm('Are you sure you want to logout?')) showNotification('Logged out successfully!', 'success'); 
+                if (confirm('Are you sure you want to logout?')) showToast('Logged out successfully!', 'success'); 
             });
             
             document.querySelectorAll('.modal-close').forEach(button => { 
