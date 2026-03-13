@@ -400,27 +400,92 @@
             opacity: 0.5; cursor: not-allowed; transform: none;
         }
         
-        .gst-verification {
-            display: flex; gap: 10px; align-items: flex-start;
+        /* ===== IMPROVED CHECKBOX STYLES ===== */
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            padding: 10px 0;
+            user-select: none;
         }
         
-        .gst-verification input {
+        .checkbox-wrapper input[type="checkbox"] {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            accent-color: var(--primary);
+            margin: 0;
+            flex-shrink: 0;
+        }
+        
+        .checkbox-wrapper .checkbox-label {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text);
+            cursor: pointer;
+            line-height: 1.4;
+        }
+        
+        .gst-section-container {
+            margin-top: 20px;
+            padding: 20px;
+            background: var(--light-gray);
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+            transition: all 0.3s ease;
+        }
+        
+        .gst-section-container.hidden {
+            display: none;
+        }
+        
+        .gst-verification {
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+        
+        .gst-verification .form-group {
             flex: 1;
+            margin-bottom: 0;
         }
         
         .verify-btn {
-            padding: 12px 20px; background: var(--light-gray);
-            border: 2px solid var(--medium-gray); border-radius: 8px;
-            color: var(--text); cursor: pointer; transition: all 0.3s;
+            padding: 12px 24px;
+            background: var(--light-gray);
+            border: 2px solid var(--medium-gray);
+            border-radius: 8px;
+            color: var(--text);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
             white-space: nowrap;
+            margin-top: 24px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
         
         .verify-btn:hover {
-            background: var(--primary); color: white; border-color: var(--primary);
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
         }
         
         .verify-btn.verified {
-            background: var(--success); color: white; border-color: var(--success);
+            background: var(--success);
+            color: white;
+            border-color: var(--success);
+        }
+        
+        .verify-btn.verified:hover {
+            background: #0f9d58;
+        }
+        
+        .verify-btn i {
+            font-size: 16px;
         }
         
         .bank-logo {
@@ -448,50 +513,6 @@
         @keyframes slideIn {
             from { transform: translateX(100%); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
-        }
-        
-        /* ===== GST FIELD STYLES ===== */
-        .gst-field-container {
-            transition: all 0.3s ease;
-        }
-        
-        .gst-field-container.disabled {
-            opacity: 0.6;
-        }
-        
-        .gst-field-container select:disabled {
-            background: var(--light-gray);
-            cursor: not-allowed;
-        }
-        
-        .gst-helper-text {
-            font-size: 12px;
-            color: var(--dark-gray);
-            margin-top: 4px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        
-        .gst-helper-text i {
-            font-size: 14px;
-            color: var(--warning);
-        }
-        
-        .gst-warning-badge {
-            background: var(--warning);
-            color: #000;
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 13px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 15px;
-        }
-        
-        .gst-warning-badge i {
-            font-size: 16px;
         }
         
         /* ===== CARDS & TABLES ===== */
@@ -646,6 +667,8 @@
             .completion-percentage { position: static; margin-top: 15px; }
             .profile-actions { flex-direction: column; }
             .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
+            .gst-verification { flex-direction: column; }
+            .verify-btn { width: 100%; margin-top: 0; justify-content: center; }
         }
     </style>
 </head>
@@ -680,18 +703,18 @@
                 gstNo: "",
                 gstRegisteredName: "",
                 businessType: "proprietorship",
-                isGstRegistered: true, // Set to true for testing, change to false to test disabled state
+                isGstRegistered: false,
                 gstVerified: false,
                 profileCompleted: false,
                 profileCompletionPercentage: 0
             },
             stats: { totalRevenue: 125000, pendingInvoices: 5, totalProducts: 24, recentTransactions: 8 },
             products: [
-                { id: 1, name: "Laptop Pro", price: 89999, stock: 12, category: "electronics", barcode: "8901234567890", gstRate: 18, addedDate: "2024-01-15" },
-                { id: 2, name: "Wireless Mouse", price: 1999, stock: 45, category: "electronics", barcode: "123456789012", gstRate: 18, addedDate: "2024-01-20" },
-                { id: 3, name: "Office Chair", price: 12999, stock: 8, category: "furniture", barcode: "978020137962", gstRate: 12, addedDate: "2024-02-01" },
-                { id: 4, name: "Webcam HD", price: 3499, stock: 23, category: "electronics", barcode: "4006381333931", gstRate: 18, addedDate: "2024-02-10" },
-                { id: 5, name: "Keyboard Mechanical", price: 5999, stock: 15, category: "electronics", barcode: "5901234567897", gstRate: 18, addedDate: "2024-02-15" }
+                { id: 1, name: "Laptop Pro", price: 89999, stock: 12, category: "electronics", barcode: "8901234567890", addedDate: "2024-01-15" },
+                { id: 2, name: "Wireless Mouse", price: 1999, stock: 45, category: "electronics", barcode: "123456789012", addedDate: "2024-01-20" },
+                { id: 3, name: "Office Chair", price: 12999, stock: 8, category: "furniture", barcode: "978020137962", addedDate: "2024-02-01" },
+                { id: 4, name: "Webcam HD", price: 3499, stock: 23, category: "electronics", barcode: "4006381333931", addedDate: "2024-02-10" },
+                { id: 5, name: "Keyboard Mechanical", price: 5999, stock: 15, category: "electronics", barcode: "5901234567897", addedDate: "2024-02-15" }
             ],
             notifications: [],
             currentInvoice: { template: "minimal", companyName: "", companyAddress: "", clientName: "", clientEmail: "", invoiceDate: new Date().toISOString().split('T')[0], dueDate: "", invoiceNumber: "", items: [], notes: "", subtotal: 0, tax: 0, total: 0 }
@@ -742,9 +765,6 @@
                 message: 'Enter a valid 6-digit pincode'
             }
         };
-
-        // GST Slabs as per government regulations
-        const gstSlabs = [0, 5, 12, 18, 28];
 
         // ===== INITIALIZATION =====
         document.addEventListener('DOMContentLoaded', function() {
@@ -992,15 +1012,23 @@
             
             if (isValid) {
                 showToast('GST number verified successfully!', 'success');
+                dashboardState.merchant.gstVerified = true;
+                
+                // Update verify button if it exists
                 const verifyBtn = document.querySelector('.verify-btn');
                 if (verifyBtn) {
                     verifyBtn.classList.add('verified');
                     verifyBtn.innerHTML = '<i class="fas fa-check-circle"></i> Verified';
                 }
-                dashboardState.merchant.gstVerified = true;
             } else {
                 showToast('Invalid GST number', 'error');
                 dashboardState.merchant.gstVerified = false;
+                
+                const verifyBtn = document.querySelector('.verify-btn');
+                if (verifyBtn) {
+                    verifyBtn.classList.remove('verified');
+                    verifyBtn.innerHTML = '<i class="fas fa-shield-alt"></i> Verify';
+                }
             }
             
             return isValid;
@@ -1242,27 +1270,27 @@
                             </div>
                         </div>
                         
-                        <!-- GST Information Section -->
+                        <!-- GST Information Section with Improved Checkbox -->
                         <div class="profile-section" id="section-gst">
                             <div class="section-header" onclick="toggleSection('gst')">
                                 <h3><i class="fas fa-file-invoice"></i> GST Information</h3>
-                                <span class="section-status ${(dashboardState.merchant.gstNo || !dashboardState.merchant.isGstRegistered) ? 'completed' : ''}">
+                                <span class="section-status ${(dashboardState.merchant.gstNo || !dashboardState.merchant.isGstRegistered) ? 'completed' : ''}" id="gstSectionStatus">
                                     ${(dashboardState.merchant.gstNo || !dashboardState.merchant.isGstRegistered) ? 'Completed' : 'Pending'}
                                 </span>
                             </div>
                             <div class="section-content" id="content-gst">
                                 <div class="form-group">
-                                    <label>
+                                    <label class="checkbox-wrapper">
                                         <input type="checkbox" id="isGstRegistered" 
                                                ${dashboardState.merchant.isGstRegistered ? 'checked' : ''}
                                                onchange="toggleGstField(this.checked)">
-                                        I am registered under GST
+                                        <span class="checkbox-label">I am registered under GST</span>
                                     </label>
                                 </div>
                                 
-                                <div id="gstFieldContainer" style="${dashboardState.merchant.isGstRegistered ? 'display: block;' : 'display: none;'}">
+                                <div id="gstFieldContainer" class="gst-section-container ${dashboardState.merchant.isGstRegistered ? '' : 'hidden'}">
                                     <div class="gst-verification">
-                                        <div style="flex: 1;">
+                                        <div class="form-group">
                                             <label>GST Number <span class="required">*</span></label>
                                             <input type="text" id="gstNo" class="${dashboardState.merchant.gstNo ? 'valid' : ''}" 
                                                    value="${dashboardState.merchant.gstNo || ''}" 
@@ -1369,16 +1397,42 @@
         // ===== TOGGLE GST FIELD =====
         function toggleGstField(isChecked) {
             const container = document.getElementById('gstFieldContainer');
+            const statusElement = document.getElementById('gstSectionStatus');
+            
             dashboardState.merchant.isGstRegistered = isChecked;
             
             if (isChecked) {
-                container.style.display = 'block';
+                container.classList.remove('hidden');
+                // Don't auto-complete status until GST number is provided
+                if (statusElement) {
+                    statusElement.textContent = 'Pending';
+                    statusElement.classList.remove('completed');
+                }
             } else {
-                container.style.display = 'none';
+                container.classList.add('hidden');
+                // Clear GST data
                 dashboardState.merchant.gstNo = '';
                 dashboardState.merchant.gstVerified = false;
+                dashboardState.merchant.gstRegisteredName = '';
+                
                 const gstInput = document.getElementById('gstNo');
                 if (gstInput) gstInput.value = '';
+                
+                const gstNameInput = document.getElementById('gstRegisteredName');
+                if (gstNameInput) gstNameInput.value = '';
+                
+                // Reset verify button
+                const verifyBtn = document.querySelector('.verify-btn');
+                if (verifyBtn) {
+                    verifyBtn.classList.remove('verified');
+                    verifyBtn.innerHTML = '<i class="fas fa-shield-alt"></i> Verify';
+                }
+                
+                // Update status to completed (since GST not required)
+                if (statusElement) {
+                    statusElement.textContent = 'Completed';
+                    statusElement.classList.add('completed');
+                }
             }
             
             autoSaveProfile();
@@ -1464,6 +1518,13 @@
             const gstNo = document.getElementById('gstNo').value;
             if (!gstNo) {
                 showToast('Please enter GST number', 'error');
+                return;
+            }
+            
+            // Validate format first
+            const validation = validateField('gstNo', gstNo);
+            if (!validation.valid) {
+                showToast(validation.message, 'error');
                 return;
             }
             
@@ -1615,23 +1676,8 @@
                                         <option value="other">Other</option>
                                     </select>
                                 </div>
-                                <!-- GST Rate Field - Now with conditional logic -->
-                                <div class="form-group" id="gstFieldGroup">
-                                    <label for="gstRate">GST Rate (%)</label>
-                                    <div class="gst-field-container ${!dashboardState.merchant.isGstRegistered ? 'disabled' : ''}" id="gstFieldContainer">
-                                        <select id="gstRate" ${!dashboardState.merchant.isGstRegistered ? 'disabled' : ''}>
-                                            ${gstSlabs.map(slab => `<option value="${slab}">${slab}%</option>`).join('')}
-                                        </select>
-                                        ${!dashboardState.merchant.isGstRegistered ? 
-                                            '<div class="gst-helper-text"><i class="fas fa-info-circle"></i> GST is not applicable because your business is not GST registered.</div>' : 
-                                            '<div class="gst-helper-text"><i class="fas fa-info-circle"></i> Please select the correct GST rate applicable to your product according to government regulations.</div>'
-                                        }
-                                    </div>
-                                </div>
-                                <!-- Check for products with existing GST when merchant not registered -->
-                                ${getGSTWarningHTML()}
                                 <div class="form-group">
-                                    <label for="productBarcode">Barcode (optional)</label>
+                                    <label for="productBarcode">Barcode</label>
                                     <div style="display: flex; gap: 10px;">
                                         <input type="text" id="productBarcode" placeholder="Enter barcode">
                                         <button type="button" class="btn-secondary" onclick="openBarcodeScanner('addProductModal')"><i class="fas fa-barcode"></i> Scan</button>
@@ -1720,39 +1766,11 @@
             calculateProfileCompletion();
         }
 
-        // ===== GET GST WARNING HTML =====
-        function getGSTWarningHTML() {
-            if (!dashboardState.merchant.isGstRegistered) {
-                // Check if any existing product has GST > 0
-                const productsWithGST = dashboardState.products.filter(p => p.gstRate && p.gstRate > 0);
-                if (productsWithGST.length > 0) {
-                    return `
-                        <div class="gst-warning-badge">
-                            <i class="fas fa-exclamation-triangle"></i>
-                            Warning: ${productsWithGST.length} product(s) have GST rates > 0%. GST will not be applied because your business is not GST registered.
-                        </div>
-                    `;
-                }
-            }
-            return '';
-        }
-
         // ===== RESET ADD PRODUCT FORM =====
         function resetAddProductForm() {
             const form = document.getElementById('addProductForm');
             if (form) {
                 form.reset();
-                
-                // Set default GST rate based on merchant registration
-                const gstSelect = document.getElementById('gstRate');
-                if (gstSelect) {
-                    if (!dashboardState.merchant.isGstRegistered) {
-                        gstSelect.value = '0'; // Force 0 for non-registered
-                    } else {
-                        gstSelect.value = '18'; // Default to 18% for registered
-                    }
-                }
-                
                 const submitBtn = document.getElementById('addProductSubmitBtn');
                 if (submitBtn) submitBtn.innerHTML = 'Add Product';
                 const title = document.getElementById('addProductModalTitle');
@@ -1896,12 +1914,12 @@
                 <div class="stats-grid">
                     <div class="stat-card"><div class="stat-header"><span class="stat-title">Total Revenue</span><i class="fas fa-rupee-sign"></i></div><div class="stat-value">₹${dashboardState.stats.totalRevenue.toLocaleString()}</div><div class="stat-change positive"><i class="fas fa-arrow-up"></i><span>12% from last month</span></div></div>
                     <div class="stat-card"><div class="stat-header"><span class="stat-title">Active Products</span><i class="fas fa-boxes"></i></div><div class="stat-value">${dashboardState.stats.totalProducts}</div><div class="stat-change positive"><i class="fas fa-plus"></i><span>Added ${dashboardState.products.length} this month</span></div></div>
-                    <div class="stat-card"><div class="stat-header"><span class="stat-title">Profile Completion</span><i class="fas fa-user-check"></i></div><div class="stat-value">${dashboardState.merchant.profileCompletionPercentage}%</div><div class="stat-change ${dashboardState.merchant.profileCompleted ? 'positive' : 'pending'}"><i class="fas ${dashboardState.merchant.profileCompleted ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i><span>${dashboardState.merchant.profileCompleted ? 'Completed' : 'Incomplete'}</span></div></div>
+                    <div class="stat-card"><div class="stat-header"><span class="stat-title">Profile Completion</span><i class="fas fa-user-check"></i></div><div class="stat-value">${dashboardState.merchant.profileCompletionPercentage}%</div><div class="stat-change ${dashboardState.merchant.profileCompleted ? 'positive' : 'warning'}"><i class="fas ${dashboardState.merchant.profileCompleted ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i><span>${dashboardState.merchant.profileCompleted ? 'Completed' : 'Incomplete'}</span></div></div>
                     <div class="stat-card"><div class="stat-header"><span class="stat-title">Recent Transactions</span><i class="fas fa-exchange-alt"></i></div><div class="stat-value">${dashboardState.stats.recentTransactions}</div><div class="stat-change positive"><i class="fas fa-check-circle"></i><span>All successful</span></div></div>
                 </div>
                 <div class="table-container">
                     <div class="table-header"><h3>Product Management</h3><p style="color: var(--dark-gray);">Manage your inventory, prices, and product details</p><div class="table-actions"><button class="btn-primary" onclick="openModal('addProductModal')"><i class="fas fa-plus"></i> Add Product</button><button class="btn-secondary" onclick="openBarcodeScanner()"><i class="fas fa-barcode"></i> Scan Barcode</button></div></div>
-                    <table class="table"><thead><tr><th>Product Name</th><th>Category</th><th>Barcode</th><th>Price</th><th>Stock</th><th>GST Rate</th><th>Status</th><th>Actions</th></tr></thead><tbody id="dashboardProducts">${dashboardState.products.slice(0,5).map(product => `<tr><td><strong>${product.name}</strong></td><td><span class="category-tag">${product.category}</span></td><td>${product.barcode || '-'}</td><td>₹${product.price.toLocaleString()}</td><td><span class="stock-indicator ${product.stock > 10 ? 'high' : product.stock > 5 ? 'medium' : 'low'}">${product.stock}</span></td><td>${product.gstRate || 0}%</td><td><span class="status ${product.stock > 0 ? 'paid' : 'failed'}">${product.stock > 0 ? 'In Stock' : 'Out of Stock'}</span></td><td><button class="btn-icon" onclick="editProduct(${product.id})" title="Edit"><i class="fas fa-edit"></i></button><button class="btn-icon" onclick="deleteProduct(${product.id})" title="Delete"><i class="fas fa-trash"></i></button></td></tr>`).join('')}</tbody></table>
+                    <table class="table"><thead><tr><th>Product Name</th><th>Category</th><th>Barcode</th><th>Price</th><th>Stock</th><th>Status</th><th>Actions</th></tr></thead><tbody id="dashboardProducts">${dashboardState.products.slice(0,5).map(product => `<tr><td><strong>${product.name}</strong></td><td><span class="category-tag">${product.category}</span></td><td>${product.barcode || '-'}</td><td>₹${product.price.toLocaleString()}</td><td><span class="stock-indicator ${product.stock > 10 ? 'high' : product.stock > 5 ? 'medium' : 'low'}">${product.stock}</span></td><td><span class="status ${product.stock > 0 ? 'paid' : 'failed'}">${product.stock > 0 ? 'In Stock' : 'Out of Stock'}</span></td><td><button class="btn-icon" onclick="editProduct(${product.id})" title="Edit"><i class="fas fa-edit"></i></button><button class="btn-icon" onclick="deleteProduct(${product.id})" title="Delete"><i class="fas fa-trash"></i></button></td></tr>`).join('')}</tbody></table>
                 </div>`;
             setupSearch();
         }
@@ -1911,7 +1929,7 @@
             contentArea.innerHTML = `
                 <div class="table-container">
                     <div class="table-header"><h3>Product Management</h3><p style="color: var(--dark-gray);">Manage your inventory, prices, and product details</p><div class="table-actions"><button class="btn-primary" onclick="openModal('addProductModal')"><i class="fas fa-plus"></i> Add Product</button><button class="btn-secondary" onclick="openBarcodeScanner()"><i class="fas fa-barcode"></i> Scan Barcode</button></div></div>
-                    <table class="table"><thead><tr><th>Product Name</th><th>Category</th><th>Barcode</th><th>Price</th><th>Stock</th><th>GST Rate</th><th>Status</th><th>Actions</th></tr></thead><tbody id="productsTable">${dashboardState.products.map(product => `<tr><td><strong>${product.name}</strong></td><td><span class="category-tag">${product.category}</span></td><td>${product.barcode || '-'}</td><td>₹${product.price.toLocaleString()}</td><td><span class="stock-indicator ${product.stock > 10 ? 'high' : product.stock > 5 ? 'medium' : 'low'}">${product.stock}</span></td><td>${product.gstRate || 0}%</td><td><span class="status ${product.stock > 0 ? 'paid' : 'failed'}">${product.stock > 0 ? 'In Stock' : 'Out of Stock'}</span></td><td><button class="btn-icon" onclick="editProduct(${product.id})" title="Edit"><i class="fas fa-edit"></i></button><button class="btn-icon" onclick="deleteProduct(${product.id})" title="Delete"><i class="fas fa-trash"></i></button></td></tr>`).join('')}</tbody></table>
+                    <table class="table"><thead><tr><th>Product Name</th><th>Category</th><th>Barcode</th><th>Price</th><th>Stock</th><th>Status</th><th>Actions</th></tr></thead><tbody id="productsTable">${dashboardState.products.map(product => `<tr><td><strong>${product.name}</strong></td><td><span class="category-tag">${product.category}</span></td><td>${product.barcode || '-'}</td><td>₹${product.price.toLocaleString()}</td><td><span class="stock-indicator ${product.stock > 10 ? 'high' : product.stock > 5 ? 'medium' : 'low'}">${product.stock}</span></td><td><span class="status ${product.stock > 0 ? 'paid' : 'failed'}">${product.stock > 0 ? 'In Stock' : 'Out of Stock'}</span></td><td><button class="btn-icon" onclick="editProduct(${product.id})" title="Edit"><i class="fas fa-edit"></i></button><button class="btn-icon" onclick="deleteProduct(${product.id})" title="Delete"><i class="fas fa-trash"></i></button></td></tr>`).join('')}</tbody></table>
                 </div>`;
             setupSearch();
         }
@@ -2140,14 +2158,6 @@
             const category = document.getElementById('productCategory').value;
             const barcode = document.getElementById('productBarcode').value;
             
-            // GST Rate handling based on merchant GST registration
-            let gstRate;
-            if (!dashboardState.merchant.isGstRegistered) {
-                gstRate = 0; // Force 0 for non-registered merchants
-            } else {
-                gstRate = parseInt(document.getElementById('gstRate').value) || 0;
-            }
-            
             if (!name || !price || !stock) { 
                 showToast('Please fill all required fields', 'error'); 
                 return; 
@@ -2160,7 +2170,6 @@
                 stock: stock, 
                 category: category, 
                 barcode: barcode || null, 
-                gstRate: gstRate,
                 addedDate: new Date().toISOString().split('T')[0] 
             };
             
@@ -2175,15 +2184,6 @@
             if (currentPage === 'dashboard' || currentPage === 'products') {
                 navigateToPage(currentPage);
             }
-            
-            // Log the payload to console for verification (in production, this would be sent to backend)
-            console.log('Product Payload:', {
-                name: name,
-                price: price,
-                gstRate: gstRate,
-                category: category,
-                barcode: barcode || undefined
-            });
         }
 
         function editProduct(productId) {
@@ -2196,22 +2196,14 @@
             document.getElementById('productCategory').value = product.category; 
             document.getElementById('productBarcode').value = product.barcode || '';
             
-            // Set GST rate based on merchant registration
-            const gstSelect = document.getElementById('gstRate');
-            if (gstSelect) {
-                if (!dashboardState.merchant.isGstRegistered) {
-                    gstSelect.value = '0'; // Force 0 for non-registered
-                    gstSelect.disabled = true;
-                } else {
-                    gstSelect.value = product.gstRate || '18';
-                    gstSelect.disabled = false;
-                }
-            }
-            
             const form = document.getElementById('addProductForm');
             const submitBtn = document.getElementById('addProductSubmitBtn');
             const title = document.getElementById('addProductModalTitle');
             
+            // Remove any existing submit handler
+            form.onsubmit = null;
+            
+            // Set new submit handler
             form.onsubmit = function(e) { 
                 e.preventDefault(); 
                 updateProduct(productId); 
@@ -2227,22 +2219,13 @@
             const productIndex = dashboardState.products.findIndex(p => p.id === productId); 
             if (productIndex === -1) return;
             
-            // GST Rate handling based on merchant GST registration
-            let gstRate;
-            if (!dashboardState.merchant.isGstRegistered) {
-                gstRate = 0; // Force 0 for non-registered merchants
-            } else {
-                gstRate = parseInt(document.getElementById('gstRate').value) || 0;
-            }
-            
             dashboardState.products[productIndex] = { 
                 ...dashboardState.products[productIndex], 
                 name: document.getElementById('productName').value, 
                 price: parseFloat(document.getElementById('productPrice').value), 
                 stock: parseInt(document.getElementById('productStock').value), 
                 category: document.getElementById('productCategory').value, 
-                barcode: document.getElementById('productBarcode').value || null,
-                gstRate: gstRate
+                barcode: document.getElementById('productBarcode').value || null 
             };
             
             closeModal('addProductModal'); 
@@ -2252,14 +2235,6 @@
             if (currentPage === 'dashboard' || currentPage === 'products') {
                 navigateToPage(currentPage);
             }
-            
-            // Log the payload to console for verification
-            console.log('Update Product Payload:', {
-                id: productId,
-                name: document.getElementById('productName').value,
-                price: parseFloat(document.getElementById('productPrice').value),
-                gstRate: gstRate
-            });
         }
 
         function deleteProduct(productId) { 

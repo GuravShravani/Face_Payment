@@ -799,26 +799,11 @@
                 </div>
             </div>
 
-            <!-- Merchant Registration Form -->
+            <!-- Merchant Registration Form - SIMPLIFIED to only email and password -->
             <div class="tab-content active" id="merchant-tab">
                 <div class="form-container">
-                    <div class="progress-indicator">
-                        <div class="progress-step">
-                            <div class="step-circle active">1</div>
-                            <div class="step-label active">Account Details</div>
-                        </div>
-                        <div class="progress-step">
-                            <div class="step-circle">2</div>
-                            <div class="step-label">Business Info</div>
-                        </div>
-                        <div class="progress-step">
-                            <div class="step-circle">3</div>
-                            <div class="step-label">Bank Details</div>
-                        </div>
-                    </div>
-                    
                     <form id="merchantForm">
-                        <!-- Step 1: Account Details -->
+                        <!-- Single step form with just email and password -->
                         <div class="form-step active" data-step="1">
                             <div class="form-group">
                                 <label class="form-label" for="merchant-email">Email Address *</label>
@@ -849,101 +834,7 @@
                             </div>
                             
                             <div class="form-footer">
-                                <div></div>
-                                <button type="button" class="btn btn-primary btn-next" data-next-step="2">
-                                    Next <i class="fas fa-arrow-right"></i>
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <!-- Step 2: Business Information -->
-                        <div class="form-step" data-step="2">
-                            <div class="form-group">
-                                <label class="form-label" for="company-name">Company Name *</label>
-                                <div class="input-with-icon">
-                                    <input type="text" id="company-name" class="form-input" placeholder="Your business name" required>
-                                    <i class="fas fa-building input-icon"></i>
-                                </div>
-                                <div class="error-message" id="company-name-error"></div>
-                            </div>
-                            
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label class="form-label" for="contact-person">Contact Person *</label>
-                                    <input type="text" id="contact-person" class="form-input" placeholder="Full name" required>
-                                    <div class="error-message" id="contact-person-error"></div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label" for="contact-no">Contact Number *</label>
-                                    <div class="input-with-icon">
-                                        <input type="tel" id="contact-no" class="form-input" placeholder="+1 234 567 8900" required>
-                                        <i class="fas fa-phone input-icon"></i>
-                                    </div>
-                                    <div class="error-message" id="contact-no-error"></div>
-                                </div>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label class="form-label" for="business-address">Business Address</label>
-                                <textarea id="business-address" class="form-input" placeholder="Full business address" rows="3"></textarea>
-                            </div>
-                            
-                            <div class="form-footer">
-                                <button type="button" class="btn btn-secondary btn-prev" data-prev-step="1">
-                                    <i class="fas fa-arrow-left"></i> Back
-                                </button>
-                                <button type="button" class="btn btn-primary btn-next" data-next-step="3">
-                                    Next <i class="fas fa-arrow-right"></i>
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <!-- Step 3: Bank Details -->
-                        <div class="form-step" data-step="3">
-                            <div class="form-group">
-                                <label class="form-label" for="bank-name">Bank Name *</label>
-                                <div class="input-with-icon">
-                                    <input type="text" id="bank-name" class="form-input" placeholder="e.g. Chase, Bank of America" required>
-                                    <i class="fas fa-university input-icon"></i>
-                                </div>
-                                <div class="error-message" id="bank-name-error"></div>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label class="form-label" for="account-number">Account Number *</label>
-                                <div class="input-with-icon">
-                                    <input type="text" id="account-number" class="form-input" placeholder="Bank account number" required>
-                                    <i class="fas fa-credit-card input-icon"></i>
-                                </div>
-                                <div class="error-message" id="account-number-error"></div>
-                            </div>
-                            
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label class="form-label" for="ifsc-code">IFSC Code *</label>
-                                    <input type="text" id="ifsc-code" class="form-input" placeholder="IFSC code" required>
-                                    <div class="error-message" id="ifsc-code-error"></div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label" for="upi-id">UPI ID *</label>
-                                    <div class="input-with-icon">
-                                        <input type="text" id="upi-id" class="form-input" placeholder="username@bank" required>
-                                        <i class="fas fa-qrcode input-icon"></i>
-                                    </div>
-                                    <div class="error-message" id="upi-id-error"></div>
-                                </div>
-                            </div>
-                            
-                            <div class="instruction-step">
-                                <div class="step-icon"><i class="fas fa-info"></i></div>
-                                <div>Your bank details are encrypted and securely stored.</div>
-                            </div>
-                            
-                            <div class="form-footer">
-                                <button type="button" class="btn btn-secondary btn-prev" data-prev-step="2">
-                                    <i class="fas fa-arrow-left"></i> Back
-                                </button>
-                                <button type="submit" class="btn btn-success">
+                                <button type="submit" class="btn btn-success" style="width: 100%; justify-content: center;">
                                     <i class="fas fa-check"></i> Complete Registration
                                 </button>
                             </div>
@@ -965,7 +856,7 @@
                 </div>
             </div>
 
-            <!-- Customer Registration Form -->
+            <!-- Customer Registration Form (unchanged) -->
             <div class="tab-content" id="customer-tab">
                 <div class="form-container">
                     <div class="progress-indicator">
@@ -1119,7 +1010,7 @@
                 </div>
             </div>
 
-            <!-- Admin Registration Form -->
+            <!-- Admin Registration Form (unchanged) -->
             <div class="tab-content" id="admin-tab">
                 <div class="form-container">
                     <div class="instruction-step" style="margin-bottom: 30px;">
@@ -1234,27 +1125,27 @@
             });
         }
 
-        // Form Navigation
+        // Form Navigation (only for customer form now)
         function initializeFormNavigation() {
-            // Next button functionality
+            // Next button functionality (only for customer form)
             document.addEventListener('click', function(e) {
                 if (e.target.classList.contains('btn-next') || e.target.closest('.btn-next')) {
                     const button = e.target.classList.contains('btn-next') ? e.target : e.target.closest('.btn-next');
                     const nextStep = button.getAttribute('data-next-step');
                     const currentForm = button.closest('form');
                     
-                    if (currentForm && nextStep) {
+                    if (currentForm && currentForm.id === 'customerForm' && nextStep) {
                         navigateToStep(currentForm, nextStep);
                     }
                 }
                 
-                // Previous button functionality
+                // Previous button functionality (only for customer form)
                 if (e.target.classList.contains('btn-prev') || e.target.closest('.btn-prev')) {
                     const button = e.target.classList.contains('btn-prev') ? e.target : e.target.closest('.btn-prev');
                     const prevStep = button.getAttribute('data-prev-step');
                     const currentForm = button.closest('form');
                     
-                    if (currentForm && prevStep) {
+                    if (currentForm && currentForm.id === 'customerForm' && prevStep) {
                         navigateToStep(currentForm, prevStep);
                     }
                 }
@@ -1390,20 +1281,6 @@
                     }
                 }
                 
-                // Phone number basic validation
-                if (input.id.includes('contact-no')) {
-                    const phoneRegex = /^[+]?[(]?[0-9]{1,4}[)]?[-\s.]?[0-9]{1,4}[-\s.]?[0-9]{1,9}$/;
-                    if (!phoneRegex.test(value)) {
-                        if (errorElement) {
-                            errorElement.textContent = 'Please enter a valid phone number';
-                            errorElement.style.display = 'block';
-                        }
-                        input.classList.add('error');
-                        isValid = false;
-                        return;
-                    }
-                }
-                
                 // If all validations passed
                 input.classList.add('success');
             });
@@ -1491,22 +1368,12 @@
 
         // Form Submissions
         function initializeFormSubmissions() {
-            // Merchant form submission
+            // Merchant form submission - SIMPLIFIED
             document.getElementById('merchantForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 
-                // Validate all steps
-                let allValid = true;
-                for (let i = 1; i <= 3; i++) {
-                    if (!validateCurrentStep(this, i.toString())) {
-                        allValid = false;
-                        // Show the step with errors
-                        navigateToStep(this, i.toString());
-                        break;
-                    }
-                }
-                
-                if (!allValid) {
+                // Validate the single step
+                if (!validateCurrentStep(this, '1')) {
                     alert('Please fix all errors before submitting.');
                     return;
                 }
@@ -1514,13 +1381,6 @@
                 // Get form data
                 const formData = {
                     email: document.getElementById('merchant-email').value,
-                    companyName: document.getElementById('company-name').value,
-                    contactPerson: document.getElementById('contact-person').value,
-                    contactNo: document.getElementById('contact-no').value,
-                    bankName: document.getElementById('bank-name').value,
-                    accountNumber: document.getElementById('account-number').value,
-                    ifscCode: document.getElementById('ifsc-code').value,
-                    upiId: document.getElementById('upi-id').value,
                     userType: 'merchant',
                     timestamp: new Date().toISOString()
                 };
@@ -2111,28 +1971,30 @@
             const activeForm = document.querySelector('.tab-content.active form');
             if (!activeForm) return;
             
-            // Reset to first step
-            activeForm.querySelectorAll('.form-step').forEach((step, index) => {
-                step.classList.remove('active');
-                if (index === 0) step.classList.add('active');
-            });
-            
-            // Reset progress indicator
-            const progressSteps = activeForm.querySelectorAll('.progress-step');
-            progressSteps.forEach((step, index) => {
-                const circle = step.querySelector('.step-circle');
-                const label = step.querySelector('.step-label');
+            // Reset to first step (only for customer form which has steps)
+            if (activeForm.id === 'customerForm') {
+                activeForm.querySelectorAll('.form-step').forEach((step, index) => {
+                    step.classList.remove('active');
+                    if (index === 0) step.classList.add('active');
+                });
                 
-                if (circle && label) {
-                    circle.classList.remove('active');
-                    label.classList.remove('active');
+                // Reset progress indicator
+                const progressSteps = activeForm.querySelectorAll('.progress-step');
+                progressSteps.forEach((step, index) => {
+                    const circle = step.querySelector('.step-circle');
+                    const label = step.querySelector('.step-label');
                     
-                    if (index === 0) {
-                        circle.classList.add('active');
-                        label.classList.add('active');
+                    if (circle && label) {
+                        circle.classList.remove('active');
+                        label.classList.remove('active');
+                        
+                        if (index === 0) {
+                            circle.classList.add('active');
+                            label.classList.add('active');
+                        }
                     }
-                }
-            });
+                });
+            }
             
             // Hide success message
             const formContainer = activeForm.closest('.form-container');

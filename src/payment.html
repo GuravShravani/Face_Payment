@@ -271,12 +271,8 @@
             color: #27ae60;
         }
 
-        .payment-method.card .payment-icon {
-            color: #f39c12;
-        }
-
-        .payment-method.digital .payment-icon {
-            color: #9b59b6;
+        .payment-method.gpay .payment-icon {
+            color: #4285f4;
         }
 
         .payment-form {
@@ -745,7 +741,7 @@
         <div class="header">
             <div class="logo">
                 <i class="fas fa-cash-register"></i>
-                <h1>Face<span>Pay</span> POS</h1>
+                <h1>Face<span>Pay</span></h1>
             </div>
             <div class="current-time" id="current-time">
                 Loading...
@@ -778,15 +774,15 @@
                     <div class="cart-summary">
                         <div class="summary-row">
                             <span>Subtotal:</span>
-                            <span id="subtotal">0.00</span>
+                            <span id="subtotal">₹0.00</span>
                         </div>
                         <div class="summary-row">
                             <span>Tax (10%):</span>
-                            <span id="tax">0.00</span>
+                            <span id="tax">₹0.00</span>
                         </div>
                         <div class="summary-row total">
                             <span>Total:</span>
-                            <span id="total">0.00</span>
+                            <span id="total">₹0.00</span>
                         </div>
                     </div>
 
@@ -825,20 +821,12 @@
                         <div class="payment-desc">Pay with Cash</div>
                     </div>
                     
-                    <div class="payment-method card" data-method="card">
+                    <div class="payment-method gpay" data-method="gpay">
                         <div class="payment-icon">
-                            <i class="fas fa-credit-card"></i>
+                            <i class="fab fa-google-pay"></i>
                         </div>
-                        <div class="payment-name">Card</div>
-                        <div class="payment-desc">Credit/Debit Card</div>
-                    </div>
-                    
-                    <div class="payment-method digital" data-method="digital">
-                        <div class="payment-icon">
-                            <i class="fas fa-mobile-alt"></i>
-                        </div>
-                        <div class="payment-name">Digital Wallet</div>
-                        <div class="payment-desc">Google Pay / Apple Pay</div>
+                        <div class="payment-name">GPay</div>
+                        <div class="payment-desc">Google Pay</div>
                     </div>
                 </div>
 
@@ -868,7 +856,7 @@
                     
                     <div class="form-group">
                         <label for="facepay-amount">Payment Amount</label>
-                        <input type="text" id="facepay-amount" class="form-control" value="0.00" readonly>
+                        <input type="text" id="facepay-amount" class="form-control" value="₹0.00" readonly>
                     </div>
                     
                     <div class="form-group">
@@ -884,12 +872,12 @@
                     <div class="face-match-status" id="face-match-status"></div>
                 </div>
 
-                <!-- Other Payment Forms -->
+                <!-- Cash Payment Form -->
                 <div class="payment-form cash-form" id="cash-form">
                     <div class="form-title">Cash Payment</div>
                     <div class="form-group">
                         <label for="cash-amount">Total Amount</label>
-                        <input type="text" id="cash-amount" class="form-control" value="$0.00" readonly>
+                        <input type="text" id="cash-amount" class="form-control" value="₹0.00" readonly>
                     </div>
                     <div class="form-group">
                         <label for="cash-received">Cash Received</label>
@@ -897,51 +885,24 @@
                     </div>
                     <div class="form-group">
                         <label for="cash-change">Change Due</label>
-                        <input type="text" id="cash-change" class="form-control" value="0.00" readonly>
+                        <input type="text" id="cash-change" class="form-control" value="₹0.00" readonly>
                     </div>
                 </div>
 
-                <div class="payment-form card-form" id="card-form">
-                    <div class="form-title">Card Payment</div>
+                <!-- GPay Form -->
+                <div class="payment-form gpay-form" id="gpay-form">
+                    <div class="form-title">Google Pay (GPay)</div>
                     <div class="form-group">
-                        <label for="card-amount">Amount</label>
-                        <input type="text" id="card-amount" class="form-control" value="0.00" readonly>
+                        <label for="gpay-amount">Amount</label>
+                        <input type="text" id="gpay-amount" class="form-control" value="₹0.00" readonly>
                     </div>
                     <div class="form-group">
-                        <label for="card-number">Card Number</label>
-                        <input type="text" id="card-number" class="form-control" placeholder="1234 5678 9012 3456" maxlength="19">
-                    </div>
-                    <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                        <div>
-                            <label for="card-expiry">Expiry Date</label>
-                            <input type="text" id="card-expiry" class="form-control" placeholder="MM/YY">
-                        </div>
-                        <div>
-                            <label for="card-cvv">CVV</label>
-                            <input type="text" id="card-cvv" class="form-control" placeholder="123" maxlength="3">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="payment-form digital-form" id="digital-form">
-                    <div class="form-title">Digital Wallet</div>
-                    <div class="form-group">
-                        <label for="digital-amount">Amount</label>
-                        <input type="text" id="digital-amount" class="form-control" value="$0.00" readonly>
+                        <label for="gpay-phone">GPay Phone Number</label>
+                        <input type="tel" id="gpay-phone" class="form-control" placeholder="Enter phone number linked to GPay">
                     </div>
                     <div class="form-group">
-                        <label for="digital-wallet">Select Wallet</label>
-                        <select id="digital-wallet" class="form-control">
-                            <option value="">Select wallet</option>
-                            <option value="google">Google Pay</option>
-                            <option value="apple">Apple Pay</option>
-                            <option value="samsung">Samsung Pay</option>
-                            <option value="paypal">PayPal</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="digital-phone">Phone Number</label>
-                        <input type="tel" id="digital-phone" class="form-control" placeholder="Enter phone number linked to wallet">
+                        <label for="gpay-upi">UPI ID (Optional)</label>
+                        <input type="text" id="gpay-upi" class="form-control" placeholder="e.g., name@okhdfcbank">
                     </div>
                 </div>
 
@@ -982,7 +943,7 @@
             </div>
             
             <div class="receipt-total" id="receipt-total">
-                Total: 0.00
+                Total: ₹0.00
             </div>
             
             <!-- PDF Preview -->
@@ -1012,17 +973,17 @@
         // Initialize jsPDF
         const { jsPDF } = window.jspdf;
 
-        // Sample Products
+        // Sample Products - Prices converted to Indian Rupees
         const products = [
-            { id: 1, name: "Laptop", price: 899.99, icon: "fas fa-laptop" },
-            { id: 2, name: "Headphones", price: 149.99, icon: "fas fa-headphones" },
-            { id: 3, name: "Smartphone", price: 699.99, icon: "fas fa-mobile-alt" },
-            { id: 4, name: "Coffee", price: 4.99, icon: "fas fa-coffee" },
-            { id: 5, name: "T-shirt", price: 24.99, icon: "fas fa-tshirt" },
-            { id: 6, name: "Book", price: 19.99, icon: "fas fa-book" },
-            { id: 7, name: "Watch", price: 249.99, icon: "fas fa-clock" },
-            { id: 8, name: "Backpack", price: 59.99, icon: "fas fa-shopping-bag" },
-            { id: 9, name: "Mouse", price: 29.99, icon: "fas fa-mouse" }
+            { id: 1, name: "Laptop", price: 74999.00, icon: "fas fa-laptop" },
+            { id: 2, name: "Headphones", price: 2999.00, icon: "fas fa-headphones" },
+            { id: 3, name: "Smartphone", price: 54999.00, icon: "fas fa-mobile-alt" },
+            { id: 4, name: "Coffee", price: 299.00, icon: "fas fa-coffee" },
+            { id: 5, name: "T-shirt", price: 999.00, icon: "fas fa-tshirt" },
+            { id: 6, name: "Book", price: 599.00, icon: "fas fa-book" },
+            { id: 7, name: "Watch", price: 3999.00, icon: "fas fa-clock" },
+            { id: 8, name: "Backpack", price: 2499.00, icon: "fas fa-shopping-bag" },
+            { id: 9, name: "Mouse", price: 1299.00, icon: "fas fa-mouse" }
         ];
 
         // Shopping Cart
@@ -1031,7 +992,7 @@
         let isCameraActive = false;
         let currentTransactionId = null;
         let capturedFaceImage = null;
-        // FIX: Add flag to track face verification status
+        // Add flag to track face verification status
         let isFaceVerified = false;
 
         // DOM Elements
@@ -1132,7 +1093,7 @@
                         <i class="${product.icon}"></i>
                     </div>
                     <div class="product-name">${product.name}</div>
-                    <div class="product-price">$${product.price.toFixed(2)}</div>
+                    <div class="product-price">₹${product.price.toFixed(2)}</div>
                 `;
                 
                 productCard.addEventListener('click', () => addToCart(product));
@@ -1202,7 +1163,7 @@
                         </div>
                         <div class="item-details">
                             <div class="item-name">${item.name}</div>
-                            <div class="item-price">$${item.price.toFixed(2)} each</div>
+                            <div class="item-price">₹${item.price.toFixed(2)} each</div>
                         </div>
                         <div class="item-quantity">
                             <button class="quantity-btn minus-btn" onclick="updateQuantity(${item.id}, -1)">
@@ -1213,7 +1174,7 @@
                                 <i class="fas fa-plus"></i>
                             </button>
                         </div>
-                        <div class="item-total">$${itemTotal.toFixed(2)}</div>
+                        <div class="item-total">₹${itemTotal.toFixed(2)}</div>
                         <div class="remove-item" onclick="removeFromCart(${item.id})">
                             <i class="fas fa-times"></i>
                         </div>
@@ -1232,9 +1193,9 @@
             const tax = subtotal * 0.10; // 10% tax
             const total = subtotal + tax;
             
-            subtotalEl.textContent = `$$ {subtotal.toFixed(2)}`;
-            taxEl.textContent = `$${tax.toFixed(2)}`;
-            totalEl.textContent = `$${total.toFixed(2)}`;
+            subtotalEl.textContent = `₹${subtotal.toFixed(2)}`;
+            taxEl.textContent = `₹${tax.toFixed(2)}`;
+            totalEl.textContent = `₹${total.toFixed(2)}`;
             
             return { subtotal, tax, total };
         }
@@ -1245,16 +1206,15 @@
             const amount = totals.total.toFixed(2);
             
             // Update all payment form amounts
-            document.getElementById('facepay-amount').value = `$${amount}`;
-            document.getElementById('cash-amount').value = `$${amount}`;
-            document.getElementById('card-amount').value = `$${amount}`;
-            document.getElementById('digital-amount').value = `$${amount}`;
+            document.getElementById('facepay-amount').value = `₹${amount}`;
+            document.getElementById('cash-amount').value = `₹${amount}`;
+            document.getElementById('gpay-amount').value = `₹${amount}`;
             
             // Update cash change if cash received is entered
             const cashReceived = parseFloat(document.getElementById('cash-received').value) || 0;
             if (cashReceived > 0) {
                 const change = cashReceived - totals.total;
-                document.getElementById('cash-change').value = change >= 0 ? `$${change.toFixed(2)}` : 'Insufficient';
+                document.getElementById('cash-change').value = change >= 0 ? `₹${change.toFixed(2)}` : 'Insufficient';
             }
         }
 
@@ -1298,15 +1258,11 @@
                 });
                 
                 currentPaymentMethod = methodName;
-                paymentMethodText.textContent = `Payment Method: ${methodName.charAt(0).toUpperCase() + methodName.slice(1)}`;
+                paymentMethodText.textContent = `Payment Method: ${methodName === 'gpay' ? 'GPay' : methodName.charAt(0).toUpperCase() + methodName.slice(1)}`;
                 
                 // Stop camera if switching away from facepay
                 if (methodName !== 'facepay' && isCameraActive) {
                     stopCamera();
-                }
-                // Reset face verification when switching to facepay
-                if (methodName === 'facepay') {
-                    // Do not auto reset, user can start fresh
                 }
             });
         });
@@ -1323,8 +1279,6 @@
                 });
                 cameraFeed.srcObject = stream;
                 isCameraActive = true;
-                // Do not reset verification automatically, but clear any old failed status if user recaptures
-                // We'll let the capture button handle resetting for a fresh attempt
             } catch (err) {
                 alert('Error accessing camera: ' + err.message);
             }
@@ -1343,7 +1297,7 @@
             }
         }
 
-        // Capture Image - FIXED: Now properly sets verification to SUCCESS
+        // Capture Image - Now properly sets verification to SUCCESS
         captureBtn.addEventListener('click', function() {
             if (!isCameraActive) {
                 alert('Please start the camera first');
@@ -1367,12 +1321,11 @@
             // Stop camera after capture
             stopCamera();
             
-            // FIX: Simulate face recognition - NOW SUCCESSFUL to solve the error
-            simulateFaceRecognition(true); // Pass true for success
+            // Simulate face recognition - SUCCESS
+            simulateFaceRecognition(true);
         });
 
-        // Simulate Face Recognition - FIXED: Always succeeds now when called from capture
-        // but keep the parameter to allow success/failure (default to success for capture)
+        // Simulate Face Recognition
         function simulateFaceRecognition(shouldSucceed = true) {
             faceMatchStatus.textContent = 'Processing face recognition...';
             faceMatchStatus.className = 'face-match-status';
@@ -1381,22 +1334,22 @@
             // Simulate API call delay
             setTimeout(() => {
                 if (shouldSucceed) {
-                    // SUCCESS - fixes the face payment error
+                    // SUCCESS
                     faceMatchStatus.textContent = 'Face recognized successfully! ✓';
                     faceMatchStatus.className = 'face-match-status success';
                     isFaceVerified = true;
                 } else {
-                    // FAIL - for demonstration if needed
+                    // FAIL
                     faceMatchStatus.textContent = 'Face recognition failed. Please try again.';
                     faceMatchStatus.className = 'face-match-status failed';
                     isFaceVerified = false;
-                    capturedFaceImage = null; // Clear captured image on failure
+                    capturedFaceImage = null;
                     capturedImage.classList.remove('show');
                 }
-            }, 1500); // Slightly faster
+            }, 1500);
         }
 
-        // Process Payment - FIXED: Now checks the isFaceVerified flag
+        // Process Payment
         processPaymentBtn.addEventListener('click', function() {
             if (cart.length === 0) {
                 alert('Cart is empty! Add items to cart first.');
@@ -1410,7 +1363,6 @@
             let message = '';
             
             if (currentPaymentMethod === 'facepay') {
-                // FIX: Use the isFaceVerified flag instead of checking classList
                 if (!capturedFaceImage) {
                     isValid = false;
                     message = 'Please capture your face first';
@@ -1418,10 +1370,21 @@
                     isValid = false;
                     message = 'Face recognition failed. Please try again.';
                 }
+            } else if (currentPaymentMethod === 'cash') {
+                const cashReceived = parseFloat(document.getElementById('cash-received').value);
+                if (!cashReceived || cashReceived < totals.total) {
+                    isValid = false;
+                    message = 'Please enter sufficient cash amount';
+                }
+            } else if (currentPaymentMethod === 'gpay') {
+                const gpayPhone = document.getElementById('gpay-phone').value;
+                if (!gpayPhone) {
+                    isValid = false;
+                    message = 'Please enter GPay phone number';
+                }
             }
             
             if (!isValid) {
-                // Show the appropriate error alert
                 alert(`Payment Error: ${message}`);
                 return;
             }
@@ -1430,7 +1393,7 @@
             currentTransactionId = 'TXN' + Date.now() + Math.floor(Math.random() * 1000);
             
             // Show success message
-            alert(`Payment successful! Transaction ID: ${currentTransactionId}\nAmount: $${totals.total.toFixed(2)}`);
+            alert(`Payment successful! Transaction ID: ${currentTransactionId}\nAmount: ₹${totals.total.toFixed(2)}`);
             
             // Generate receipt
             generateReceipt();
@@ -1473,7 +1436,7 @@
                 itemDiv.className = 'receipt-item';
                 itemDiv.innerHTML = `
                     <span>${item.name} x${item.quantity}</span>
-                    <span>$${(item.price * item.quantity).toFixed(2)}</span>
+                    <span>₹${(item.price * item.quantity).toFixed(2)}</span>
                 `;
                 receiptDetails.appendChild(itemDiv);
             });
@@ -1481,15 +1444,15 @@
             // Add totals
             const subtotalDiv = document.createElement('div');
             subtotalDiv.className = 'receipt-item';
-            subtotalDiv.innerHTML = `<span>Subtotal</span><span>$${totals.subtotal.toFixed(2)}</span>`;
+            subtotalDiv.innerHTML = `<span>Subtotal</span><span>₹${totals.subtotal.toFixed(2)}</span>`;
             receiptDetails.appendChild(subtotalDiv);
             
             const taxDiv = document.createElement('div');
             taxDiv.className = 'receipt-item';
-            taxDiv.innerHTML = `<span>Tax (10%)</span><span>$${totals.tax.toFixed(2)}</span>`;
+            taxDiv.innerHTML = `<span>Tax (10%)</span><span>₹${totals.tax.toFixed(2)}</span>`;
             receiptDetails.appendChild(taxDiv);
             
-            receiptTotal.textContent = `Total: $${totals.total.toFixed(2)}`;
+            receiptTotal.textContent = `Total: ₹${totals.total.toFixed(2)}`;
             
             // Show receipt modal
             receiptModal.style.display = 'flex';
@@ -1518,7 +1481,8 @@
                 doc.setTextColor(100, 100, 100);
                 doc.text(`Transaction ID: ${currentTransactionId}`, pageWidth / 2, 28, { align: 'center' });
                 doc.text(`Date: ${now.toLocaleString()}`, pageWidth / 2, 32, { align: 'center' });
-                doc.text(`Payment Method: ${currentPaymentMethod.charAt(0).toUpperCase() + currentPaymentMethod.slice(1)}`, pageWidth / 2, 36, { align: 'center' });
+                const paymentDisplay = currentPaymentMethod === 'gpay' ? 'GPay' : currentPaymentMethod.charAt(0).toUpperCase() + currentPaymentMethod.slice(1);
+                doc.text(`Payment Method: ${paymentDisplay}`, pageWidth / 2, 36, { align: 'center' });
                 
                 // Add face image if available
                 if (capturedFaceImage && currentPaymentMethod === 'facepay' && isFaceVerified) {
@@ -1551,7 +1515,7 @@
                 let yPosition = (capturedFaceImage && currentPaymentMethod === 'facepay' && isFaceVerified) ? 100 : 55;
                 cart.forEach(item => {
                     const itemText = `${item.name} x${item.quantity}`;
-                    const itemPrice = `$${(item.price * item.quantity).toFixed(2)}`;
+                    const itemPrice = `₹${(item.price * item.quantity).toFixed(2)}`;
                     
                     doc.setFontSize(10);
                     doc.text(itemText, 20, yPosition);
@@ -1567,18 +1531,18 @@
                 yPosition += 8;
                 
                 doc.text('Subtotal:', 20, yPosition);
-                doc.text(`$${totals.subtotal.toFixed(2)}`, pageWidth - 20, yPosition, { align: 'right' });
+                doc.text(`₹${totals.subtotal.toFixed(2)}`, pageWidth - 20, yPosition, { align: 'right' });
                 yPosition += 6;
                 
                 doc.text('Tax (10%):', 20, yPosition);
-                doc.text(`$${totals.tax.toFixed(2)}`, pageWidth - 20, yPosition, { align: 'right' });
+                doc.text(`₹${totals.tax.toFixed(2)}`, pageWidth - 20, yPosition, { align: 'right' });
                 yPosition += 8;
                 
                 doc.setFontSize(12);
                 doc.setFont(undefined, 'bold');
                 doc.setTextColor(44, 62, 80);
                 doc.text('TOTAL:', 20, yPosition);
-                doc.text(`$${totals.total.toFixed(2)}`, pageWidth - 20, yPosition, { align: 'right' });
+                doc.text(`₹${totals.total.toFixed(2)}`, pageWidth - 20, yPosition, { align: 'right' });
                 
                 // Add footer
                 doc.setFontSize(8);
@@ -1589,7 +1553,7 @@
                 yPosition += 5;
                 doc.text('FacePay POS System - Secure Facial Recognition Payments', pageWidth / 2, yPosition, { align: 'center' });
                 yPosition += 5;
-                doc.text('For support: support@facepay.com | Phone: 1-800-FACE-PAY', pageWidth / 2, yPosition, { align: 'center' });
+                doc.text('For support: support@facepay.com | Phone: 1800-FACE-PAY', pageWidth / 2, yPosition, { align: 'center' });
                 
                 // Save the PDF
                 doc.save(`FacePay_Receipt_${currentTransactionId}.pdf`);
@@ -1613,13 +1577,14 @@
         downloadReceiptBtn.addEventListener('click', function() {
             const now = new Date();
             const totals = calculateTotals();
+            const paymentDisplay = currentPaymentMethod === 'gpay' ? 'GPay' : currentPaymentMethod.charAt(0).toUpperCase() + currentPaymentMethod.slice(1);
             
             // Create receipt text
             let receiptText = `FACE PAY POS - RECEIPT\n`;
             receiptText += `===============================\n`;
             receiptText += `Date: ${now.toLocaleString()}\n`;
             receiptText += `Transaction ID: ${currentTransactionId}\n`;
-            receiptText += `Payment Method: ${currentPaymentMethod.charAt(0).toUpperCase() + currentPaymentMethod.slice(1)}\n`;
+            receiptText += `Payment Method: ${paymentDisplay}\n`;
             receiptText += `===============================\n`;
             
             if (capturedFaceImage && currentPaymentMethod === 'facepay' && isFaceVerified) {
@@ -1635,13 +1600,13 @@
             receiptText += `ITEMS:\n`;
             
             cart.forEach(item => {
-                receiptText += `${item.name} x${item.quantity}: $${(item.price * item.quantity).toFixed(2)}\n`;
+                receiptText += `${item.name} x${item.quantity}: ₹${(item.price * item.quantity).toFixed(2)}\n`;
             });
             
             receiptText += `===============================\n`;
-            receiptText += `Subtotal: $${totals.subtotal.toFixed(2)}\n`;
-            receiptText += `Tax (10%): $${totals.tax.toFixed(2)}\n`;
-            receiptText += `TOTAL: $${totals.total.toFixed(2)}\n`;
+            receiptText += `Subtotal: ₹${totals.subtotal.toFixed(2)}\n`;
+            receiptText += `Tax (10%): ₹${totals.tax.toFixed(2)}\n`;
+            receiptText += `TOTAL: ₹${totals.total.toFixed(2)}\n`;
             receiptText += `===============================\n`;
             receiptText += `Thank you for your purchase!\n`;
             receiptText += `FacePay POS System\n`;
